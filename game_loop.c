@@ -22,7 +22,7 @@ void game_loop_cleanup(Game game, Graphic_engine *gengine);
 
 int main(int argc, char *argv[])
 {
-  Game game;
+  Game *game;
   Graphic_engine *gengine;
   int result;
   Command *last_cmd;
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  result = game_loop_init(&game, &gengine, argv[1]);
+  result = game_loop_init(game, &gengine, argv[1]);
 
   if (result == 1)
   {
@@ -46,13 +46,13 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  last_cmd = game_get_last_command(&game);
+  last_cmd = game_get_last_command(game);
 
-  while ((command_get_code(last_cmd) != EXIT) && (game_get_finished(&game) == FALSE))
+  while ((command_get_code(last_cmd) != EXIT) && (game_get_finished(game) == FALSE))
   {
-    graphic_engine_paint_game(gengine, &game);
+    graphic_engine_paint_game(gengine, game);
     command_get_user_input(last_cmd);
-    game_actions_update(&game, last_cmd);
+    game_actions_update(game, last_cmd);
   }
 
   game_loop_cleanup(game, gengine);

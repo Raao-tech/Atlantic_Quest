@@ -14,6 +14,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef struct _Game
+{
+  Player  *player;
+  Object  *objects;
+  Space   *spaces[MAX_SPACES];
+  Command *last_cmd;
+
+  int     n_spaces;
+  Bool    finished;
+};
+
 /**
    Game interface implementation
 */

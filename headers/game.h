@@ -20,16 +20,7 @@
 #define MAX_SPACES 100
 
 
-typedef struct _Game
-{
-  Player *player;
-  Object *objects;
-  Space *spaces[MAX_SPACES];
-  Command *last_cmd;
-
-  int n_spaces;
-  Bool finished;
-} Game;
+typedef struct _Game Game;
 
 
 /**

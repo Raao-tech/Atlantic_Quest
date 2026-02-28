@@ -41,15 +41,6 @@ Game* game_create();
  */
 Status game_destroy(Game **game);
 
-/**
- * @brief It creates a game from a file
- * @author Violeta y Rafa
- *
- * @param game a pointer to game
- * @param filename string with the name of the file
- * @return OK, if everything goes well, or ERROR if there was some mistake
- */
-Status game_create_from_file(Game **game, char *filename);
 
 
 /**

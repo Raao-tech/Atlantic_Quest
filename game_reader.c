@@ -4,12 +4,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* Variables a automatizar */
 #define ID_PLAYER 1
 #define ID_OBJECT 11
 #define NAME_OBJC "TNT"
 
-Status game_load_spaces(Game *game, char *filename)
-{
+/* Create the map of videogame.  Load the information from file to the code*/
+Status game_load_spaces(Game *game, char *filename){
   FILE *file = NULL;
   char line[WORD_SIZE] = "";
   char name[WORD_SIZE] = "";
@@ -71,8 +72,8 @@ Status game_load_spaces(Game *game, char *filename)
   return status;
 }
 
-Status game_load_player(Game *game, Id id_player)
-{
+/* Create a player, set its ID */
+Status game_load_player(Game *game, Id id_player){
   if (game == NULL || id_player == NO_ID)
   {
     return ERROR;
@@ -86,7 +87,7 @@ Status game_load_player(Game *game, Id id_player)
   /*set location of the player*/
   return game_set_player_location(game, game_get_space_id_at(game, 0));
 }
-
+/* Create an object on a space, set its ID and its name */
 Status game_load_object(Game *game, Id id_object, char *name)
 {
   if (game == NULL || id_object == NO_ID || name == NULL)

@@ -13,6 +13,7 @@
 
 #include "command.h"
 #include "game.h"
+#include "game_reader.h"
 #include "game_actions.h"
 #include "graphic_engine.h"
 
@@ -62,7 +63,6 @@ int main(int argc, char *argv[])
 
 int game_loop_init(Game **game, Graphic_engine **gengine, char *file_name)
 {
-  
   if (game_create_from_file(game, file_name) == ERROR)
   {
     return 1;

@@ -115,19 +115,19 @@ Status game_create_from_file(Game **game, char *filename)
 
   if (game_load_spaces(*game, filename) == ERROR)
   {
-    game_destroy(*game);
+    game_destroy(game);
     return ERROR;
   }
 
   if (game_load_player(*game, ID_PLAYER) == ERROR)
   {
-    game_destroy(*game);
+    game_destroy(game);
     return ERROR;
   }
 
   if (game_load_object(*game, ID_OBJECT, NAME_OBJC) == ERROR)
   {
-    game_destroy(*game);
+    game_destroy(game);
     return ERROR;
   }
 

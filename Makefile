@@ -39,7 +39,6 @@ game.o: game.c
 graphic_engine.o: graphic_engine.c headers/libscreen.h
 	$(CC) -c $(FLAGS) $< -o $@
 
-
 object.o: object.c
 	$(CC) -c $(FLAGS) $< -o $@
 
@@ -49,6 +48,13 @@ player.o: player.c
 space.o: space.c
 	$(CC) -c $(FLAGS) $< -o $@
 
+
+mandar:
+	zip -r Game_mandar_RaVi.zip ./
+	clear
+
+mandar_rm:
+	rm	Game_mandar_RaVi.zip
 
 .PHONY: clean play debug
 

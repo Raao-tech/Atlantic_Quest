@@ -1,6 +1,8 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "set.h"
+#define ROJO     "\x1b[31m"
+#define RESET     "\x1b[0m"
 
 struct _Set{
     Id*  ids;
@@ -18,13 +20,7 @@ Set*    set_creat(){
         return  NULL;
     }
     newset->n_ids = 0;
-    
-    if((newset->ids = (Id*)malloc(sizeof(Id))) == NULL){
-        return  NULL;
-    }
-
-    newset->ids[0] = NO_ID;
-    
+	newset->ids = NULL;
 
     return newset;
 }
@@ -90,28 +86,49 @@ Status	set_add(Set* pset, Id	 new_id){
 }
 
 Id	set_pop(Set* pset){
-
 	Id id_pop;
 
-	if(!pset){
+	/* Manejo de errores */
+	if(!pset || pset->n_ids == 0){
 		return NO_ID;
 	}
 	if(set_is_empty(pset) == TRUE){
 		return	NO_ID;
 	}
+
+
+	/* Guardamos el valor de id */
+	id_pop = pset->ids[(pset->n_ids)-1]; // se asigna el valor de id (ultimo eleemntos)
+	pset->ids[(pset->n_ids) - 1] = NO_ID;
 	
-	
-	id_pop = pset->ids[pset->n_ids - 1 ];
-	pset->ids[pset->n_ids - 1 ] = NO_ID;
+	if(pset->n_ids == 1){   //Liberamos el array ids si queda un solo elemento
+		free(pset->ids);
+		pset->ids = NULL;
+		pset->n_ids = 0;
+		return id_pop;
+	}
 
-	Id* pset_temp = (Id*)realloc((void *)pset->ids, (sizeof(Id) * (--pset->n_ids)));
+	/* Reducimos el array de ids de pset*/
+	Id* pset_temp = (Id*)realloc((void *)pset->ids, (sizeof(Id) * (pset->n_ids -1)));
+	if(pset_temp){
+		pset->ids = pset_temp;
+	}
 
+	pset->n_ids--;
+	return (id_pop);
+}
 
+Status	set_print(FILE* output, Set*	pset){
+	if(!pset){
+		fprintf(output, ROJO "ERROR: " RESET "There is nothing on the Set of ids\n");
+		return	ERROR;
+	}
 
-	return ();
+	fprintf(output, "**********The ids presents:**********\n");
+	for (int i = 0; i < pset->n_ids; i++){
+	fprintf(output, "\tn_Id (%d):\t" ROJO "%ld" RESET"\n", (i+1), pset->ids[i]);
+	}
+	fprintf(output, "**********END of the Ids*************\n");
 
-	
-
-
-
+	return OK;
 }

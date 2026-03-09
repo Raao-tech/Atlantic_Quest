@@ -7,41 +7,67 @@
  * @date 28-02-2026
  * @copyright GNU Public License
  */
-
 #ifndef SET_H
 #define SET_H
 
 #include "types.h"
+#include <stdio.h>
 
 typedef struct _Set Set;
 
-
 /**
- * @brief It create a set generic, the allocated memory to all ids save on
- * @author Rafa
+ * @brief It creates a new set, initializing the ID array to NULL and counter to 0.
+ * @author Rafael
  *
- * @param n_max the max ids 
- * @return OK, if everything goes well, or ERROR if there was some mistake
+ * @return Pointer to the new set, or NULL if memory allocation fails.
  */
-Set*    set_creat(int   n_max);
+Set*    set_creat();
 
 /**
- * @brief It destroy a set generic, and freeng allocated memory 
- * @author Rafa
+ * @brief It destroys a set, freeing the internal ID array and the set structure itself.
+ * @author Rafael
  *
- * @param n_max the max ids 
- * @return OK, if everything goes well, or ERROR if there was some mistake
+ * @param pset Pointer to the set to be destroyed.
+ * @return OK if everything goes well, or ERROR if the pointer is NULL.
  */
-Status    set_destroy(Set** ppset);
+Status  set_destroy(Set *pset);
 
 /**
- * @brief This function checks whether or not there are IDs in the stack 
- * @author Rafa
+ * @brief This function checks whether or not there are IDs in the set.
+ * @author Rafael
  *
- * @param pset Pointer to object with the stack of the ids
- * @return TRUE if is empty, FALSE when there are elements or the pointer is NULL.
+ * @param pset Pointer to the set object.
+ * @return TRUE if it is empty or NULL, FALSE when there are elements.
  */
 Bool	set_is_empty(Set *pset);
 
+/**
+ * @brief Adds a new ID to the set by reallocating memory for the internal array.
+ * @author Rafael
+ *
+ * @param pset Pointer to the set.
+ * @param new_id The ID to be added.
+ * @return OK if the ID was added successfully, or ERROR if pset is NULL or memory fails.
+ */
+Status	set_add(Set* pset, Id new_id);
+
+/**
+ * @brief Extracts the last ID added to the set (LIFO) and reduces the allocated memory.
+ * @author Rafael
+ *
+ * @param pset Pointer to the set.
+ * @return The extracted ID, or NO_ID if the set is empty or NULL.
+ */
+Id	set_pop(Set* pset);
+
+/**
+ * @brief Prints the contents of the set to the specified output stream.
+ * @author Rafael
+ *
+ * @param output File pointer (e.g., stdout) where the set will be printed.
+ * @param pset Pointer to the set to be printed.
+ * @return OK if successful, or ERROR if pset is NULL.
+ */
+Status	set_print(FILE* output, Set* pset);
 
 #endif

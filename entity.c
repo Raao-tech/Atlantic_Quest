@@ -2,7 +2,7 @@
  * @brief It implements the character struct
  *
  * @file character.c
- * @author Violeta y Rafael
+ * @author Violeta
  * @version 0
  * @date 04-02-2025
  * @copyright GNU Public License

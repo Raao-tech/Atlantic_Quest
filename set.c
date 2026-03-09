@@ -8,50 +8,46 @@ struct _Set{
 };
 
 
-Set*    set_creat(int   n_max){
+Set*    set_creat(){
     Set*    newset = NULL;
     int i;
 
-    if(n_max <0) {
-        return NULL;
-    }
+    
 
     if((newset= (Set*)malloc(sizeof(Set))) == NULL){
         return  NULL;
     }
-    newset->n_ids = n_max;
+    newset->n_ids = 0;
     
-    if((newset->ids = (Id*)malloc(sizeof(Id)*(newset->n_ids))) == NULL){
+    if((newset->ids = (Id*)malloc(sizeof(Id))) == NULL){
         return  NULL;
     }
 
-    for(i = 0; i < newset->n_ids; i++){
-        newset->ids[i] = NO_ID;
-    }
+    newset->ids[0] = NO_ID;
+    
 
     return newset;
 }
 
-Status  set_destroy(Set **ppset){
+Status  set_destroy(Set *pset){
 
     int i;
 
-    if(!ppset || !(*ppset)){
+    if(!pset ){
         return ERROR;
     }
 
-    if((*ppset)->ids){
-        for ( i = 0; i < (*ppset)->n_ids; i++){
-           (*ppset)->ids[i] = NO_ID;
+    if((pset)->ids){
+        for ( i = 0; i < (pset)->n_ids; i++){
+           (pset)->ids[i] = NO_ID;
         }
-        free((*ppset)->ids);
-        (*ppset)->ids = NULL;
+        free((pset)->ids);
+        (pset)->ids = NULL;
     }
 
-    (*ppset)->n_ids = 0;
+    (pset)->n_ids = 0;
 
-    free((*ppset));
-    *ppset = NULL;
+    free((pset));
 
     return OK;
 }
@@ -71,22 +67,7 @@ Bool	set_is_empty(Set *pset){
 	return FALSE;
 }
 
-/* Bool	set_is_full(Set *pset){
 
-    int i;
-
-	if(pset == NULL){
-		return TRUE;
-	}
-
-    for (i = 0; i < ; i++){
-        
-    }
-    
-
-
-	return TRUE;
-} */
 Status	set_add(Set* pset, Id	 new_id){
 
 	/* If pset or new_id don't exist  */
@@ -94,13 +75,43 @@ Status	set_add(Set* pset, Id	 new_id){
 		return	ERROR;
 	}
 
-	if(set_is_full(pset) == TRUE){
-		Id* pset_realloc = (Id*)realloc((void *)pset,2);
-		
-		if(pset_realloc == NULL){
-			return ERROR;
-		}
-
+	//agregamos un espacio en el conjutno de objetos
+	Id* pset_temp = (Id*)realloc((void *)pset->ids, (sizeof(Id) * (pset->n_ids + 1)) );
+	
+	if(pset_temp == NULL){
+		return ERROR;
 	}
+	pset_temp[pset->n_ids] = new_id;
+	pset->n_ids++; 
+
+	pset->ids = pset_temp;
+
+	return	OK;
+}
+
+Id	set_pop(Set* pset){
+
+	Id id_pop;
+
+	if(!pset){
+		return NO_ID;
+	}
+	if(set_is_empty(pset) == TRUE){
+		return	NO_ID;
+	}
+	
+	
+	id_pop = pset->ids[pset->n_ids - 1 ];
+	pset->ids[pset->n_ids - 1 ] = NO_ID;
+
+	Id* pset_temp = (Id*)realloc((void *)pset->ids, (sizeof(Id) * (--pset->n_ids)));
+
+
+
+	return ();
+
+	
+
+
 
 }

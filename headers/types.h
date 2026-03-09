@@ -16,9 +16,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-
+/* Consts to numbers */
 #define WORD_SIZE 1000
 #define NO_ID -1
+
+/* Colors to prints */
+#define ROJO     "\x1b[31m"
+#define VERDE   "\x1b[32m"
+#define RESET   "\x1b[0m"
 
 typedef long Id;
 

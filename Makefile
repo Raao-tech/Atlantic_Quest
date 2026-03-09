@@ -1,62 +1,47 @@
 #######################################
+CC = gcc
+# Busca todos los .c en el directorio actual
+SRCS = $(wildcard *.c)
+# Convierte la lista de .c en .o
+OBJS = $(SRCS:.c=.o)
+
 FLAGS = -g -Wall -O0 -Wextra -I ./headers -Wpedantic -DDEBUG 
 PREFLAG = valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -s
 BD = castle.dat
-DEPENDS = command.o game_actions.o game.o game_loop.o game_reader.o graphic_engine.o object.o player.o space.o
-CC = gcc
 TARGET = castle
 #######################################
 
+all: $(TARGET)
 
-
-run: play
-
-play: $(TARGET)
+run: $(TARGET)
 	./$(TARGET) $(BD)
 
+# Ejecución con Valgrind
 runv: $(TARGET)
-	$(PREFLAG) ./$(TARGET)	$(BD)
+	$(PREFLAG) ./$(TARGET) $(BD)
 
-castle: $(DEPENDS)
-	$(CC) $(FLAGS) $^ -L. -lscreen -o $(TARGET)
+# Linkado final (usando $^ que son todas las dependencias)
+$(TARGET): $(OBJS)
+	$(CC) $(FLAGS) $^ -L. -lscreen -o $@
 
-command.o: command.c
-	$(CC) -c  $(FLAGS) $< -o $@
 
-game_actions.o: game_actions.c
-	$(CC) -c  $(FLAGS) $< -o $@
-
-game_loop.o: game_loop.c
-	$(CC) -c $(FLAGS) $< -o $@
-
-game_reader.o: game_reader.c
+# REGLA DE PATRÓN: Esto sustituye a todas tus reglas individuales (.o: .c)
+# $< es el archivo .c y $@ es el archivo .o
+%.o: %.c
 	$(CC) -c $(FLAGS) $< -o $@
 
 
-game.o: game.c
-	$(CC) -c $(FLAGS) $< -o $@
+	
 
-graphic_engine.o: graphic_engine.c headers/libscreen.h
-	$(CC) -c $(FLAGS) $< -o $@
-
-object.o: object.c
-	$(CC) -c $(FLAGS) $< -o $@
-
-player.o: player.c
-	$(CC) -c $(FLAGS) $< -o $@
-
-space.o: space.c
-	$(CC) -c $(FLAGS) $< -o $@
-
-
-mandar:
+# Empaquetado
+mandar: clean
 	zip -r Game_mandar_RaVi.zip ./
 	clear
 
 mandar_rm:
-	rm	Game_mandar_RaVi.zip
+	rm -f Game_mandar_RaVi.zip
 
-.PHONY: clean play debug
+.PHONY: clean run runv mandar mandar_rm
 
 clean:
-	rm -f *.o *.gch $(TARGET)
+	rm -f *.o *.gch $(TARGET) Game_mandar_RaVi.zip

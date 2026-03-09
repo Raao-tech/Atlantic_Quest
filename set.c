@@ -1,8 +1,17 @@
+/**
+ * @brief It implements the set structure
+ *
+ * @file set.c
+ * @author Profesores PPROG
+ * @version 0
+ * @date 27-01-2025
+ * @copyright GNU Public License
+ */
+
 #include "stdio.h"
 #include "stdlib.h"
 #include "set.h"
-#define ROJO     "\x1b[31m"
-#define RESET     "\x1b[0m"
+
 
 struct _Set{
     Id*  ids;
@@ -12,9 +21,6 @@ struct _Set{
 
 Set*    set_creat(){
     Set*    newset = NULL;
-    int i;
-
-    
 
     if((newset= (Set*)malloc(sizeof(Set))) == NULL){
         return  NULL;
@@ -49,8 +55,6 @@ Status  set_destroy(Set *pset){
 }
 
 Bool	set_is_empty(Set *pset){
-
-    int i;
 
 	if(pset == NULL){
 		return	FALSE;

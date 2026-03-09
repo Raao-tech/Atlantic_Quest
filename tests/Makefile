@@ -11,13 +11,19 @@ OBJS = $(SRCS:.c=.o)
 
 
 
-# Regla principal para generar el ejecutable del test
+# Regla para generar el ejecutable del test set
 test_set: $(OBJS)
 	$(CC) $(FLAGS) $(OBJS) -o $@
+
+
+
+
 
 # Regla genérica para convertir cualquier .c en .o
 %.o: %.c
 	$(CC) -c $(FLAGS) $< -o $@
+
+
 
 
 

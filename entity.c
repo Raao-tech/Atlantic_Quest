@@ -1,5 +1,5 @@
 /**
- * @brief It implements the character struct
+ * @brief It implements the entity struct
  *
  * @file character.c
  * @author Violeta
@@ -10,80 +10,186 @@
 
 #include "entity.h"
 
-#define TAM 6
 
 /**
- * @brief character
+ * @brief Entity
  *
- * This struct stores all the information of a character.
+ * This struct stores all the information of a Entity.
  */
-struct _Entity
-{
+struct _Entity{
   Id id;                    /*!< Id number of the object, it must be unique */
-  char name[WORD_SIZE + 1]; /*!< Name of the object */
-  char gdesc[TAM];
   int health;
+  char *gdesc;
   char *message;
+  char *name;
 };
 
-Entity *entity_create()
-{
+Entity *entity_create(){
   Entity *newEntity = NULL;
 
   newEntity = (Entity *)malloc(sizeof(Entity));
-  if (newEntity == NULL)
-  {
-    return NULL;
-  }
+  if (newEntity == NULL) {return NULL;}
 
   /* Initialization of an empty character*/
   newEntity->id = NO_ID;
-  *newEntity->name = '\0';
-  *newEntity->gdesc = '\0';
+  newEntity->gdesc = NULL;
+  newEntity->name = NULL;
+  newEntity->message = NULL;
   newEntity->health = 0;
   
   return newEntity;
 }
 
 
-Status entity_destroy(Entity *entity)
-{
-  if (!entity)
-  {
+Status entity_destroy(Entity *entity){
+  if (!entity){
     return ERROR;
   }
 
+  free(entity->gdesc);
+  free(entity->name);
   free(entity->message);
   free(entity);
 
   return OK;
 }
 
+Status  entity_set_name(Entity *entity, char*  name){
+  int   length_name;
 
-Status entity_set_name(Entity *entity, char *name)
-{
-  if (!entity || !name)
-  {
+  if(!entity || !name){
+    return  ERROR;
+  }
+
+  /* Calculamos el tamaño del name sin el \0  */
+  length_name = strlen(name);
+
+  /*  Si existe name, liberalo*/
+  if(entity->name){
+    free  (entity->name);
+    entity->name = NULL;
+  }
+
+  /* Reservamos memoria (4 + 1 = 5 bytes para "Hola\0") */
+  entity->name = (char *) calloc(length_name + 1, sizeof(char));
+
+  /* VALIDAR la reserva de memoria antes de copiar */
+  if (entity->name == NULL) {
     return ERROR;
   }
 
-  if (!strcpy(entity->name, name))
-  {
-    return ERROR;
-  }
+  /* Copiamos (strcpy copia los caracteres y el \0 automáticamente) */
+  strcpy(entity->name, name);
 
   return OK;
 }
 
-char *entity_get_name(Entity *entity)
-{
-  if (!entity)
-  {
+char*  entity_get_name(Entity *entity){
+  if(!entity || !entity->name){
     return NULL;
   }
 
-  return entity->name;
+  return  strdup(entity->name);
 }
+
+
+Status  entity_set_gdesc(Entity *entity, char*  desc){
+  int   length_desc;
+
+  if(!entity || !desc){
+    return  ERROR;
+  }
+
+  /* Calculamos el tamaño del desc sin el \0  */
+  length_desc = strlen(desc);
+
+  /*  Si existe gdesc, liberalo*/
+  if(entity->gdesc){
+    free  (entity->gdesc);
+    entity->gdesc = NULL;
+  }
+
+  /* Reservamos memoria (4 + 1 = 5 bytes para "Hola\0") */
+  entity->gdesc = (char *) calloc(length_desc + 1, sizeof(char));
+
+  /* VALIDAR la reserva de memoria antes de copiar */
+  if (entity->gdesc == NULL) {
+    return ERROR;
+  }
+
+  /* Copiamos (strcpy copia los caracteres y el \0 automáticamente) */
+  strcpy(entity->gdesc, desc);
+
+  return OK;
+}
+
+char*  entity_get_gdesc(Entity *entity){
+  if(!entity || !entity->gdesc){
+    return NULL;
+  }
+
+  return  strdup(entity->gdesc);
+}
+
+
+Status  entity_set_message(Entity *entity, char*  message){
+  int   length_message;
+
+  if(!entity || !message){
+    return  ERROR;
+  }
+
+  /* Calculamos el tamaño del message sin el \0  */
+  length_message = strlen(message);
+
+  /*  Si existe message, liberalo*/
+  if(entity->message){
+    free  (entity->message);
+    entity->message = NULL;
+  }
+
+  /* Reservamos memoria (4 + 1 = 5 bytes para "Hola\0") */
+  entity->message = (char *) calloc(length_message + 1, sizeof(char));
+
+  /* VALIDAR la reserva de memoria antes de copiar */
+  if (entity->message == NULL) {
+    return ERROR;
+  }
+
+  /* Copiamos (strcpy copia los caracteres y el \0 automáticamente) */
+  strcpy(entity->message, message);
+
+  return OK;
+}
+
+char*  entity_get_message(Entity *entity){
+  if(!entity || !entity->message){
+    return NULL;
+  }
+
+  return  strdup(entity->message);
+}
+
+
+Status  entity_set_health(Entity *entity, int value){
+  if(!entity || value < MIN_LIFE || value > MAX_LIFE){
+    return  ERROR;
+  }
+  
+  entity->health = value;
+
+  return OK;
+}
+
+int entity_get_health(Entity *entity){
+  if(!entity){
+    return ERROR_LIFE;
+  }
+
+  return  entity->health;
+}
+
+
 
 
 /*

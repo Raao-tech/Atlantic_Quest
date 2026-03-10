@@ -179,30 +179,34 @@ void game_actions_right(Game *game)
 
   return;
 }
+
 void game_actions_take(Game *game)
 {
-
-  Id space_id = NO_ID;
   Id obj_id = NO_ID;
+  Id space_id = NO_ID;
+  char *obj_name = NULL;
 
   space_id = game_get_player_location(game);
+  obj_name = command_get_obj(game_get_last_command(game));
+
+  obj_id=game_get_obj_id_from_name(obj_name);
 
   if (NO_ID == space_id)
   {
     return;
   }
-  obj_id = game_get_object_id(game);
-  if (obj_id == NO_ID)
-  {
-    return;
-  }
 
-  if (game_player_take(game, obj_id) == ERROR)
-  {
+  if (game_is_obj_in_space(space_id, obj_id) == FALSE){
     return;
   }
+  
+  if (game_set_player_object(game, obj_id) == ERROR) return;
+
+  if (game_delete_space_object(space_id, obj_id) == ERROR) return;
+  
   return;
 }
+
 
 void game_actions_drop(Game *game)
 {

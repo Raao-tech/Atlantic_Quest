@@ -26,6 +26,7 @@ char *cmd_to_str[N_CMD][N_CMDT] = {{"", "No command"}, {"", "Unknown"}, {"e", "E
  */
 struct _Command
 {
+  char *obj;
   CommandCode code; /*!< Name of the command */
 };
 
@@ -46,7 +47,7 @@ Command *command_create()
 
   /* Initialization of an empty command*/
   newCommand->code = NO_CMD;
-
+  newCommand ->obj = NULL;
   return newCommand;
 }
 
@@ -93,7 +94,10 @@ Status command_get_user_input(Command *command)
   {
     return ERROR;
   }
-
+  if (command->obj) {
+    free(command->obj);
+    command->obj= NULL;
+  }
   if (fgets(input, CMD_LENGHT, stdin))
   {
     token = strtok(input, " \n");
@@ -114,6 +118,9 @@ Status command_get_user_input(Command *command)
         i++;
       }
     }
+    token = strtok(input, " \n");
+    if (token)
+      command->obj = strdup(token);
     return command_set_code(command, cmd);
   }
 

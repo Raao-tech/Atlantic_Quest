@@ -89,7 +89,6 @@ Status game_destroy(Game **game)
 
 
 
-
 /* Functions to sets properties of the game */
 Status game_create_player(Game *game, Id id_player)
 {
@@ -206,32 +205,7 @@ Id game_get_player_location(Game *game)
   return player_get_space(game->player);
 }
 
-Status game_player_take(Game *game, Id id_obj)
-{
-  Space *space_on = NULL;
-  Id location_player = NO_ID;
 
-  if (!game || id_obj == NO_ID)
-    return ERROR;
-
-  if (player_get_obj(game->player) != NO_ID)
-    return ERROR;
-
-  location_player = player_get_space(game->player);
-  if (location_player == NO_ID)
-    return ERROR;
-
-  space_on = game_get_space(game, location_player);
-  if (!space_on)
-    return ERROR;
-
-  /* Just if object is on the room*/
-  if (space_get_object(space_on) != id_obj)
-    return ERROR;
-
-  space_set_object(space_on, NO_ID);
-  return player_set_obj(game->player, id_obj);
-}
 
 Status game_player_drop(Game *game)
 {
@@ -300,12 +274,15 @@ Bool game_get_finished(Game *game)
   return game->finished;
 }
 
-Id game_get_object_id(Game *game)
-{
-  if (!game || !game->objects)
-    return NO_ID;
-  return obj_get_id(game->objects);
+Bool game_is_obj_in_space(space_id, obj_id){
+
+//aquí tiene q llamar a una fc space_contains_object
+
+return space_contains_object(space_id, obj_id);
+
 }
+
+
 int game_get_n_spaces(Game *game)
 {
   if (!game)

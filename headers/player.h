@@ -39,6 +39,23 @@ Player *player_create();
 Status player_destroy(Player *player);
 
 /**
+ * @brief It sets the id
+ * @author Rafael
+ *
+ * @param player a pointer to the player
+ * @param new_id a value of the new id
+ * @return OK, if everything goes well, or ERROR if there was some mistake
+ */
+Status  player_set_id(Player  *player, Id new_id);
+/**
+ * @brief It gets the id
+ * @author Rafael
+ *
+ * @param player a pointer to the player
+ * @return the player's id
+ */
+Id  player_get_id(Player  *player);
+/**
  * @brief It sets the name of a player
  * @author Violeta y Rafa
  *

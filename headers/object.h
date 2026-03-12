@@ -21,11 +21,9 @@ typedef struct _Object Object;
  * @brief It creates a new object, allocating memory and initializing it
  * @author Violeta y Rafa
  *
- * @param id the identification number for the new object
- * @param name a string with the name for the new object
  * @return a new object, initialized
  */
-Object *obj_create(Id id, char *name);
+Object *obj_create();
 
 /**
  * @brief It destroys an object, freeing the allocated memory
@@ -64,23 +62,6 @@ char *obj_get_name(Object *obj);
  */
 Id obj_get_id(Object *obj);
 
-/**
- * @brief It prints the object name
- * @author Violeta y Rafa
- *
- * @param obj a pointer to the object
- * @return OK, if everything goes well, or ERROR if there was some mistake
- */
-Status obj_print_name(Object *obj);
-
-/**
- * @brief It prints the object id
- * @author Violeta y Rafa
- *
- * @param obj a pointer to the object
- * @return OK, if everything goes well, or ERROR if there was some mistake
- */
-Status obj_print_id(Object *obj);
 
 /**
  * @brief It prints the object information

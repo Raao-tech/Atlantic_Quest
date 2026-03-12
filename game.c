@@ -30,56 +30,40 @@ struct _Game {
 
 
 /* Functions to create the game */
-Game* game_create()
-{
+Game* game_create(){
   int i;
   Game  *game  = NULL;
 
   game = (Game *)malloc(sizeof(Game)); 
 
-  if(!game)
-  {
-    return ERROR;
-  }
+  if(!game) return ERROR;
 
-  for (i = 0; i < MAX_SPACES; i++)
-  {
+  for (i = 0; i < MAX_SPACES; i++){
     game->spaces[i] = NULL;
   }
 
-  game->n_spaces = 0;
-  game->player = NULL;
-  game->objects = NULL;
-  game->last_cmd = command_create();
-  game->finished = FALSE;
+  game->n_spaces =  0;
+  game->player =    player_create();
+  game->objects =   NULL;
+  game->last_cmd =  command_create();
+  game->finished =  FALSE;
 
   return game;
 }
 
-Status game_destroy(Game **game)
-{
+Status game_destroy(Game **game){
   int i = 0;
-  if (game == NULL || *game == NULL)
-  {
+  if (game == NULL || *game == NULL){
     return ERROR;
   }
 
-  for (i = 0; i < (*game)->n_spaces; i++)
-  {
-    if(space_destroy((*game)->spaces[i]) == ERROR){
-      return  ERROR;
-    }
+  for (i = 0; i < (*game)->n_spaces; i++){
+    if(space_destroy((*game)->spaces[i]) == ERROR) return  ERROR;
   }
 
-  if ((player_destroy((*game)->player) == ERROR) || (obj_destroy((*game)->objects) == ERROR))
-  {
-    return ERROR;
-  }
+  if ((player_destroy((*game)->player) == ERROR) || (obj_destroy((*game)->objects) == ERROR)) return ERROR;
 
-  if (command_destroy((*game)->last_cmd) == ERROR)
-  {
-    return ERROR;
-  }
+  if (command_destroy((*game)->last_cmd) == ERROR)  return ERROR;
 
   free(*game);
   *game = NULL;
@@ -89,30 +73,23 @@ Status game_destroy(Game **game)
 
 
 
-/* Functions to sets properties of the game */
+/* Functions to sets properties of the game *//* 
 Status game_create_player(Game *game, Id id_player)
 {
-  if (game == NULL)
-  {
-    return ERROR;
-  }
+  if (game == NULL) return ERROR;
 
   game->player = player_create(id_player);
 
   return OK;
 }
 
-Status game_create_object(Game *game, Id id_obj, char *name)
-{
-  if (game == NULL)
-  {
-    return ERROR;
-  }
+Status game_create_object(Game *game, Id id_obj, char *name){
+  if (game == NULL) return ERROR;
 
   game->objects = obj_create(id_obj, name);
 
   return OK;
-}
+} */
 
 Status game_set_object_location(Game *game, Id space_id)
 {

@@ -12,6 +12,8 @@
 #define SPACE_H
 
 #include "types.h"
+#include "set.h"
+#include "character.h"
 
 typedef struct _Space Space;
 
@@ -19,10 +21,9 @@ typedef struct _Space Space;
  * @brief It creates a new space, allocating memory and initializing its members
  * @author Profesores PPROG
  *
- * @param id the identification number for the new space
  * @return a new space, initialized
  */
-Space *space_create(Id id);
+Space *space_create();
 
 /**
  * @brief It destroys a space, freeing the allocated memory
@@ -32,6 +33,16 @@ Space *space_create(Id id);
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
 Status space_destroy(Space *space);
+
+/**
+ * @brief It sets the id of a space
+ * @author Profesores PPROG
+ *
+ * @param space a pointer to the space
+ * @param new_id a value with the id of space
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status space_set_id(Space *space, Id new_id);
 
 /**
  * @brief It gets the id of a space

@@ -17,13 +17,14 @@
  * This struct stores all the information of a Entity.
  */
 struct _Entity{
-  Id id;                    /*!< Id number of the object, it must be unique */
-  int health;
-  char *gdesc;
-  char *message;
-  char *name;
+  Id    id;                   /*!< Id number of the object, it must be unique */
+  int   health;
+  char  *gdesc;
+  char  *message;
+  char  *name;
 };
 
+/* create or destroy */
 Entity *entity_create(){
   Entity *newEntity = NULL;
 
@@ -40,7 +41,6 @@ Entity *entity_create(){
   return newEntity;
 }
 
-
 Status entity_destroy(Entity *entity){
   if (!entity){
     return ERROR;
@@ -54,6 +54,23 @@ Status entity_destroy(Entity *entity){
   return OK;
 }
 
+
+/* id */
+Status  entity_set_id(Entity *entity, Id new_id){
+  if(!entity) return ERROR;
+
+  entity->id = new_id;
+  return OK;
+}
+
+Id  entity_get_id(Entity *entity){
+  if(!entity) return ERROR;
+
+  return entity->id;
+}
+
+
+/* name */
 Status  entity_set_name(Entity *entity, char*  name){
   int   length_name;
 
@@ -93,6 +110,7 @@ char*  entity_get_name(Entity *entity){
 }
 
 
+/* gdesc */
 Status  entity_set_gdesc(Entity *entity, char*  desc){
   int   length_desc;
 
@@ -132,6 +150,7 @@ char*  entity_get_gdesc(Entity *entity){
 }
 
 
+/* message */
 Status  entity_set_message(Entity *entity, char*  message){
   int   length_message;
 
@@ -171,20 +190,16 @@ char*  entity_get_message(Entity *entity){
 }
 
 
+/* health */
 Status  entity_set_health(Entity *entity, int value){
-  if(!entity || value < MIN_LIFE || value > MAX_LIFE){
-    return  ERROR;
-  }
+  if(!entity || value < MIN_LIFE || value > MAX_LIFE) return  ERROR;
   
   entity->health = value;
-
   return OK;
 }
 
 int entity_get_health(Entity *entity){
-  if(!entity){
-    return ERROR_LIFE;
-  }
+  if(!entity) return ERROR_LIFE;
 
   return  entity->health;
 }

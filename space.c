@@ -15,87 +15,101 @@
  *
  * This struct stores all the information of a space.
  */
-struct _Space
-{
+struct _Space{
   Id id;                    /*!< Id number of the space, it must be unique */
   char name[WORD_SIZE + 1]; /*!< Name of the space */
+  Character *character;      /* !<Character */
   Id north;                 /*!< Id of the space at the north */
   Id south;                 /*!< Id of the space at the south */
   Id east;                  /*!< Id of the space at the east */
   Id west;                  /*!< Id of the space at the west */
-  Id obj_id;                /*!< Whether the space has an object or not */
+  Set*  objs;
 };
 
 /** space_create allocates memory for a new space
  *  and initializes its members
  */
-Space *space_create(Id id)
-{
+Space *space_create(){
   Space *newSpace = NULL;
 
   /* Error control */
-  if (id == NO_ID)
-  {
-    return NULL;
-  }
-
   newSpace = (Space *)calloc(1, sizeof(Space));
-  if (newSpace == NULL)
-  {
-    return NULL;
-  }
+  if (!newSpace) return NULL;
 
   /* Initialization of an empty space*/
-  newSpace->id = id;
+  newSpace->id = NO_ID;
   newSpace->name[0] = '\0';
   newSpace->north = NO_ID;
   newSpace->south = NO_ID;
   newSpace->east = NO_ID;
   newSpace->west = NO_ID;
-  newSpace->obj_id = NO_ID;
+  newSpace->objs = set_creat();
+  newSpace->character = character_create();
+
+  if( !newSpace->objs || !newSpace->character) return NULL;
 
   return newSpace;
 }
-Status space_destroy(Space *space)
-{
-  if (!space)
-  {
-    return ERROR;
-  }
-
+Status space_destroy(Space *space){
+  if (!space) return ERROR;
+  
+  if(set_destroy(space->objs) == ERROR) return ERROR;
+  
   free(space);
   return OK;
 }
 
-Id space_get_id(Space *space)
-{
-  if (!space)
-  {
-    return NO_ID;
-  }
-  return space->id;
-}
-Status space_set_name(Space *space, char *name)
-{
-  if (!space || !name)
-  {
-    return ERROR;
-  }
 
-  if (!strcpy(space->name, name))
-  {
-    return ERROR;
-  }
+
+Status space_set_id(Space *space, Id new_id){
+  if(!space) return ERROR;
+
+  space->id = new_id;
   return OK;
 }
-const char *space_get_name(Space *space)
-{
-  if (!space)
-  {
-    return NULL;
-  }
+Id space_get_id(Space *space){
+  if (!space) return NO_ID;
+  
+  return space->id;
+}
+
+Status space_set_name(Space *space, char *name){
+  if (!space || !name) return ERROR;
+
+  if (!strcpy(space->name, name)) return ERROR;
+  
+  return OK;
+}
+const char *space_get_name(Space *space){
+  if (!space) return NULL;
+  
   return space->name;
 }
+
+
+
+/* functions to objetc */
+Status space_set_object(Space *space, Id id){
+  if (!space) return ERROR;
+
+
+  return OK;
+}
+Id space_get_object(Space *space){
+  if (!space) return FALSE;
+  
+
+  return  ;
+}
+
+
+
+
+
+
+
+
+
 
 /* functions to sets to neitghboors */
 Status space_set_north(Space *space, Id id)
@@ -169,28 +183,8 @@ Id space_get_west(Space *space)
   return space->west;
 }
 
-/* functions to objetc */
-Status space_set_object(Space *space, Id id)
-{
-  if (!space)
-  {
-    return ERROR;
-  }
-  space->obj_id = id;
-  return OK;
-}
 
-Id space_get_object(Space *space)
-{
-  if (!space)
-  {
-    return FALSE;
-  }
-  return space->obj_id;
-}
-
-Status space_print(Space *space)
-{
+Status space_print(Space *space){
   Id idaux = NO_ID;
 
   /* Error Control */

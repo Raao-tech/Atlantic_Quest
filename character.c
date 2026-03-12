@@ -23,6 +23,7 @@ struct _Character{
   Bool friendly;
 };
 
+/* create or destroy */
 Character *character_create(){
   /* Creamos el espacio para el character */
   Character *newCharacter = (Character *) malloc(sizeof(Character));
@@ -41,7 +42,6 @@ Character *character_create(){
   return newCharacter;
 }
 
-
 Status character_destroy(Character *character)
 {
   if (!character){
@@ -54,6 +54,20 @@ Status character_destroy(Character *character)
   return OK;
 }
 
+/* id */
+Status  character_set_id(Character *character, Id new_id){
+  if(!character) return ERROR;
+
+  return  entity_set_id(character, new_id);
+}
+
+Id  character_get_id(Character *character){
+  if(!character) return NO_ID;
+
+  return  entity_get_id(character);
+}
+
+/* name */
 Status character_set_name(Character *character, char *name){
   if (!character || !name) return ERROR;
 
@@ -69,6 +83,7 @@ char *character_get_name(Character *character){
   return entity_get_name(character->e_character);
 }
 
+/* friendly */
 Status character_set_friendly(Character *character, Bool value){
 
   if (!character) return ERROR;
@@ -79,7 +94,7 @@ Status character_set_friendly(Character *character, Bool value){
 }
 
 Bool character_get_friendly(Character *character){
-  if (!character)return TRUE;
+  if (!character) return TRUE;
 
   return character->friendly;
 }

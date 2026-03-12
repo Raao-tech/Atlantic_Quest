@@ -24,8 +24,7 @@ char *cmd_to_str[N_CMD][N_CMDT] = {{"", "No command"}, {"", "Unknown"}, {"e", "E
  *
  * This struct stores all the information related to a command.
  */
-struct _Command
-{
+struct _Command{
   char *obj;
   CommandCode code; /*!< Name of the command */
 };
@@ -33,17 +32,12 @@ struct _Command
 /** space_create allocates memory for a new space
  *  and initializes its members
  */
-Command *command_create()
-{
-
+Command *command_create(){
   Command *newCommand = NULL;
 
   newCommand = (Command *)calloc(1, sizeof(Command));
 
-  if (newCommand == NULL)
-  {
-    return NULL;
-  }
+  if (newCommand == NULL) return NULL;
 
   /* Initialization of an empty command*/
   newCommand->code = NO_CMD;
@@ -51,72 +45,51 @@ Command *command_create()
   return newCommand;
 }
 
-Status command_destroy(Command *command)
-{
-  if (!command)
-  {
-    return ERROR;
-  }
+Status command_destroy(Command *command){
+  if (!command) return ERROR;
 
   free(command);
   command = NULL;
   return OK;
 }
 
-Status command_set_code(Command *command, CommandCode code)
-{
-  if (!command)
-  {
-    return ERROR;
-  }
+Status command_set_code(Command *command, CommandCode code){
+  if (!command) return ERROR;
 
   command->code = code;
 
   return OK;
 }
 
-CommandCode command_get_code(Command *command)
-{
-  if (!command)
-  {
-    return NO_CMD;
-  }
+CommandCode command_get_code(Command *command){
+  if (!command) return NO_CMD;
+  
   return command->code;
 }
 
-Status command_get_user_input(Command *command)
-{
-  char input[CMD_LENGHT] = "", *token = NULL;
+Status command_get_user_input(Command *command){
+  char  input[CMD_LENGHT] = '\0';
+  char  *token = NULL;
   int i = UNKNOWN - NO_CMD + 1;
   CommandCode cmd;
 
-  if (!command)
-  {
-    return ERROR;
-  }
+  if (!command) return ERROR;
+
   if (command->obj) {
     free(command->obj);
     command->obj= NULL;
   }
-  if (fgets(input, CMD_LENGHT, stdin))
-  {
+  
+  if (fgets(input, CMD_LENGHT, stdin)){
     token = strtok(input, " \n");
-    if (!token)
-    {
-      return command_set_code(command, UNKNOWN);
-    }
+    if (!token) return command_set_code(command, UNKNOWN);
 
     cmd = UNKNOWN;
-    while (cmd == UNKNOWN && i < N_CMD)
-    {
+    while (cmd == UNKNOWN && i < N_CMD){
       if (!strcasecmp(token, cmd_to_str[i][CMDS]) || !strcasecmp(token, cmd_to_str[i][CMDL]))
-      {
         cmd = i + NO_CMD;
-      }
       else
-      {
         i++;
-      }
     }
     token = strtok(input, " \n");
     if (token)

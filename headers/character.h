@@ -35,6 +35,8 @@ Character *character_create();
  */
 Status character_destroy(Character *character);
 
+Status  character_set_id(Character *character, Id new_id);
+Id  character_get_id(Character *character);
 /**
  * @brief It sets the name of a character
  * @author Violeta y Rafa
@@ -46,17 +48,6 @@ Status character_destroy(Character *character);
 Status character_set_name(Character *character, char *name);
 
 /**
- * @brief It sets the relationship status of a character
- * @author Violeta y Rafa
- *
- * @param character a pointer to the character
- * @param value boolean value to see if it's friendly or unfriendly
- * @return OK, if everything goes well, or ERROR if there was some mistake
- */
-Status character_set_friendly(Character *character, Bool value);
-
-
-/**
  * @brief It gets the name of a character
  * @author Violeta y Rafa
  *
@@ -65,6 +56,15 @@ Status character_set_friendly(Character *character, Bool value);
  */
 char *character_get_name(Character *character);
 
+/**
+ * @brief It sets the relationship status of a character
+ * @author Violeta y Rafa
+ *
+ * @param character a pointer to the character
+ * @param value boolean value to see if it's friendly or unfriendly
+ * @return OK, if everything goes well, or ERROR if there was some mistake
+ */
+Status character_set_friendly(Character *character, Bool value);
 
 /**
  * @brief It gets the relationship status of a character

@@ -22,6 +22,7 @@ struct _Player{
   Set *objects;
 };
 
+/* player */
 Player *player_create(){
   /* Creamos espacio  para el player */
   Player *newPlayer = (Player *) malloc(sizeof(Player));
@@ -58,7 +59,19 @@ Status player_destroy(Player *player){
   return OK;
 }
 
+/* id */
+Status  player_set_id(Player  *player, Id new_id){
+  if(!player || !(player->e_player)) return ERROR;
 
+  return entity_set_id(player->e_player, new_id);
+}
+Id  player_get_id(Player  *player){
+  if(!player || !(player->e_player)) return NO_ID;
+
+  return entity_get_id(player->e_player);
+}
+
+/* name */
 Status player_set_name(Player *player, char *name){
   if (!player || !name) return ERROR;
 
@@ -73,8 +86,7 @@ char *player_get_name(Player *player){
   return entity_get_name(player->e_player);
 }
 
-
-
+/* health */
 Status  player_set_health(Player *player, int life){
     if(!player || !player->e_player) return ERROR;
 

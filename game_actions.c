@@ -196,9 +196,7 @@ void game_actions_take(Game *game)
     return;
   }
 
-  if (game_is_obj_in_space(space_id, obj_id) == FALSE){
-    return;
-  }
+  if (game_is_obj_in_space(space_id, obj_id) == FALSE) return;
   
   if (game_set_player_object(game, obj_id) == ERROR) return;
 
@@ -208,22 +206,14 @@ void game_actions_take(Game *game)
 }
 
 
-void game_actions_drop(Game *game)
-{
-
+void game_actions_drop(Game *game){
   Id space_id = NO_ID;
 
   space_id = game_get_player_location(game);
 
-  if (NO_ID == space_id)
-  {
-    return;
-  }
+  if (NO_ID == space_id) return;
 
-  if (game_player_drop(game) == ERROR)
-  {
-    return;
-  }
-
+  if (game_player_drop(game) == ERROR) return;
+  
   return;
 }

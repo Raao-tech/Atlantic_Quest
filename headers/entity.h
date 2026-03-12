@@ -38,6 +38,25 @@ Entity *entity_create();
 Status entity_destroy(Entity *entity);
 
 /**
+ * @brief It sets the id
+ * @author Rafael
+ *
+ * @param entity a pointer to the entity
+ * @param new_id a value of the new id
+ * @return OK, if everything goes well, or ERROR if there was some mistake
+ */
+Status  entity_set_id(Entity *entity, Id new_id);
+
+/**
+ * @brief It return the id
+ * @author Rafael
+ *
+ * @param entity a pointer to the entity
+ * @return the entity's id
+ */
+Id  entity_get_id(Entity *entity);
+
+/**
  * @brief It sets the name of an entity
  * @author Violeta
  *

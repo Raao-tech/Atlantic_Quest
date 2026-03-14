@@ -98,25 +98,25 @@ Status	set_reduce(Set *pset, int dest_address){
 
 
 /* add, delete, contains_id, and get_n_ids */
-Bool	set_contains_id(Set *pset, Id _id){
+Bool	set_contains_id(Set *pset, Id ref_id){
 	int	i;
 	if(!pset) return FALSE;
 
 	for (i = 0; i < pset->n_ids; i++){
-		if(pset->ids[i] == _id)	return TRUE;
+		if(pset->ids[i] == ref_id)	return TRUE;
 	}
 
 	return FALSE;
 }
 Status	set_add(Set	*pset, Id	 new_id){
-
+	Id* pset_temp = NULL;
 	/* If pset or new_id don't exist  */
 	if(pset == NULL || new_id == NO_ID) return	ERROR;
 
 	if( set_contains_id(pset, new_id) == TRUE) return OK;
 
 	//agregamos un espacio en el conjutno de objetos
-	Id* pset_temp = (Id*)realloc((void *)pset->ids, (sizeof(Id) * (pset->n_ids + 1)) );
+	pset_temp = (Id*)realloc((void *)pset->ids, (sizeof(Id) * (pset->n_ids + 1)) );
 	
 	if(pset_temp == NULL) return ERROR;
 	
@@ -138,7 +138,7 @@ Status	set_delete_id(Set *pset, Id trash_id){
 	return ERROR;
 }
 int		set_get_n_ids(Set *pset){
-	if(!pset) return -1;
+	if(!pset) return ERROR_MAIN;
 	return	pset->n_ids;
 }
 

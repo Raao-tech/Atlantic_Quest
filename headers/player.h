@@ -76,6 +76,11 @@ char *player_get_name(Player *player);
 
 
 
+Status  player_set_attack(Player *player, int value);
+int  player_get_attack(Player *player);
+
+
+
 
 
 /**

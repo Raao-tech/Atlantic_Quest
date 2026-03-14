@@ -44,27 +44,6 @@ Status game_destroy(Game **game);
 
 
 /**
- * @brief It creates a new player, allocating memory and initializing it
- * @author Violeta y Rafa
- *
- * @param game a pointer to game
- * @param id_player the player's ID
- * @return OK, if everything goes well, or ERROR if there was some mistake
- */
-Status game_create_player(Game *game, Id id_player);
-
-/**
- * @brief It creates a new object, allocating memory and initializing it
- * @author Violeta y Rafa
- *
- * @param game a pointer to game
- * @param id_obj the object's ID
- * @param name string of the object's name
- * @return OK, if everything goes well, or ERROR if there was some mistake
- */
-Status game_create_object(Game *game, Id id_obj, char *name);
-
-/**
  * @brief Sets the location of a player
  * @author Violeta y Rafa
  *

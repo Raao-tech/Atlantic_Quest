@@ -99,8 +99,14 @@ int player_get_health(Player *player){
   return  entity_get_health(player->e_player);
 }
 
-
-
+Status  player_set_attack(Player *player, int value){
+  if(!player) return ERROR;
+  return entity_set_attack(player->e_player, value);
+}
+int  player_get_attack(Player *player){
+  if(!player) return ERROR_ATTACK;
+  return entity_get_attack(player->e_player);
+}
 
 
 

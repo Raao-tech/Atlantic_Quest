@@ -3,8 +3,8 @@
  *
  * @file space.h
  * @author Profesores PPROG
- * @version 0
- * @date 27-01-2025
+ * @version 2
+ * @date 24-01-2026
  * @copyright GNU Public License
  */
 
@@ -13,7 +13,9 @@
 
 #include "types.h"
 #include "set.h"
-#include "character.h"
+
+#define MAX_LINE 5
+#define MAX_CHAR 9
 
 typedef struct _Space Space;
 
@@ -68,9 +70,130 @@ Status space_set_name(Space *space, char *name);
  * @author Profesores PPROG
  *
  * @param space a pointer to the space
- * @return  a string with the name of the space
+ * @return a string with the name of the space
  */
 const char *space_get_name(Space *space);
+
+
+/* ========== Objects (Set of Ids) ========== */
+
+/**
+ * @brief It adds an object id to the space
+ * @author Violeta y Rafa
+ *
+ * @param space a pointer to the space
+ * @param new_id the id of the object to add
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status space_set_object(Space *space, Id new_id);
+
+/**
+ * @brief It checks whether an object id is in the space
+ * @author Violeta y Rafa
+ *
+ * @param space a pointer to the space
+ * @param id_obj the id of the object to search for
+ * @return TRUE if found, FALSE otherwise
+ */
+Bool space_contains_object(Space *space, Id id_obj);
+
+/**
+ * @brief It removes an object id from the space
+ * @author Violeta y Rafa
+ *
+ * @param space a pointer to the space
+ * @param id_obj the id of the object to remove
+ * @return OK if removed, ERROR if not found or space is NULL
+ */
+Status space_remove_object(Space *space, Id id_obj);
+
+/**
+ * @brief It returns the number of objects in the space
+ * @author Violeta y Rafa
+ *
+ * @param space a pointer to the space
+ * @return number of objects, or ERROR_MAIN if space is NULL
+ */
+int space_get_n_objects(Space *space);
+
+
+/* ========== Characters (Set of Ids) ========== */
+
+/**
+ * @brief It adds a character id to the space
+ * @author Violeta y Rafa
+ *
+ * @param space a pointer to the space
+ * @param new_id the id of the character to add
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status space_set_character(Space *space, Id new_id);
+
+/**
+ * @brief It checks whether a character id is in the space
+ * @author Violeta y Rafa
+ *
+ * @param space a pointer to the space
+ * @param id_chara the id of the character to search for
+ * @return TRUE if found, FALSE otherwise
+ */
+Bool space_contains_character(Space *space, Id id_chara);
+
+/**
+ * @brief It removes a character id from the space
+ * @author Violeta y Rafa
+ *
+ * @param space a pointer to the space
+ * @param id_chara the id of the character to remove
+ * @return OK if removed, ERROR if not found or space is NULL
+ */
+Status space_remove_character(Space *space, Id id_chara);
+
+/**
+ * @brief It returns the number of characters in the space
+ * @author Violeta y Rafa
+ *
+ * @param space a pointer to the space
+ * @return number of characters, or ERROR_MAIN if space is NULL
+ */
+int space_get_n_characters(Space *space);
+
+
+/* ========== Graphic description (5 x 9 ASCII art) ========== */
+
+/**
+ * @brief It sets one line of the graphic description of a space
+ * @author Violeta y Rafa
+ *
+ * @param space a pointer to the space
+ * @param line the line number (0 to MAX_LINE-1)
+ * @param desc a string with the content for that line (max MAX_CHAR chars)
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status space_set_gdesc_line(Space *space, int line, char *desc);
+
+/**
+ * @brief It prints the full graphic description of a space to an output stream
+ * @author Violeta y Rafa
+ *
+ * @param output file pointer where the gdesc will be printed
+ * @param space a pointer to the space
+ * @return OK if successful, ERROR otherwise
+ */
+Status space_print_gdesc(FILE *output, Space *space);
+
+/**
+ * @brief It gets one line of the graphic description of a space
+ * @author Violeta y Rafa
+ *
+ * @param space a pointer to the space
+ * @param line the line number (0 to MAX_LINE-1)
+ * @return a pointer to the line string, or NULL if error
+ */
+char *space_get_gdesc(Space *space, int line);
+
+
+/* ========== Neighbours ========== */
 
 /**
  * @brief It sets the id of the space located at the north
@@ -80,7 +203,6 @@ const char *space_get_name(Space *space);
  * @param id the id number of the space located at the north
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
-
 Status space_set_north(Space *space, Id id);
 
 /**
@@ -112,11 +234,7 @@ Status space_set_south(Space *space, Id id);
 Id space_get_south(Space *space);
 
 /**
- * @brObject* obj_create(Id id, char* name);
-Status obj_destroy(Object* obj);
-Status obj_set_name(Object* obj, char* name);
-const char* obj_get_name(Object* obj);
-Status obj_print(Object* obj);ief It sets the id of the space located at the east
+ * @brief It sets the id of the space located at the east
  * @author Profesores PPROG
  *
  * @param space a pointer to the space
@@ -153,31 +271,13 @@ Status space_set_west(Space *space, Id id);
  */
 Id space_get_west(Space *space);
 
-/**
- * @brief It sets whether the space has an object or not
- * @author Violeta y Rafa
- *
- * @param space a pointer to the space
- * @param value a Id, specifying objects's id on the spaces;
- * @return OK, if everything goes well or ERROR if there was some mistake
- */
-Status space_set_object(Space *space, Id id);
+/* ========== Print ========== */
 
 /**
- * @brief It check the space has an id of object or not
- * @author Violeta y Rafa
- *
- * @param space a pointer to the space
- * @param id_obj a pointer to the space
- * @return a Id, specifying objects's id on the spaces;
- */
-Bool space_contains_object(Space *space, Id id_obj);
-
-/**
- * @brief It prints the space information
+ * @brief It prints all the space information
  * @author Profesores PPROG
  *
- * This fucntion shows the id and name of the space, the spaces that surrounds it and wheter it has an object or not.
+ * Shows the id, name, neighbours, objects, characters and graphic description.
  * @param space a pointer to the space
  * @return OK, if everything goes well or ERROR if there was some mistake
  */

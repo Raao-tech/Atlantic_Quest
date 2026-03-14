@@ -19,6 +19,7 @@
 struct _Entity{
   Id    id;                   /*!< Id number of the object, it must be unique */
   int   health;
+  int   attack;
   char  *gdesc;
   char  *message;
   char  *name;
@@ -37,14 +38,13 @@ Entity *entity_create(){
   newEntity->name = NULL;
   newEntity->message = NULL;
   newEntity->health = 0;
+  newEntity->attack = 0;
   
   return newEntity;
 }
 
 Status entity_destroy(Entity *entity){
-  if (!entity){
-    return ERROR;
-  }
+  if (!entity) return ERROR;
 
   free(entity->gdesc);
   free(entity->name);
@@ -205,6 +205,19 @@ int entity_get_health(Entity *entity){
 }
 
 
+/* attack */
+Status  entity_set_attack(Entity *entity, int value){
+  if(!entity || value < MIN_ATTACK) return  ERROR;
+  
+  entity->attack = value;
+  return OK;
+}
+
+int entity_get_attack(Entity *entity){
+  if(!entity) return ERROR_ATTACK;
+
+  return  entity->attack;
+}
 
 
 /*

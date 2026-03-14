@@ -15,8 +15,10 @@
 #include "set.h"
 
 #define  MIN_LIFE 0
+#define  MIN_ATTACK 0
 #define  MAX_LIFE 10
 #define  ERROR_LIFE -1
+#define  ERROR_ATTACK -1
 
 typedef struct _Entity Entity;
 
@@ -131,5 +133,8 @@ Status entity_set_health(Entity *entity, int value);
  * @return the health value, or ERROR_LIFE if the pointer is NULL
  */
 int entity_get_health(Entity *entity);
+
+Status  entity_set_attack(Entity *entity, int value);
+int entity_get_attack(Entity *entity);
 
 #endif

@@ -70,7 +70,7 @@ CommandCode command_get_code(Command *command){
 Status command_get_user_input(Command *command){
   char  input[CMD_LENGHT] = '\0';
   char  *token = NULL;
-  int i = UNKNOWN - NO_CMD + 1;
+  int i = UNKNOWN - NO_CMD + 1; //por qué resta No_CMD?
   CommandCode cmd;
 
   if (!command) return ERROR;

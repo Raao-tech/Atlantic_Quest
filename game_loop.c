@@ -28,21 +28,18 @@ int main(int argc, char *argv[])
   int result;
   Command *last_cmd;
 
-  if (argc < 2)
-  {
+  if (argc < 2){
     fprintf(stderr, "Use: %s <game_data_file>\n", argv[0]);
     return 1;
   }
 
   result = game_loop_init(&game, &gengine, argv[1]);
 
-  if (result == 1)
-  {
+  if (result == 1){
     fprintf(stderr, "Error while initializing game.\n");
     return 1;
   }
-  else if (result == 2)
-  {
+  else if (result == 2){
     fprintf(stderr, "Error while initializing graphic engine.\n");
     return 1;
   }

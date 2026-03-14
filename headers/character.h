@@ -3,16 +3,16 @@
  *
  * @file character.h
  * @author Violeta y Rafa
- * @version 0
- * @date 27-01-2025
+ * @version 2
+ * @date 04-02-2025
  * @copyright GNU Public License
  */
 
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
+#include "types.h"
 #include "entity.h"
-
 
 typedef struct _Character Character;
 
@@ -20,9 +20,7 @@ typedef struct _Character Character;
  * @brief It creates a new character, allocating memory and initializing it
  * @author Violeta y Rafa
  *
- * @param id the identification number for the new character
- * @param name the name for the new character
- * @return a new character, initialized
+ * @return a new character, initialized, or NULL if memory fails
  */
 Character *character_create();
 
@@ -35,8 +33,25 @@ Character *character_create();
  */
 Status character_destroy(Character *character);
 
-Status  character_set_id(Character *character, Id new_id);
-Id  character_get_id(Character *character);
+/**
+ * @brief It sets the id of a character
+ * @author Violeta y Rafa
+ *
+ * @param character a pointer to the character
+ * @param new_id the new id value
+ * @return OK, if everything goes well, or ERROR if there was some mistake
+ */
+Status character_set_id(Character *character, Id new_id);
+
+/**
+ * @brief It gets the id of a character
+ * @author Violeta y Rafa
+ *
+ * @param character a pointer to the character
+ * @return the character's id, or NO_ID if character is NULL
+ */
+Id character_get_id(Character *character);
+
 /**
  * @brief It sets the name of a character
  * @author Violeta y Rafa
@@ -48,32 +63,116 @@ Id  character_get_id(Character *character);
 Status character_set_name(Character *character, char *name);
 
 /**
- * @brief It gets the name of a character
+ * @brief It gets a copy of the name of a character (caller must free it)
  * @author Violeta y Rafa
  *
  * @param character a pointer to the character
- * @return a string with the name of the character
+ * @return a copy of the name, or NULL if character is NULL
  */
 char *character_get_name(Character *character);
 
 /**
- * @brief It sets the relationship status of a character
+ * @brief It sets the graphic description of a character
  * @author Violeta y Rafa
  *
  * @param character a pointer to the character
- * @param value boolean value to see if it's friendly or unfriendly
+ * @param desc a string with the graphic description (max 6 chars for F4)
+ * @return OK, if everything goes well, or ERROR if there was some mistake
+ */
+Status character_set_gdesc(Character *character, char *desc);
+
+/**
+ * @brief It gets a copy of the graphic description of a character (caller must free it)
+ * @author Violeta y Rafa
+ *
+ * @param character a pointer to the character
+ * @return a copy of the gdesc, or NULL if character is NULL
+ */
+char *character_get_gdesc(Character *character);
+
+/**
+ * @brief It sets the message of a character
+ * @author Violeta y Rafa
+ *
+ * @param character a pointer to the character
+ * @param messg a string with the message
+ * @return OK, if everything goes well, or ERROR if there was some mistake
+ */
+Status character_set_message(Character *character, char *messg);
+
+/**
+ * @brief It gets a copy of the message of a character (caller must free it)
+ * @author Violeta y Rafa
+ *
+ * @param character a pointer to the character
+ * @return a copy of the message, or NULL if character is NULL
+ */
+char *character_get_message(Character *character);
+
+/**
+ * @brief It sets the health of a character
+ * @author Violeta y Rafa
+ *
+ * @param character a pointer to the character
+ * @param life the health points to set
+ * @return OK, if everything goes well, or ERROR if out of bounds
+ */
+Status character_set_health(Character *character, int life);
+
+/**
+ * @brief It gets the health of a character
+ * @author Violeta y Rafa
+ *
+ * @param character a pointer to the character
+ * @return the health value, or ERROR_LIFE if character is NULL
+ */
+int character_get_health(Character *character);
+
+/**
+ * @brief It sets the attack value of a character
+ * @author Violeta y Rafa
+ *
+ * @param character a pointer to the character
+ * @param value the attack value to set
+ * @return OK, if everything goes well, or ERROR if there was some mistake
+ */
+Status character_set_attack(Character *character, int value);
+
+/**
+ * @brief It gets the attack value of a character
+ * @author Violeta y Rafa
+ *
+ * @param character a pointer to the character
+ * @return the attack value, or ERROR_ATTACK if character is NULL
+ */
+int character_get_attack(Character *character);
+
+/**
+ * @brief It sets whether the character is friendly or not
+ * @author Violeta y Rafa
+ *
+ * @param character a pointer to the character
+ * @param value TRUE for friendly, FALSE for unfriendly
  * @return OK, if everything goes well, or ERROR if there was some mistake
  */
 Status character_set_friendly(Character *character, Bool value);
 
 /**
- * @brief It gets the relationship status of a character
+ * @brief It gets whether the character is friendly or not
  * @author Violeta y Rafa
  *
  * @param character a pointer to the character
- * @return the boolean value that shows if a character is frindly or unfriendly
+ * @return TRUE if friendly, defaults to TRUE if character is NULL
  */
 Bool character_get_friendly(Character *character);
 
+/**
+ * @brief It prints all the character information for debugging
+ * @author Violeta y Rafa
+ *
+ * @param character a pointer to the character
+ * @return OK, if everything goes well, or ERROR if character is NULL
+ */
+Status character_print(Character *character);
 
 #endif

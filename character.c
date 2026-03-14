@@ -92,6 +92,38 @@ char      *character_get_gdesc(Character *character){
 }
 
 
+
+/* message*/
+Status    character_set_message(Character *character, char* messg){
+  if(!character || !messg) return ERROR;
+  return entity_set_message(character->e_character, messg);
+}
+char      *character_get_message(Character *character){
+  if(!character) return NULL;
+  return  entity_get_message(character->e_character);
+}
+   
+
+/* health */
+Status character_set_health(Character *character, int life){
+  if(!character) return ERROR;
+  return entity_set_health(character->e_character, life);
+}
+int character_get_health(Character *character){
+  if(!character) return ERROR_LIFE;
+  return entity_get_health(character->e_character);
+}
+
+/* attack */
+Status character_set_attack(Character *character, int value){
+  if(!character) return ERROR;
+  return entity_set_attack(character->e_character, value);
+}
+int character_get_attack(Character *character){
+  if(!character) return ERROR_ATTACK;
+  return entity_get_attack(character->e_character);
+}
+
 /* friendly */
 Status character_set_friendly(Character *character, Bool value){
 
@@ -108,6 +140,36 @@ Bool character_get_friendly(Character *character){
 }
 
 
+
+
+/* ================ PRINT ============================ */
+
+Status character_print(Character *character){
+  char *name = NULL;
+  char *gdesc = NULL;
+  char *message = NULL;
+
+  if(!character) return ERROR;
+
+  name = character_get_name(character);
+  gdesc = character_get_gdesc(character);
+  message = character_get_message(character);
+
+  fprintf(stdout, "\n--- Character ---\n");
+  fprintf(stdout, "|| ID:       %ld\n", character_get_id(character));
+  fprintf(stdout, "|| NAME:     %s\n", name ? name : "N/A");
+  fprintf(stdout, "|| GDESC:    %s\n", gdesc ? gdesc : "N/A");
+  fprintf(stdout, "|| HEALTH:   %d\n", character_get_health(character));
+  fprintf(stdout, "|| FRIENDLY: %s\n", character_get_friendly(character) == TRUE ? "YES" : "NO");
+  fprintf(stdout, "|| MESSAGE:  %s\n", message ? message : "N/A");
+  fprintf(stdout, "-----------------\n");
+
+  if(name) free(name);
+  if(gdesc) free(gdesc);
+  if(message) free(message);
+
+  return OK;
+}
 /*
 Status create_set_obj(Character *create, Id id_obj)
 {

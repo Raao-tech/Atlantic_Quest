@@ -8,8 +8,9 @@ SET_BIN = set_test
 ENT_BIN = entity_test
 SPC_BIN = space_test
 PLY_BIN = player_test
+CHR_BIN = character_test
 
-all: $(SET_BIN) $(ENT_BIN) $(SPC_BIN) $(PLY_BIN)
+all: $(SET_BIN) $(ENT_BIN) $(SPC_BIN) $(PLY_BIN) $(CHR_BIN)
 
 # COMPILATION RULES
 
@@ -27,6 +28,10 @@ $(SPC_BIN): space_test.o ../space.o ../set.o
 
 # Player test: There are two unused functions. Don't worry (8"D)  Be Happy... please
 $(PLY_BIN): player_test.o ../player.o ../entity.o ../set.o
+	$(CC) $(FLAGS) $^ -o $@
+
+# Character test: he is perfect...  we thing jsjsj
+$(CHR_BIN): character_test.o ../character.o ../entity.o ../set.o
 	$(CC) $(FLAGS) $^ -o $@
 
 # Local test objects
@@ -50,6 +55,8 @@ vent: $(ENT_BIN)
 vspc: $(SPC_BIN)
 	$(PREFLAG) ./$(SPC_BIN)
 
+vchr: $(CHR_BIN)
+	$(PREFLAG) ./$(CHR_BIN)
 # Run a single test: make run_set T=5
 run_set: $(SET_BIN)
 	./$(SET_BIN) $(T)
@@ -62,6 +69,9 @@ run_ent: $(ENT_BIN)
 
 run_spc: $(SPC_BIN)
 	./$(SPC_BIN) $(T)
+
+run_chr: $(CHR_BIN)
+	./$(CHR_BIN) $(T)
 
 # CLEANUP
 #######################################

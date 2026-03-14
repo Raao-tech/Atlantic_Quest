@@ -42,7 +42,6 @@ Entity *entity_create(){
   
   return newEntity;
 }
-
 Status entity_destroy(Entity *entity){
   if (!entity) return ERROR;
 
@@ -62,7 +61,6 @@ Status  entity_set_id(Entity *entity, Id new_id){
   entity->id = new_id;
   return OK;
 }
-
 Id  entity_get_id(Entity *entity){
   if(!entity) return ERROR;
 
@@ -100,7 +98,6 @@ Status  entity_set_name(Entity *entity, char*  name){
 
   return OK;
 }
-
 char*  entity_get_name(Entity *entity){
   if(!entity || !entity->name){
     return NULL;
@@ -113,15 +110,13 @@ char*  entity_get_name(Entity *entity){
 /* gdesc */
 Status  entity_set_gdesc(Entity *entity, char*  desc){
   int   length_desc;
+  if(!entity || !desc) return  ERROR;
 
-  if(!entity || !desc){
-    return  ERROR;
-  }
 
   /* Calculamos el tamaño del desc sin el \0  */
   length_desc = strlen(desc);
 
-  /*  Si existe gdesc, liberalo*/
+  /*  Si existe gdesc, liberalo.  Limpiamos nuestro anterior array*/
   if(entity->gdesc){
     free  (entity->gdesc);
     entity->gdesc = NULL;
@@ -131,16 +126,13 @@ Status  entity_set_gdesc(Entity *entity, char*  desc){
   entity->gdesc = (char *) calloc(length_desc + 1, sizeof(char));
 
   /* VALIDAR la reserva de memoria antes de copiar */
-  if (entity->gdesc == NULL) {
-    return ERROR;
-  }
+  if (entity->gdesc == NULL) return ERROR; 
 
   /* Copiamos (strcpy copia los caracteres y el \0 automáticamente) */
   strcpy(entity->gdesc, desc);
 
   return OK;
 }
-
 char*  entity_get_gdesc(Entity *entity){
   if(!entity || !entity->gdesc){
     return NULL;
@@ -180,7 +172,6 @@ Status  entity_set_message(Entity *entity, char*  message){
 
   return OK;
 }
-
 char*  entity_get_message(Entity *entity){
   if(!entity || !entity->message){
     return NULL;
@@ -197,7 +188,6 @@ Status  entity_set_health(Entity *entity, int value){
   entity->health = value;
   return OK;
 }
-
 int entity_get_health(Entity *entity){
   if(!entity) return ERROR_LIFE;
 
@@ -212,48 +202,8 @@ Status  entity_set_attack(Entity *entity, int value){
   entity->attack = value;
   return OK;
 }
-
 int entity_get_attack(Entity *entity){
   if(!entity) return ERROR_ATTACK;
 
   return  entity->attack;
 }
-
-
-/*
-Status create_set_obj(Character *character, Id id_obj)
-{
-  if (character == NULL)
-  {
-    return ERROR;
-  }
-
-  character->id_object_take = id_obj;
-  return OK;
-}
-
-
-
-Id create_get_obj(Character *character)
-{
-  if (character == NULL)
-  {
-    return NO_ID;
-  }
-  return character->id_object_take;
-}
-
-Status create_print(Character *character)
-{
-
-  if (!character || character->id == NO_ID)
-  {
-    return ERROR;
-  }
-
-
-  fprintf(stdout, "--> Character %ld: %s)\n", character->id, character->name);
-
-  return OK;
-}
- */

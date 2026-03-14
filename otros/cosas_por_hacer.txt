@@ -1,4 +1,6 @@
-
+6)agregar el set/get_mssg de entity
+5)agregar el set/get_mssg de character
+4)agregar el set/get_mssg de Player
 3)Modifciar Player
-2)Agregar el test_space
-1)Agregar el set/get_attack en character.
+2)Agregar el test_space                   (COMPLETADO)
+1)Agregar el set/get_attack en character. 

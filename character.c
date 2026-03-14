@@ -41,7 +41,6 @@ Character *character_create(){
 
   return newCharacter;
 }
-
 Status character_destroy(Character *character)
 {
   if (!character){
@@ -60,7 +59,6 @@ Status  character_set_id(Character *character, Id new_id){
 
   return  entity_set_id(character->e_character, new_id);
 }
-
 Id  character_get_id(Character *character){
   if(!character) return NO_ID;
 
@@ -75,13 +73,24 @@ Status character_set_name(Character *character, char *name){
 
   return OK;
 }
-
 char *character_get_name(Character *character){
   if (!character || !character->e_character) return NULL;
 
   /* Ya entity_get_name hace un strdup del name que devuelve */
   return entity_get_name(character->e_character);
 }
+
+
+/* gDescription */
+Status    character_set_gdesc(Character *character, char* desc){
+  if(!character || !desc) return ERROR;
+  return entity_set_gdesc(character->e_character, desc);
+}
+char      *character_get_gdesc(Character *character){
+  if(!character) return NULL;
+  return  entity_get_gdesc(character->e_character);
+}
+
 
 /* friendly */
 Status character_set_friendly(Character *character, Bool value){
@@ -92,7 +101,6 @@ Status character_set_friendly(Character *character, Bool value){
 
   return OK;
 }
-
 Bool character_get_friendly(Character *character){
   if (!character) return TRUE;
 

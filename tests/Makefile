@@ -1,73 +1,71 @@
-#######################################
 # COMPILER AND FLAGS
-#######################################
 CC = gcc
-# -I../headers tells the compiler where to find .h files
 FLAGS = -g -Wall -O0 -Wextra -I../headers -Wpedantic -DDEBUG
-# Valgrind configuration
 PREFLAG = valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -s
 
-#######################################
-# TARGETS (Executables)
-#######################################
-SET_BIN = test_set
-ENT_BIN = test_entity
+# TARGETS
+SET_BIN = set_test
+ENT_BIN = entity_test
+SPC_BIN = space_test
+PLY_BIN = player_test
 
-# Default rule
-all: $(SET_BIN) $(ENT_BIN)
+all: $(SET_BIN) $(ENT_BIN) $(SPC_BIN) $(PLY_BIN)
 
-#######################################
 # COMPILATION RULES
-#######################################
 
-# Rule for Entity Test: Needs test_entity.o + entity.o + set.o
-# (Using character.c/entity.c from parent directory)
-$(ENT_BIN): $(ENT_BIN).o ../entity.o ../set.o
+# Set test
+$(SET_BIN): set_test.o ../set.o
 	$(CC) $(FLAGS) $^ -o $@
 
-# Rule for Set Test: Needs test_set.o + set.o
-$(SET_BIN): $(SET_BIN).o ../set.o
+# Entity test
+$(ENT_BIN): entity_test.o ../entity.o ../set.o
 	$(CC) $(FLAGS) $^ -o $@
 
-# Pattern rule for local test objects
+# Space test: space depends on set (for Set* inside Space)
+$(SPC_BIN): space_test.o ../space.o ../set.o
+	$(CC) $(FLAGS) $^ -o $@
+
+# Player test: There are two unused functions. Don't worry (8"D)  Be Happy... please
+$(PLY_BIN): player_test.o ../player.o ../entity.o ../set.o
+	$(CC) $(FLAGS) $^ -o $@
+
+# Local test objects
 %.o: %.c
 	$(CC) -c $(FLAGS) $< -o $@
 
-# Pattern rule for parent directory objects
+# Parent directory objects
 ../%.o: ../%.c
 	$(CC) -c $(FLAGS) $< -o $@
 
-#######################################
-# EXECUTION SHORTCUTS (using $< for the first dependency)
-#######################################
-
-# Run Entity Test with Valgrind
-vent: $(ENT_BIN)
-	@read -p "Show ENTITY data on terminal? (s/n): " answ; \
-	if [ "$$answ" = "n" ]; then \
-		mkdir -p Outputs; \
-		$(PREFLAG) ./$< > Outputs/out_entity.txt 2>&1; \
-		echo "Results saved in tests/Outputs/out_entity.txt"; \
-	else \
-		$(PREFLAG) ./$<; \
-	fi
-
-# Run Set Test with Valgrind
+# RUN WITH VALGRIND
 vset: $(SET_BIN)
-	@read -p "Show SET data on terminal? (s/n): " answ; \
-	if [ "$$answ" = "n" ]; then \
-		mkdir -p Outputs; \
-		$(PREFLAG) ./$< > Outputs/out_set.txt 2>&1; \
-		echo "Results saved in tests/Outputs/out_set.txt"; \
-	else \
-		$(PREFLAG) ./$<; \
-	fi
+	$(PREFLAG) ./$(SET_BIN)
 
-#######################################
+vply: $(PLY_BIN)
+	$(PREFLAG) ./$(PLY_BIN)
+
+vent: $(ENT_BIN)
+	$(PREFLAG) ./$(ENT_BIN)
+
+vspc: $(SPC_BIN)
+	$(PREFLAG) ./$(SPC_BIN)
+
+# Run a single test: make run_set T=5
+run_set: $(SET_BIN)
+	./$(SET_BIN) $(T)
+
+run_ply: $(PLY_BIN)
+	./$(PLY_BIN) $(T)
+
+run_ent: $(ENT_BIN)
+	./$(ENT_BIN) $(T)
+
+run_spc: $(SPC_BIN)
+	./$(SPC_BIN) $(T)
+
 # CLEANUP
 #######################################
 clean:
-	@rm -f *.o ../*.o $(SET_BIN) $(ENT_BIN)
-	@rm -rf Outputs
+	@rm -f *.o ../*.o $(SET_BIN) $(ENT_BIN) $(SPC_BIN)
 
-.PHONY: clean all vent vset
+.PHONY: clean all vset vent vspc run_set run_ent run_spc

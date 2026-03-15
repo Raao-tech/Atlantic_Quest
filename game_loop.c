@@ -3,13 +3,14 @@
  *
  * @file game_loop.c
  * @author Profesores PPROG
- * @version 0
+ * @version 2
  * @date 24-01-2026
  * @copyright GNU Public License
  */
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "command.h"
 #include "game.h"
@@ -18,15 +19,16 @@
 #include "graphic_engine.h"
 
 int game_loop_init(Game **game, Graphic_engine **gengine, char *file_name);
-
 void game_loop_cleanup(Game *game, Graphic_engine *gengine);
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]){
   Game *game = NULL;
-  Graphic_engine *gengine;
+  Graphic_engine *gengine = NULL;
   int result;
   Command *last_cmd;
+
+  /* Seed random for attack */
+  srand(time(NULL));
 
   if (argc < 2){
     fprintf(stderr, "Use: %s <game_data_file>\n", argv[0]);
@@ -46,8 +48,7 @@ int main(int argc, char *argv[])
 
   last_cmd = game_get_last_command(game);
 
-  while ((command_get_code(last_cmd) != EXIT) && (game_get_finished(game) == FALSE))
-  {
+  while ((command_get_code(last_cmd) != EXIT) && (game_get_finished(game) == FALSE)){
     graphic_engine_paint_game(gengine, game);
     command_get_user_input(last_cmd);
     game_actions_update(game, last_cmd);
@@ -58,24 +59,20 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-int game_loop_init(Game **game, Graphic_engine **gengine, char *file_name)
-{
-  if (game_create_from_file(game, file_name) == ERROR)
-  {
+int game_loop_init(Game **game, Graphic_engine **gengine, char *file_name){
+  if (game_create_from_file(game, file_name) == ERROR){
     return 1;
   }
 
-  if ((*gengine = graphic_engine_create()) == NULL)
-  {
-    game_destroy(game);
+  if ((*gengine = graphic_engine_create()) == NULL){
+    game_destroy(*game);
     return 2;
   }
 
   return 0;
 }
 
-void game_loop_cleanup(Game *game, Graphic_engine *gengine)
-{
-  game_destroy(&game);
+void game_loop_cleanup(Game *game, Graphic_engine *gengine){
+  game_destroy(game);
   graphic_engine_destroy(gengine);
 }

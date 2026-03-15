@@ -34,6 +34,7 @@ Object *obj_create();
  */
 Status obj_destroy(Object *obj);
 
+ /* =============Name============= */
 /**
  * @brief It sets the name of an object
  * @author Violeta y Rafa
@@ -45,6 +46,16 @@ Status obj_destroy(Object *obj);
 Status obj_set_name(Object *obj, char *name);
 
 /**
+ * @brief It checks whether the object has the given name
+ * @author Violeta y Rafa
+ *
+ * @param obj a pointer to the object
+ * @param name the name to compare against
+ * @return TRUE if the names match, FALSE otherwise or if any parameter is NULL
+ */
+Bool obj_has_name(Object *obj, char *name);
+
+/**
  * @brief It gets the name of an object
  * @author Violeta y Rafa
  *
@@ -53,6 +64,16 @@ Status obj_set_name(Object *obj, char *name);
  */
 char *obj_get_name(Object *obj);
 
+ /* =============ID============= */
+/**
+ * @brief It sets the id of an object
+ * @author Violeta y Rafa
+ *
+ * @param obj a pointer to the object
+ * @param id the id to set
+ * @return OK  if all good, ERROR if pointer is NULL or other case not good
+ */
+ Status obj_set_id(Object *obj, Id id);
 /**
  * @brief It gets the id of an object
  * @author Violeta y Rafa
@@ -61,7 +82,6 @@ char *obj_get_name(Object *obj);
  * @return the id of object
  */
 Id obj_get_id(Object *obj);
-
 
 /**
  * @brief It prints the object information

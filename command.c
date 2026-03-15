@@ -3,7 +3,7 @@
  *
  * @file command.c
  * @author Profesores PPROG
- * @version 0
+ * @version 2
  * @date 24-01-2026
  * @copyright GNU Public License
  */
@@ -17,70 +17,76 @@
 
 #define CMD_LENGHT 30
 
-char *cmd_to_str[N_CMD][N_CMDT] = {{"", "No command"}, {"", "Unknown"}, {"e", "Exit"}, {"n", "Next"}, {"l", "Left"}, {"r", "Right"}, {"b", "Back"}, {"t", "Take"}, {"d", "Drop"}};
-
-/**
- * @brief Command
- *
- * This struct stores all the information related to a command.
- */
-struct _Command{
-  char *obj;
-  CommandCode code; /*!< Name of the command */
+char *cmd_to_str[N_CMD][N_CMDT] = {
+  {"", "No command"},
+  {"", "Unknown"},
+  {"e", "Exit"},
+  {"n", "Next"},
+  {"l", "Left"},
+  {"r", "Right"},
+  {"b", "Back"},
+  {"t", "Take"},
+  {"d", "Drop"},
+  {"a", "Attack"},
+  {"c", "Chat"}
 };
 
-/** space_create allocates memory for a new space
- *  and initializes its members
- */
+struct _Command {
+  char *obj;
+  CommandCode code;
+};
+
 Command *command_create(){
   Command *newCommand = NULL;
 
   newCommand = (Command *)calloc(1, sizeof(Command));
-
   if (newCommand == NULL) return NULL;
 
-  /* Initialization of an empty command*/
   newCommand->code = NO_CMD;
-  newCommand ->obj = NULL;
+  newCommand->obj = NULL;
   return newCommand;
 }
 
 Status command_destroy(Command *command){
   if (!command) return ERROR;
 
+  if (command->obj) free(command->obj);
+
   free(command);
-  command = NULL;
   return OK;
 }
 
 Status command_set_code(Command *command, CommandCode code){
   if (!command) return ERROR;
-
   command->code = code;
-
   return OK;
 }
 
 CommandCode command_get_code(Command *command){
   if (!command) return NO_CMD;
-  
   return command->code;
 }
 
+char *command_get_obj(Command *command){
+  if (!command) return NULL;
+  return command->obj;
+}
+
 Status command_get_user_input(Command *command){
-  char  input[CMD_LENGHT] = '\0';
-  char  *token = NULL;
-  int i = UNKNOWN - NO_CMD + 1; //por qué resta No_CMD?
+  char input[CMD_LENGHT] = "";
+  char *token = NULL;
+  int i = UNKNOWN - NO_CMD + 1;
   CommandCode cmd;
 
   if (!command) return ERROR;
 
   if (command->obj) {
     free(command->obj);
-    command->obj= NULL;
+    command->obj = NULL;
   }
-  
+
   if (fgets(input, CMD_LENGHT, stdin)){
+    /* First token: the command itself */
     token = strtok(input, " \n");
     if (!token) return command_set_code(command, UNKNOWN);
 
@@ -91,12 +97,14 @@ Status command_get_user_input(Command *command){
       else
         i++;
     }
-    token = strtok(input, " \n");
+
+    /* Second token: the object/target name (for take, drop, attack, chat) */
+    token = strtok(NULL, " \n");
     if (token)
       command->obj = strdup(token);
+
     return command_set_code(command, cmd);
   }
-
   else
     return command_set_code(command, EXIT);
 }

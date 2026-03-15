@@ -27,8 +27,6 @@ struct _Object{
 /* create or destroy */
 Object *obj_create(){
   Object *newObj = NULL;
-
-  /* Error control */
   newObj = (Object *)calloc(1, sizeof(Object));
   if (newObj == NULL) return NULL;
 
@@ -38,10 +36,8 @@ Object *obj_create(){
 
   return newObj;
 }
-
 Status obj_destroy(Object *obj){
   if (!obj) return ERROR;
-
   free(obj);
   return OK;
 }
@@ -50,32 +46,28 @@ Status obj_destroy(Object *obj){
 Status obj_set_id(Object *obj, Id id){
   if (!obj) return ERROR;
   obj->id = id;
-
   return OK;
 }
-Id obj_get_id(Object *obj)
-{
-
-  if (obj == NULL)
-  {
-    return NO_ID;
-  }
-
+Id obj_get_id(Object *obj){
+  if (obj == NULL) return NO_ID;
   return obj->id;
 }
+
 
 /* name */
 Status obj_set_name(Object *obj, char *name){
   if (!obj || !name) return ERROR;
-  if (strcpy(obj->name, name) == NULL) return ERROR;
+  strncpy(obj->name, name, WORD_SIZE);
+  obj->name[WORD_SIZE] = '\0';
 
   return OK;
 }
+Bool obj_has_name(Object *obj, char *name){
+    if(!obj || !name) return FALSE;
+    return (strcmp(obj->name, name) == 0) ? TRUE : FALSE;
+}
 char *obj_get_name(Object *obj){
-  if (!obj)
-  {
-    return NULL;
-  }
+  if (!obj) return NULL;
   return obj->name;
 }
 

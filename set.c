@@ -142,6 +142,12 @@ int		set_get_n_ids(Set *pset){
 	return	pset->n_ids;
 }
 
+/* get id at position (for external iteration) */
+Id	set_get_id_at(Set *pset, int position){
+	if(!pset || position < 0 || position >= pset->n_ids) return NO_ID;
+	return pset->ids[position];
+}
+
 /* print */
 Status	set_print(FILE* output, Set*	pset){
 	if(!pset){

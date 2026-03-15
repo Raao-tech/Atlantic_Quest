@@ -63,6 +63,16 @@ Id character_get_id(Character *character);
 Status character_set_name(Character *character, char *name);
 
 /**
+ * @brief It checks whether the character has the given name
+ * @author Violeta y Rafa
+ *
+ * @param character a pointer to the character
+ * @param name the name to compare against
+ * @return TRUE if the names match, FALSE otherwise or if any parameter is NULL
+ */
+Bool character_has_name(Character *character, char *name);
+
+/**
  * @brief It gets a copy of the name of a character (caller must free it)
  * @author Violeta y Rafa
  *

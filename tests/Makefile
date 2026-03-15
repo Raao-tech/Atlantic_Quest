@@ -9,73 +9,74 @@ ENT_BIN = entity_test
 SPC_BIN = space_test
 PLY_BIN = player_test
 CHR_BIN = character_test
+GAM_BIN = game_test
+CMD_BIN = command_test
 
-all: $(SET_BIN) $(ENT_BIN) $(SPC_BIN) $(PLY_BIN) $(CHR_BIN)
+all: $(SET_BIN) $(ENT_BIN) $(SPC_BIN) $(PLY_BIN) $(CHR_BIN) $(GAM_BIN) $(CMD_BIN)
 
 # COMPILATION RULES
 
-# Set test
 $(SET_BIN): set_test.o ../set.o
 	$(CC) $(FLAGS) $^ -o $@
 
-# Entity test
 $(ENT_BIN): entity_test.o ../entity.o ../set.o
 	$(CC) $(FLAGS) $^ -o $@
 
-# Space test: space depends on set (for Set* inside Space)
 $(SPC_BIN): space_test.o ../space.o ../set.o
 	$(CC) $(FLAGS) $^ -o $@
 
-# Player test: There are two unused functions. Don't worry (8"D)  Be Happy... please
 $(PLY_BIN): player_test.o ../player.o ../entity.o ../set.o
 	$(CC) $(FLAGS) $^ -o $@
 
-# Character test: he is perfect...  we thing jsjsj
 $(CHR_BIN): character_test.o ../character.o ../entity.o ../set.o
 	$(CC) $(FLAGS) $^ -o $@
 
-# Local test objects
+$(GAM_BIN): game_test.o ../game.o ../player.o ../character.o ../object.o ../space.o ../entity.o ../set.o ../command.o
+	$(CC) $(FLAGS) $^ -o $@
+
+$(CMD_BIN): command_test.o ../command.o
+	$(CC) $(FLAGS) $^ -o $@
+
 %.o: %.c
 	$(CC) -c $(FLAGS) $< -o $@
 
-# Parent directory objects
 ../%.o: ../%.c
 	$(CC) -c $(FLAGS) $< -o $@
 
 # RUN WITH VALGRIND
 vset: $(SET_BIN)
 	$(PREFLAG) ./$(SET_BIN)
-
-vply: $(PLY_BIN)
-	$(PREFLAG) ./$(PLY_BIN)
-
 vent: $(ENT_BIN)
 	$(PREFLAG) ./$(ENT_BIN)
-
 vspc: $(SPC_BIN)
 	$(PREFLAG) ./$(SPC_BIN)
-
+vply: $(PLY_BIN)
+	$(PREFLAG) ./$(PLY_BIN)
 vchr: $(CHR_BIN)
 	$(PREFLAG) ./$(CHR_BIN)
-# Run a single test: make run_set T=5
+vgam: $(GAM_BIN)
+	$(PREFLAG) ./$(GAM_BIN)
+vcmd: $(CMD_BIN)
+	$(PREFLAG) ./$(CMD_BIN)
+
+# RUN SINGLE TEST
 run_set: $(SET_BIN)
 	./$(SET_BIN) $(T)
-
-run_ply: $(PLY_BIN)
-	./$(PLY_BIN) $(T)
-
 run_ent: $(ENT_BIN)
 	./$(ENT_BIN) $(T)
-
 run_spc: $(SPC_BIN)
 	./$(SPC_BIN) $(T)
-
+run_ply: $(PLY_BIN)
+	./$(PLY_BIN) $(T)
 run_chr: $(CHR_BIN)
 	./$(CHR_BIN) $(T)
+run_gam: $(GAM_BIN)
+	./$(GAM_BIN) $(T)
+run_cmd: $(CMD_BIN)
+	./$(CMD_BIN) $(T)
 
 # CLEANUP
-#######################################
 clean:
-	@rm -f *.o ../*.o $(SET_BIN) $(ENT_BIN) $(SPC_BIN)
+	@rm -f *.o ../*.o $(SET_BIN) $(ENT_BIN) $(SPC_BIN) $(PLY_BIN) $(CHR_BIN) $(GAM_BIN) $(CMD_BIN)
 
-.PHONY: clean all vset vent vspc run_set run_ent run_spc
+.PHONY: clean all vset vent vspc vply vchr vgam vcmd

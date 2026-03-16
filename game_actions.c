@@ -96,7 +96,7 @@ void game_actions_next(Game *game){
   Id next_id = NO_ID;
 
   if (space_id == NO_ID){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_dir);
     return;
   }
 
@@ -107,7 +107,7 @@ void game_actions_next(Game *game){
     player_set_location(player, next_id);
     game_set_last_cmd_status(game, OK);
   } else {
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_dir);
   }
 }
 
@@ -118,7 +118,7 @@ void game_actions_back(Game *game){
   Id back_id = NO_ID;
 
   if (space_id == NO_ID){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_dir);
     return;
   }
 
@@ -129,7 +129,7 @@ void game_actions_back(Game *game){
     player_set_location(player, back_id);
     game_set_last_cmd_status(game, OK);
   } else {
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_dir);
   }
 }
 
@@ -140,7 +140,7 @@ void game_actions_left(Game *game){
   Id left_id = NO_ID;
 
   if (space_id == NO_ID){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_dir);
     return;
   }
 
@@ -151,7 +151,7 @@ void game_actions_left(Game *game){
     player_set_location(player, left_id);
     game_set_last_cmd_status(game, OK);
   } else {
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_dir);
   }
 }
 
@@ -162,7 +162,7 @@ void game_actions_right(Game *game){
   Id right_id = NO_ID;
 
   if (space_id == NO_ID){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_dir);
     return;
   }
 
@@ -173,7 +173,7 @@ void game_actions_right(Game *game){
     player_set_location(player, right_id);
     game_set_last_cmd_status(game, OK);
   } else {
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_dir);
   }
 }
 
@@ -187,21 +187,21 @@ void game_actions_take(Game *game){
   Id obj_id = NO_ID;
 
   if (space_id == NO_ID){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_take);
     return;
   }
 
   /* Get the object name from the command */
   obj_name = command_get_obj(game_get_last_command(game));
   if (!obj_name){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_take);
     return;
   }
 
   /* Find the object by name in the game */
   obj = game_get_object_by_name(game, obj_name);
   if (!obj){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_take);
     return;
   }
 
@@ -210,7 +210,7 @@ void game_actions_take(Game *game){
 
   /* Check that the object is in the current space */
   if (space_contains_object(space, obj_id) == FALSE){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_take);
     return;
   }
 
@@ -231,7 +231,7 @@ void game_actions_drop(Game *game){
   Id obj_id = NO_ID;
 
   if (space_id == NO_ID || player_get_n_objects(player) == 0){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_drop);
     return;
   }
 
@@ -242,19 +242,19 @@ void game_actions_drop(Game *game){
     /* Drop a specific object by name */
     obj = game_get_object_by_name(game, obj_name);
     if (!obj){
-      game_set_last_cmd_status(game, ERROR);
+      game_set_last_cmd_status(game, ERROR_drop);
       return;
     }
     obj_id = obj_get_id(obj);
   } else {
     /* No name specified: error */
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_drop);
     return;
   }
 
   /* Check player has it */
   if (player_contains_object(player, obj_id) == FALSE){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_drop);
     return;
   }
 
@@ -276,21 +276,21 @@ void game_actions_attack(Game *game){
   int roll;
 
   if (space_id == NO_ID){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_Attack);
     return;
   }
 
   /* Get character name from command */
   char_name = command_get_obj(game_get_last_command(game));
   if (!char_name){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_Attack);
     return;
   }
 
   /* Find character by name */
   ch = game_get_character_by_name(game, char_name);
   if (!ch){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_Attack);
     return;
   }
 
@@ -299,19 +299,19 @@ void game_actions_attack(Game *game){
 
   /* Character must be in the same space */
   if (space_contains_character(space, char_id) == FALSE){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_Attack);
     return;
   }
 
   /* Character must NOT be friendly */
   if (character_get_friendly(ch) == TRUE){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_Attack);
     return;
   }
 
   /* Character must be alive */
   if (character_get_health(ch) <= 0){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_Attack);
     return;
   }
 
@@ -345,21 +345,21 @@ void game_actions_chat(Game *game){
   Id char_id = NO_ID;
 
   if (space_id == NO_ID){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_Chat);
     return;
   }
 
   /* Get character name from command */
   char_name = command_get_obj(game_get_last_command(game));
   if (!char_name){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_Chat);
     return;
   }
 
   /* Find character by name */
   ch = game_get_character_by_name(game, char_name);
   if (!ch){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_Chat);
     return;
   }
 
@@ -368,13 +368,13 @@ void game_actions_chat(Game *game){
 
   /* Character must be in the same space */
   if (space_contains_character(space, char_id) == FALSE){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_Chat);
     return;
   }
 
   /* Character must be friendly */
   if (character_get_friendly(ch) == FALSE){
-    game_set_last_cmd_status(game, ERROR);
+    game_set_last_cmd_status(game, ERROR_Chat);
     return;
   }
 

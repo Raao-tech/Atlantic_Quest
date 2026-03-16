@@ -271,7 +271,7 @@ Status game_set_last_command(Game *game, Command *command);
  * @author Violeta y Rafa
  *
  * @param game a pointer to the game
- * @param status OK or ERROR
+ * @param status OK, ERROR_attack, ERROR_chat, ERROR_dir ERROR
  * @return OK, if everything goes well, or ERROR if game is NULL
  */
 Status game_set_last_cmd_status(Game *game, Status status);
@@ -281,7 +281,7 @@ Status game_set_last_cmd_status(Game *game, Status status);
  * @author Violeta y Rafa
  *
  * @param game a pointer to the game
- * @return OK or ERROR (defaults to ERROR if game is NULL)
+ * @return OK, ERROR_attack, Error_chat, ERROR_dir o ERROR (defaults to ERROR if game is NULL) 
  */
 Status game_get_last_cmd_status(Game *game);
 

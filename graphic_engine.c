@@ -31,6 +31,22 @@ struct _Graphic_engine {
   Area *map, *descript, *banner, *help, *feedback;
 };
 
+
+/**
+ * @brief It evaluates the status result of the last command executed
+ * @author Violeta y Rafa
+ *
+ *
+ * @param result OK, ERROR_attack, ERROR_chat, ERROR_dir, ERROR_take, ERROR_drop,  ERROR
+ * @return  A pointer to string with feedback
+ */
+static char *ge_evaluated_error(Status result);
+
+
+
+
+
+
 Graphic_engine *graphic_engine_create(){
   static Graphic_engine *ge = NULL;
 
@@ -116,6 +132,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game){
   char obj_str[100];
   char char_str[50];
   CommandCode last_cmd = UNKNOWN;
+  Status  type_error;
   extern char *cmd_to_str[N_CMD][N_CMDT];
   int i;
 
@@ -138,14 +155,14 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game){
       ge_build_obj_str(game, sp_back, obj_str, sizeof(obj_str));
       sprintf(str, "              +---------------+");
       screen_area_puts(ge->map, str);
-      sprintf(str, "              |           %3ld|", id_back);
+      sprintf(str, "              |           %-4ld|", id_back);
       screen_area_puts(ge->map, str);
       for (i = 0; i < MAX_LINE; i++){
         char *gdl = space_get_gdesc(sp_back, i);
-        sprintf(str, "              |%-13s|", gdl ? gdl : "");
+        sprintf(str, "              |%-15s|", gdl ? gdl : "");
         screen_area_puts(ge->map, str);
       }
-      sprintf(str, "              |%-13s|", obj_str);
+      sprintf(str, "              |%-15s|", obj_str);
       screen_area_puts(ge->map, str);
       sprintf(str, "              +---------------+");
       screen_area_puts(ge->map, str);
@@ -165,16 +182,16 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game){
       screen_area_puts(ge->map, str);
       sprintf(str, "              +---------------+");
       screen_area_puts(ge->map, str);
-      sprintf(str, "              | %s %s %3ld|", char_str[0] ? char_str : "", pgdesc ? pgdesc : ">8D", id_act);
+      sprintf(str, "              | %-6s %-3s %-3ld|", char_str[0] ? char_str : "", pgdesc ? pgdesc : ">8D", id_act);
       screen_area_puts(ge->map, str);
 
       for (i = 0; i < MAX_LINE; i++){
         char *gdl = space_get_gdesc(space_act, i);
-        sprintf(str, "              |%-13s|", gdl ? gdl : "");
+        sprintf(str, "              |%-15s|", gdl ? gdl : "");
         screen_area_puts(ge->map, str);
       }
 
-      sprintf(str, "              |%-13s|", obj_str);
+      sprintf(str, "              |%-15s|", obj_str);
       screen_area_puts(ge->map, str);
       sprintf(str, "              +---------------+");
       screen_area_puts(ge->map, str);
@@ -195,9 +212,9 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game){
       screen_area_puts(ge->map, str);
       sprintf(str, "              +---------------+");
       screen_area_puts(ge->map, str);
-      sprintf(str, "              |           %3ld|", id_next);
+      sprintf(str, "              |           %-4ld|", id_next);
       screen_area_puts(ge->map, str);
-      sprintf(str, "              |%-13s|", obj_str);
+      sprintf(str, "              |%-15s|", obj_str);
       screen_area_puts(ge->map, str);
       sprintf(str, "              +---------------+");
       screen_area_puts(ge->map, str);
@@ -269,7 +286,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game){
   }
 
   /* ===== BANNER ===== */
-  screen_area_puts(ge->banner, " The haunted castle game ");
+  screen_area_puts(ge->banner, "              The haunted castle game ");
 
   /* ===== HELP ===== */
   screen_area_clear(ge->help);
@@ -281,13 +298,14 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game){
   /* ===== FEEDBACK (F15j: last commands with OK/ERROR) ===== */
   screen_area_clear(ge->feedback);
   last_cmd = command_get_code(game_get_last_command(game));
+  type_error = game_get_last_cmd_status(game);
   if (last_cmd >= 0 && last_cmd < N_CMD + 1){
     int idx = last_cmd - NO_CMD;
     if (idx >= 0 && idx < N_CMD){
       sprintf(str, " %s (%s): %s",
         cmd_to_str[idx][CMDL],
         cmd_to_str[idx][CMDS],
-        game_get_last_cmd_status(game) == OK ? "OK" : "ERROR");
+        ge_evaluated_error(type_error));
       screen_area_puts(ge->feedback, str);
     }
   }
@@ -295,4 +313,22 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game){
   /* Dump to terminal */
   screen_paint();
   printf("prompt:> ");
+}
+
+
+
+
+
+/* =========PRIVATED FUNCTION================= */
+
+static char *ge_evaluated_error(Status result){
+
+  if(result == OK)            return "OK";
+  if(result == ERROR_Attack)  return "ERROR: (Attack/a)  (name monster)";
+  if(result == ERROR_Chat)    return "ERROR: (chat/c)  (name character friend)";
+  if(result == ERROR_dir)     return "ERROR: It's not possible go to there. Can't you see there's a wall?. A little of please";
+  if(result == ERROR_take)    return "ERROR: (take/t) (name of  object)";
+  if(result == ERROR_drop)    return "ERROR: (drop/d) (name of  object)";
+
+  return  "ERROR";
 }

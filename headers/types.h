@@ -37,7 +37,12 @@ typedef enum
 typedef enum
 {
     ERROR,
-    OK
+    OK,
+    ERROR_Attack,
+    ERROR_Chat,
+    ERROR_dir,
+    ERROR_take,
+    ERROR_drop
 } Status;
 
 typedef enum

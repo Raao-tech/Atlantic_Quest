@@ -2,9 +2,9 @@
  * @brief It defines common types for the whole project
  *
  * @file types.h
- * @author Profesores PPROG
- * @version 0
- * @date 27-01-2025
+ * @author Profesores PROG, Violeta, Rafael and Salvador
+ * @version 3.0
+ * @date 23-4-2026
  * @copyright GNU Public License
  */
 
@@ -50,7 +50,8 @@ typedef enum
     N,
     S,
     E,
-    W
+    W,
+    U /*Unknown*/
 } Direction;
 
 #endif

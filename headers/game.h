@@ -2,9 +2,9 @@
  * @brief It defines the game interface
  *
  * @file game.h
- * @author Profesores PPROG
- * @version 2
- * @date 27-01-2025
+ * @author Profesores PROG, Violeta, Rafael and Salvador
+ * @version 3.0
+ * @date 23-4-2026
  * @copyright GNU Public License
  */
 
@@ -21,6 +21,7 @@
 #define MAX_SPACES      100
 #define MAX_OBJECTS     100
 #define MAX_CHARACTERS  100
+#define MAX_LINKS       MAX_SPACES*4
 
 typedef struct _Game Game;
 
@@ -74,6 +75,29 @@ Space *game_get_space(Game *game, Id id);
  * @return pointer to the last command, or NULL if game is NULL
  */
 Command *game_get_last_command(Game *game);
+
+/**
+ * @brief It gets the id of a destiny space by its origin Space and direction
+ * @author Salvador
+ *
+ * @param game a pointer to the game
+ * @param space the id of the origin space
+ * @param dir the direction to get the destiny space from
+ * @return the id of the destiny space, or NO_ID if not found
+ */
+Id game_get_connection(Game *game, Id space, Direction dir);
+
+/**
+ * @brief It gets wether a connection is open or not
+ * @author Salvador
+ *
+ * @param game a pointer to the game
+ * @param space the id of the origin space
+ * @param dir the direction to get the destiny space from
+ * @return TRUE if the connection is open, FALSE otherwise
+ */
+Bool game_connection_is_open(Game *game, Id space, Direction dir);
+
 
 
 /* ========== Add elements (used by game_reader) ========== */

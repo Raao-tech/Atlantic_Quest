@@ -42,7 +42,8 @@ typedef enum
     ERROR_Chat,
     ERROR_dir,
     ERROR_take,
-    ERROR_drop
+    ERROR_drop,
+    FULL_OF_LOVE
 } Status;
 
 typedef enum

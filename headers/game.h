@@ -4,7 +4,7 @@
  * @file game.h
  * @author Profesores PROG, Violeta, Rafael and Salvador
  * @version 3.0
- * @date 23-4-2026
+ * @date 24-3-2026
  * @copyright GNU Public License
  */
 
@@ -21,6 +21,7 @@
 #define MAX_SPACES      100
 #define MAX_OBJECTS     100
 #define MAX_CHARACTERS  100
+#define MAX_PLAYERS     10
 #define MAX_LINKS       MAX_SPACES*4
 
 typedef struct _Game Game;
@@ -30,7 +31,7 @@ typedef struct _Game Game;
 
 /**
  * @brief It creates a new game, allocating memory and initializing it
- * @author Profesores PPROG
+ * @author Profesores PPROG, Rafa, Violeta and Salvador
  *
  * @return pointer to new game, or NULL if memory fails
  */
@@ -38,7 +39,7 @@ Game *game_create();
 
 /**
  * @brief It destroys a game, freeing all allocated memory
- * @author Violeta y Rafa
+ * @author Violeta, Rafa and Salvador
  *
  * @param game a pointer to the game
  * @return OK, if everything goes well, or ERROR if there was some mistake
@@ -49,13 +50,13 @@ Status game_destroy(Game *game);
 /* ========== Access: Enfoque B (expose pointers) ========== */
 
 /**
- * @brief It gets the player pointer
- * @author Violeta y Rafa
+ * @brief It gets the players in game
+ * @author Salvador
  *
  * @param game a pointer to the game
- * @return pointer to the player, or NULL if game is NULL
+ * @return pointer to the array of players, NULL in case of error
  */
-Player *game_get_player(Game *game);
+Player **game_get_players(Game *game);
 
 /**
  * @brief It gets a space by its id
@@ -98,8 +99,6 @@ Id game_get_connection(Game *game, Id space, Direction dir);
  */
 Bool game_connection_is_open(Game *game, Id space, Direction dir);
 
-
-
 /* ========== Add elements (used by game_reader) ========== */
 
 /**
@@ -132,6 +131,15 @@ Status game_add_object(Game *game, Object *obj);
  */
 Status game_add_character(Game *game, Character *character);
 
+/**
+ * @brief It adds a player to the game
+ * @author Salvador
+ *
+ * @param game a pointer to the game
+ * @param player a pointer to the player to add
+ * @return OK, if everything goes well, or ERROR if there was some mistake
+ */
+Status game_add_player(Game *game, Player *player);
 
 /* ========== Search: Objects ========== */
 
@@ -198,6 +206,37 @@ Character *game_get_character_by_name(Game *game, char *name);
  */
 Id game_get_character_location(Game *game, Id char_id);
 
+/* ========== Search: Players ========== */
+
+/**
+ * @brief It finds a player by its id
+ * @author Salvador
+ *
+ * @param game a pointer to the game
+ * @param id the id of the player to find
+ * @return pointer to the player, or NULL if not found
+ */
+Player *game_get_player_by_id(Game *game, Id id);
+
+/**
+ * @brief It finds a player by its name
+ * @author Salvador
+ *
+ * @param game a pointer to the game
+ * @param name the name of the player to find
+ * @return pointer to the player, or NULL if not found
+ */
+Player *game_get_player_by_name(Game *game, char *name);
+
+/**
+ * @brief It finds in which space a player is located
+ * @author Salvador
+ *
+ * @param game a pointer to the game
+ * @param player_id the id of the player to locate
+ * @return the id of the space containing the player, or NO_ID if not found
+ */
+Id game_get_player_location(Game *game, Id player_id);
 
 /* ========== Access by index (for iteration) ========== */
 
@@ -220,6 +259,16 @@ Object *game_get_object_at(Game *game, int position);
  * @return pointer to the character, or NULL if out of range
  */
 Character *game_get_character_at(Game *game, int position);
+
+/**
+ * @brief It gets a player by its position in the array
+ * @author Salvador
+ *
+ * @param game a pointer to the game
+ * @param position the index in the players array
+ * @return pointer to the player, or NULL if out of range
+ */
+Player *game_get_player_at(Game *game, int position);
 
 /**
  * @brief It gets the id of a space by its position in the array
@@ -258,6 +307,14 @@ int game_get_n_objects(Game *game);
  */
 int game_get_n_characters(Game *game);
 
+/**
+ * @brief It returns the number of players in the game
+ * @author Salvador
+ *
+ * @param game a pointer to the game
+ * @return number of players, or -1 if game is NULL
+ */
+int game_get_n_players(Game *game);
 
 /* ========== Game state ========== */
 
@@ -314,7 +371,7 @@ Status game_get_last_cmd_status(Game *game);
 
 /**
  * @brief It prints the full game state for debugging
- * @author Violeta y Rafa
+ * @author Violeta, Rafa and Salvador
  *
  * @param game a pointer to the game
  */

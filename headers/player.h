@@ -73,6 +73,16 @@ Status player_set_name(Player *player, char *name);
 char *player_get_name(Player *player);
 
 /**
+ * @brief It checks whether the player has the given name
+ * @author Salvador
+ *
+ * @param player a pointer to the player
+ * @param name the name to compare against
+ * @return TRUE if the names match, FALSE otherwise or if any parameter is NULL
+ */
+Bool player_has_name(Player *player, char *name);
+
+/**
  * @brief It sets the health of a player
  * @author Violeta y Rafa
  *

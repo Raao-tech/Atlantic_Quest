@@ -2,9 +2,9 @@
  * @brief It defines the entity module interface
  *
  * @file entity.h
- * @author Violeta y Rafa
- * @version 0
- * @date 27-01-2025
+ * @author Violeta, Rafa y Salvador
+ * @version 1
+ * @date 24-03-2026
  * @copyright GNU Public License
  */
 
@@ -76,6 +76,16 @@ Status entity_set_name(Entity *entity, char *name);
  * @return a copy of the name of the entity (the caller must free it)
  */
 char *entity_get_name(Entity *entity);
+
+/**
+ * @brief It checks whether the entity has the given name
+ * @author Salvador
+ *
+ * @param entity a pointer to the entity
+ * @param name the name to compare against
+ * @return TRUE if the names match, FALSE otherwise or if any parameter is NULL
+ */
+Bool entity_has_name(Entity *entity, char *name);
 
 /**
  * @brief It sets the graphic description of an entity

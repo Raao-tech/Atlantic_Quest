@@ -3,8 +3,8 @@
  *
  * @file game.c
  * @author Profesores PROG, Violeta, Rafael and Salvador
- * @version 3.0
- * @date 23-4-2026
+ * @version 3.1
+ * @date 25-3-2026
  * @copyright GNU Public License
  */
 
@@ -28,7 +28,8 @@ struct _Game
   Character *characters[MAX_CHARACTERS];
   Command *last_cmd;
   Links *links[MAX_LINKS];
-
+ 
+  int turn;
   int n_players;
   int n_spaces;
   int n_objects;
@@ -60,6 +61,7 @@ Game *game_create()
   for (i = 0; i < MAX_LINKS; i++)
     game->links[i] = NULL;
 
+  game->turn = 0;
   game->n_spaces = 0;
   game->n_objects = 0;
   game->n_characters = 0;
@@ -463,6 +465,15 @@ Status game_get_last_cmd_status(Game *game)
   return game->last_cmd_status;
 }
 
+Status game_turn_update (Game *game)
+{
+  if(!game)
+    return ERROR;
+  if(game->n_players<=0)
+    return ERROR;
+  game->turn=(game->turn+1)%game->n_players;
+  return OK;
+}
 /* ========== Print (debugging) ========== */
 
 void game_print(Game *game)

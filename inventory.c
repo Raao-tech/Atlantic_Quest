@@ -2,9 +2,9 @@
  * @brief It implements the player struct
  *
  * @file player.c
- * @author Violeta y Rafael
- * @version 0
- * @date 04-02-2025
+ * @author Violeta, Rafael y Salvador
+ * @version 1
+ * @date 25-03-2026
  * @copyright GNU Public License
  */
 
@@ -34,13 +34,11 @@ Inventory *inventory_create(){
   return newInventory;
 }
 
-
 Status inventory_destroy(Inventory *inventory){
   if (!inventory) return ERROR;
   free(inventory);
   return OK;
 }
-
 
 Status inventory_add(Inventory *inventory, Id new_id){
 	
@@ -58,6 +56,13 @@ Status	inventory_delete_obj(Inventory *inventory, Id trash_id){
 	return set_delete_id(inventory->objs, trash_id);
 }
 
+Bool inventory_contains_object(Inventory* inventory, Id* obj){
+  if(!inventory||obj==NO_ID)
+  {
+    return FALSE;
+  }
+  return set_contains_id(inventory->objs, obj);
+}
 /* id */
 Status inventory_set_max_objs(Inventory *inventory, int max){
   if (!inventory || max < 0) return ERROR;

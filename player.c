@@ -3,8 +3,8 @@
  *
  * @file player.c
  * @author Violeta, Rafael and Salvador
- * @version 1.0
- * @date 23-4-2026
+ * @version 1.1
+ * @date 25-3-2026
  * @copyright GNU Public License
  */
 
@@ -124,11 +124,11 @@ Status    player_add_object(Player *player, Id new_obj){
 }
 Bool      player_contains_object(Player *player, Id ref_obj){
   if(!player) return FALSE;
-  return  inventory_contains_id(player->backpack, ref_obj);
+  return  inventory_contains_obj(player->backpack, ref_obj);
 }
 Status    player_delete_object(Player *player, Id trash_obj){
   if(!player) return ERROR;
-  return  inventory_delete_id(player->backpack, trash_obj);
+  return  inventory_delete_obj(player->backpack, trash_obj);
 }
 int       player_get_n_objects(Player *player){
   if(!player) return ERROR_MAIN;

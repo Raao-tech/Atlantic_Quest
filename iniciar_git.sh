@@ -35,6 +35,11 @@ while [ $play -eq 1 ]; do
         sleep 2
         clear
         play=0;
+
+        git config --global --unset user.name
+        git config --global --unset user.email
+        git remote remove origin  # Para que no se quede tu Token guardado en la carpeta
+
         exit 0;
     elif [[ ! "$opcion" =~ ^[1-2]+$ ]]; then
         echo -e "${name} Has introducido una opcion invalida.... Dios, lo que me toca vivir\n";

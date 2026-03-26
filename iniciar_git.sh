@@ -59,11 +59,18 @@ if [ "$opcion" == 1 ]; then
     git remote add origin $repo
     read -p "cual es tu USERNAME de github? : " username
     read -p "cual es tu EMAIL de github? : " email
-    read -p "Cual es tu PASSWORD de github? : " password
     read -p "Cual es tu TOKEN de uni? : " token
 
-    git config --global user.email  "$email"
-    git config --global user.name  "$username"
+    echo -e "Configurando credenciales temporales..."
+    git config --global user.email "$email"
+    git config --global user.name "$username"
+
+    git remote remove origin 2>/dev/null
+    git remote add origin "https://$username:$token@github.com/Raao-tech/Game_Violeta_Rafael.git"
+
+    echo -e "¡Listo! Intentando sincronizar con GitHub..."
+    git pull origin main --allow-unrelated-histories
+
 
 fi
 

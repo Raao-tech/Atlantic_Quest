@@ -11,6 +11,8 @@ BD = castle.dat
 TARGET = castle
 #######################################
 
+#Nuestro querido asistente, apreciadla, es vuestra mejor herramienta para esta semana santa, recuerden mantender actualziados sus
+#Tokens para poder trabajar juntos.  Por cierto, no la molesten.
 Ingit: Ingit.sh
 	./Ingit.sh
 

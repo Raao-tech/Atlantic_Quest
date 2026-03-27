@@ -28,19 +28,23 @@ if [ "$aperturas" -eq 0 ]; then
     sed -i "s/Aperturas.*/Aperturas\t1/" "$stats_file"
     sed -i "s/Ultimo_name.*/Ultimo_name\t$name/" "$stats_file"
     sed -i "s/Ultimo_user.*/Ultimo_user\t$username/" "$stats_file"
+
+    sleep 1
+    echo -e "¿En que te puedo ayudar hoy?\n"
+    sleep 1
+    echo -e "1. iniciar mi repo desde una compu de la uni\n";
+    echo -e "2. iniciar mi repo desde mi compu";
 else
     name=$ultimo_name
     echo -e "¡Hola de nuevo, ${name}! Soy Ingit.\n"
+    sleep 1
+    echo -e "¿En que te puedo ayudar esta vez?\n"
+    sleep 1
+    echo -e "\n-----------Opciones de administracion------------\n";
+    echo -e "3. Guarda y manda mis cambios\n";
+    echo -e "4. Visualizar Ramas\n";
+    echo -e "5. Estado del proyecto\n";
 fi
-sleep 1
-
-echo -e "¿En que te puedo ayudar hoy?\n"
-echo -e "1. iniciar mi repo desde una compu de la uni\n";
-echo -e "2. iniciar mi repo desde mi compu";
-echo -e "-----------Opciones de administracion------------";
-echo -e "3. Guarda y manda mis cambios\n";
-echo -e "4. Visualizar Ramas\n";
-echo -e "5. Estado del proyecto\n";
 
 echo -e "${adios}. Adios Ingit\n";
 
@@ -169,8 +173,7 @@ elif [ "$opcion" == 3 ]; then
         git rebase --continue
     fi
 
-    # 3. Una vez limpio, mandamos
-   
+    # 3. Una vez limpio, mandamos 
     git add .
     git commit -m "$cambios"
     git push origin main

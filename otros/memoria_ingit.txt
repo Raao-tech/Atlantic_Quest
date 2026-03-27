@@ -1,0 +1,3 @@
+Aperturas	0	\n
+Ultimo_user	NAN	\n
+ultima_fecha	18	20	27	03	2026	\n

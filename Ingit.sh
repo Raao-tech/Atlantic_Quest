@@ -1,12 +1,33 @@
 #!/bin/bash
 repo="https://github.com/Raao-tech/Game_Violeta_Rafael.git";
 adios="6";
-echo -e "Hola! Soy tu asistente de Pre_prog, llamame Ingit.\n";
 
-read -p "Quien eres? responde: " name;
-sleep 0.29
-echo -e "Bienvenido ${name}, que quieres hacer?\n";
+# Revisamos la memoria de ingit
+stats_file=".otros/memoria_ingit.txt"
+mkdir -p .otros  # Crea la carpeta oculta si no existe
+
+if [ ! -f "$stats_file" ]; then
+    echo -e "Aperturas\t0\nUltimo_user\tNAN\nultima_fecha\t$(date +'%H\t%M\t%d\t%m\t%Y')" > "$stats_file"
+fi
+
+# Leer datos con un valor por defecto si falla awk
+aperturas=$(awk '/Aperturas/ {print $2}' "$stats_file")
+aperturas=${aperturas:-0} # Si está vacío, pon 0
+ultimo_user=$(awk '/Ultimo_user/ {print $2}' "$stats_file")
+ultimo_user=${ultimo_user:-"NAN"}
+
+if [ "$aperturas" -eq 0 ]; then
+    echo -e "Hola! Soy tu asistente de Pre_prog, llamame Ingit.\n"
+    read -p "Veo que es tu primera vez por aquí. ¿Quién eres? responde: " name
+    # Actualizamos el archivo: Aperturas pasa a 1 y guardamos el nombre
+    sed -i "s/Aperturas.*/Aperturas\t1/" "$stats_file"
+    sed -i "s/Ultimo_user.*/Ultimo_user\t$name/" "$stats_file"
+else
+    name=$ultimo_user
+    echo -e "¡Hola de nuevo, ${name}! Soy Ingit.\n"
+fi
 sleep 1
+
 echo -e "1. iniciar mi repo desde una compu de la uni\n";
 echo -e "2. iniciar mi repo desde mi compu";
 echo -e "-----------Opciones de administracion------------";
@@ -42,6 +63,16 @@ while [ $play -eq 1 ]; do
         clear
         play=0;
 
+        # Guardar fecha actual y resetear aperturas a 0
+        fecha_actual=$(date +'%H\t%M\t%d\t%m\t%Y')
+        sed -i "s/Aperturas.*/Aperturas\t0/" "$stats_file"
+        sed -i "s/ultima_fecha.*/ultima_fecha\t$fecha_actual/" "$stats_file"
+
+        #Limpiamos el config gnereal del repo (talk vez no sea lo mejor si es tu compu, pero por ahora lo dejaremos asi)
+        echo -e "Por cierto, deberias asegurarte de volver a iniciar tus crendeciales si queires trabajar en otro repo, o usame para tus proyectos personales\n"
+        echo -e "Soy una gran asistente jejeje... por favor, aca no me pagan, me estan explotando\n"
+        echo -e "Bueno, continaure borrando cosas, ya estas avisado... llamame al +58 555 555 55 para pdoer ayudarte luego jejeje\n"
+        sleep 3
         git config --global --unset user.name
         git config --global --unset user.email
         git remote remove origin
@@ -131,7 +162,9 @@ elif [ "$opcion" == 3 ]; then
     git commit -m "$cambios"
     git push origin main
 
-    echo -e "Vale. Ya estaria, si necesitas algo mas, vuelve a llamarme\n"
+    fecha_actual=$(date +'%H\t%M\t%d\t%m\t%Y')
+    sed -i "s/ultima_fecha.*/ultima_fecha\t$fecha_actual/" "$stats_file"
+    echo -e "Vale. Ya estaría, registro de fecha actualizado. Vuelve cuando quieras.\n" echo -e "Vale. Ya estaria, si necesitas algo mas, vuelve a llamarme\n"
     sleep 1.5
     clear
         

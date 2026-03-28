@@ -160,7 +160,9 @@ if [ "$opcion" == 1 ]; then
     url_con_token="https://${username}:${token}@github.com/Raao-tech/Game_Violeta_Rafael.git"
     
     git remote prune origin
+    git tag -d origin/main
 
+    echo -e "${BLUE} Obvia lo de arriba ${YELOW} ^^^^ ${RESET}\n"
     git remote remove origin 2>/dev/null
     git remote add origin "$url_con_token"
 
@@ -192,13 +194,20 @@ if [ "$opcion" == 1 ]; then
     sed -i "s/Ultimo_name.*/Ultimo_name\t$name/" "$stats_file"
     
 elif [ "$opcion" == 3 ]; then
-    read -p "$(echo -e "${YELLOW}¿Qué cambios has hecho?${RESET} (Mensaje para el ${GREEN}commit${RESET}): ")" respuesta
+    read -p "$(echo -e "${YELOW}¿Qué cambios has hecho?${RESET} (Mensaje para el ${GREEN}commit${RESET}): ")" respuesta
 
+    echo -e "OK. Primero guardemos tus cambios en el local\n"
+    git add .
+    git commit -m "$respuesta es un comentario preambulo"
     echo -e "OK. Comenzaremos viendo si hay errores de compatibilidad...\n"
+    
+    
 
     # 1. Intentamos traer lo de la nube
     git fetch origin main
 
+    #Esto ees para que no haya problemas con el estado de la nube en la memoeria de Ingit, leugo lo ponemos otra vez en 1
+    sed -i "s/Aperturas.*/Aperturas\t0/" "$stats_file"
     # 2. Intentamos un pull. Si falla, hay conflictos.
     if ! git pull origin main --rebase; then
         echo -e "${RED} ¡HOUSTON, TENEMOS UN CONFLICTO! ${RESET} 
@@ -212,7 +221,6 @@ elif [ "$opcion" == 3 ]; then
         read -p "Presiona ${GREEN} ENTER ${RESET} cuando hayas ${RED} resuelto los conflictos ${RESET} en el código..." listo
         
         git add .
-        git commit -m "Commit de emergencia antes de hacer el pusheado de rebase del colaborador ${username}"
         git rebase --continue
     fi
 

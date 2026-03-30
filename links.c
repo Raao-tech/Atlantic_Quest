@@ -1,7 +1,7 @@
 /**
- * @brief It implements the entity struct
+ * @brief It implements the links struct
  *
- * @file character.c
+ * @file link.c
  * @author Violeta
  * @version 0
  * @date 04-02-2025
@@ -106,22 +106,59 @@ Status       link_set_open_dest_to_origin(Links *link, Bool status)
     link->status_orig = status;
     return OK;
 }
-Bool         link_get_open_dest_to_origin(Links *link);
+Bool         link_get_open_dest_to_origin(Links *link)
+{
+     if(!link) return FALSE;
+    return link->status_orig;   
+}
 
-Status       link_set_open_origin_to_dest(Links *link, Bool status);
-Bool         link_get_open_origin_to_dest(Links *link);
+Status       link_set_open_origin_to_dest(Links *link, Bool status)
+{
+    if(!link) return ERROR;
+    link->status_dest = status;
+    return OK;
+}
+Bool         link_get_open_origin_to_dest(Links *link)
+{
+    if(!link) return FALSE;
+    return link->status_dest; 
+}
 
 /* ============== (set/get) direction ====================== */
 
-Status       link_set_direction(Links *link, Direction dir);
-Direction    link_get_direction(Links *link);
+Status       link_set_direction(Links *link, Direction dir)
+{
+    if(!link || dir== U) return ERROR;
+    link->direction = dir;
+    return OK;
+}
+Direction    link_get_direction(Links *link)
+{
+    if(!link) return FALSE;
+    return link->direction;
+}
 
 /* oppsited direction */
-Direction    link_get_oppsite_direction(Links *link);
+Direction    link_get_oppsite_direction(Links *link)
+{
+    if(!link) return U;
+    //esto se puede optimizar tla vez usando congruencias, pero  a falta de una idea funcional lo dejare asi
+    if(link->direction == N) return S;
+    if(link->direction == S) return N;
+    if(link->direction == E) return W;
+    if(link->direction == W) return E;
+    
+    return U;
+}
 
 /* ============== (set/get) origin/destination ====================== */
 
-Status       link_set_origin_id(Links *link, Id id_orig);
+Status       link_set_origin_id(Links *link, Id id_orig)
+{
+    if(!link || id_orig == U) return ERROR;
+    
+   link->origin = id_orig;
+}
 Id           link_get_origin_id(Links *link);
 
 Status       link_set_destination_id(Links *link, Id id_dest);

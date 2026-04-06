@@ -158,6 +158,10 @@ Status space_remove_character(Space *space, Id id_chara);
  */
 int space_get_n_characters(Space *space);
 
+/*========== Discovered (Can you come in?) ===========*/
+
+Status space_set_discovered(Space* space, Bool value);
+Bool space_get_discovered(Space* space);
 
 /* ========== Graphic description (5 x 9 ASCII art) ========== */
 

@@ -22,21 +22,23 @@
  */
 struct _Game
 {
-  Player *players[MAX_PLAYERS];
-  Object *objects[MAX_OBJECTS];
-  Space *spaces[MAX_SPACES];
-  Character *characters[MAX_CHARACTERS];
-  Command *last_cmd;
-  Links *links[MAX_LINKS];
+  /*TADs*/
+  Player      *players[MAX_PLAYERS];
+  Character   *characters[MAX_CHARACTERS];
+  Object      *objects[MAX_OBJECTS];
+  Space       *spaces[MAX_SPACES];
+  Links       *links[MAX_LINKS];
+  Command     *last_cmd;
+
  
-  int turn;
-  int n_players;
-  int n_spaces;
-  int n_objects;
-  int n_characters;
-  int n_links;
-  Bool finished;
-  Status last_cmd_status;
+  int     turn;
+  int     n_players;
+  int     n_spaces;
+  int     n_objects;
+  int     n_characters;
+  int     n_links;
+  Bool    finished;
+  Status  last_cmd_status;
 };
 
 /* ========== Create / Destroy ========== */
@@ -47,19 +49,13 @@ Game *game_create()
   Game *game = NULL;
 
   game = (Game *)malloc(sizeof(Game));
-  if (!game)
-    return NULL;
+  if (!game) return NULL;
 
-  for (i = 0; i < MAX_SPACES; i++)
-    game->players[i] = NULL;
-  for (i = 0; i < MAX_SPACES; i++)
-    game->spaces[i] = NULL;
-  for (i = 0; i < MAX_OBJECTS; i++)
-    game->objects[i] = NULL;
-  for (i = 0; i < MAX_CHARACTERS; i++)
-    game->characters[i] = NULL;
-  for (i = 0; i < MAX_LINKS; i++)
-    game->links[i] = NULL;
+  for (i = 0; i < MAX_SPACES; i++)     game->players[i] = NULL;
+  for (i = 0; i < MAX_SPACES; i++)     game->spaces[i] = NULL;
+  for (i = 0; i < MAX_OBJECTS; i++)    game->objects[i] = NULL;
+  for (i = 0; i < MAX_CHARACTERS; i++) game->characters[i] = NULL;
+  for (i = 0; i < MAX_LINKS; i++)      game->links[i] = NULL;
 
   game->turn = 0;
   game->n_spaces = 0;
@@ -70,8 +66,8 @@ Game *game_create()
   game->last_cmd_status = OK;
 
   game->last_cmd = command_create();
-  if (!game->last_cmd)
-  {
+
+  if (!game->last_cmd){
     free(game);
     return NULL;
   }
@@ -82,23 +78,15 @@ Game *game_create()
 Status game_destroy(Game *game)
 {
   int i;
-  if (!game)
-    return ERROR;
+  if (!game) return ERROR;
 
-  for (i = 0; i < game->n_spaces; i++)
-    space_destroy(game->spaces[i]);
-
-  for (i = 0; i < game->n_objects; i++)
-    obj_destroy(game->objects[i]);
-
-  for (i = 0; i < game->n_characters; i++)
-    character_destroy(game->characters[i]);
-
-  for (i = 0; i < game->n_players; i++)
-    player_destroy(game->players[i]);
+  for (i = 0; i < game->n_spaces; i++)      space_destroy(game->spaces[i]);
+  for (i = 0; i < game->n_objects; i++)     obj_destroy(game->objects[i]);
+  for (i = 0; i < game->n_characters; i++)  character_destroy(game->characters[i]);
+  for (i = 0; i < game->n_players; i++)     player_destroy(game->players[i]);
+  for (i = 0; i < game->n_links; i++)     link_destroy(game->links[i]);
 
   command_destroy(game->last_cmd);
-
   free(game);
   return OK;
 }
@@ -127,8 +115,7 @@ Space *game_get_space(Game *game, Id id)
   if (!game || id == NO_ID)
     return NULL;
 
-  for (i = 0; i < game->n_spaces; i++)
-  {
+  for (i = 0; i < game->n_spaces; i++){
     if (space_get_id(game->spaces[i]) == id)
       return game->spaces[i];
   }
@@ -139,20 +126,25 @@ Space *game_get_space(Game *game, Id id)
 Id game_get_connection(Game *game, Id space, Direction dir)
 {
   int i;
-  if (!game || space == NO_ID || dir == U)
-  {
-    return NO_ID;
-  }
+  Direction dir_opp;
+  Direction dir_norm;
+  Id  id_orig;
+  Id  id_dest;
+
+  if (!game || space == NO_ID || dir == U) return NO_ID;
+
+  /*Iniciando Valores por costumbre y... Toc esporádica, no tengo otra razon*/
+  id_orig = id_dest = NO_ID; 
+  dir_norm = dir_opp = U;
   for (i = 0; i < game->n_links; i++)
   {
-    if (link_get_origin_id(game->links[i]) == space && link_get_direction(game->links[i]) == dir)
-    {
-      return link_get_destiny_id(game->links[i]);
-    }
-    else if (link_get_destiny_id(game->links[i]) == space && link_get_opposite_direction(game->links[i]) == dir)
-    {
-      return link_get_origin_id(game->links[i]);
-    }
+    dir_norm =  link_get_direction(game->links[i]);
+    dir_opp =   link_get_opposite_direction(game->links[i]);
+    id_orig =   link_get_origin_id(game->links[i]);
+    id_dest =   link_get_destination_id(game->links[i]);
+
+    if ((id_orig == space) && (dir_norm == dir)) return id_dest;
+    else if ((id_dest == space) && (dir_opp == dir)) return id_orig;
   }
   return NO_ID;
 }
@@ -160,10 +152,8 @@ Id game_get_connection(Game *game, Id space, Direction dir)
 Bool game_connection_is_open(Game *game, Id space, Direction dir)
 {
   int i;
-  if (!game || space == NO_ID || dir == U)
-  {
-    return FALSE;
-  }
+  if (!game || space == NO_ID || dir == U) return FALSE;
+  
   for (i = 0; i < game->n_links; i++)
   {
     if (link_get_origin_id(game->links[i]) == space && link_get_direction(game->links[i]) == dir)

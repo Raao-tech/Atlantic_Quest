@@ -179,6 +179,7 @@ if [ "$opcion" == 1 ]; then
     # Guardar fecha actual y reiniciar las aperturas para el proximo colabroardor
     sed -i "s/Aperturas.*/Aperturas\t0/" "$stats_file"
     fecha_actual=$(date +'%H\t%M\t%d\t%m\t%Y')
+    sed -i "s/Aperturas.*/Aperturas\t0/" "$stats_file"
     
     git add otros/memoria_ingit.txt
     git commit -m "Ingreso de ${username} el dia ${fecha_actual}"

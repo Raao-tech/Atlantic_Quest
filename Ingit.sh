@@ -195,63 +195,58 @@ if [ "$opcion" == 1 ]; then
     sed -i "s/Ultimo_name.*/Ultimo_name\t$name/" "$stats_file"
     
 elif [ "$opcion" == 3 ]; then
-    read -p "$(echo -e "${YELOW}¿Qué cambios has hecho?${RESET} (Mensaje para el ${GREEN}commit${RESET}): ")" respuesta
+    read -p "$(echo -e "${YELOW}¿Qué cambios has hecho?${RESET} (Mensaje para el commit): ")" mensaje
 
-    echo -e "OK. Primero guardemos tus cambios en el local\n"
+    # 1. Guardar cambios locales del usuario
+    echo -e "\nGuardando tus avances locales..."
     git add .
-    git commit -m "$respuesta (Guardadndo Cambios locales)"    
-    
+    git commit -m "$mensaje"
 
-    # 1. Intentamos traer lo de la nube
-    echo -e "OK. Comenzaremos viendo si hay errores de compatibilidad con la NUBE...\n"
+    # 2. PREPARAR EL REPO PARA LA NUBE (Resetear contador)
+    # Guardamos tus datos actuales en variables temporales para no perderlos localmente
+    temp_name=$name
+    temp_user=$username
+    
+    echo -e "Preparando el archivo de memoria para que el repo aparezca como 'nuevo' en GitHub..."
+    sed -i "s/Aperturas.*/Aperturas\t0/" "$stats_file"
+    sed -i "s/Ultimo_name.*/Ultimo_name\tNAN/" "$stats_file"
+    sed -i "s/Ultimo_user.*/Ultimo_user\tNAN/" "$stats_file"
+    
+    # Añadimos este cambio de "reset" al commit que vamos a subir
+    git add "$stats_file"
+    # Usamos --amend para que no aparezcan mil commits de "reset" en el historial
+    GIT_EDITOR=true git commit --amend --no-edit
+
+    # 3. TRAER CAMBIOS DE LA NUBE Y HACER REBASE
+    echo -e "Sincronizando con la nube (Fetch & Rebase)..."
     git fetch origin main
 
-    #Esto ees para que no haya problemas con el estado de la nube en la memoeria de Ingit, leugo lo ponemos otra vez en 1
-    sed -i "s/Aperturas.*/Aperturas\t0/" "$stats_file"
-    # 2. Intentamos un pull. Si falla, hay conflictos.
+    # Intentamos el pull con rebase
     if ! git pull origin main --rebase; then
-            
-
-
-        echo -e "${RED} ¡HOUSTON, TENEMOS UN CONFLICTO! ${RESET} 
-        ${YELOW} Alguien ${RESET} ha tocado las ${RED} mismas líneas que tú ${RESET}. 
-        Abre los archivos marcados, busca las marcas ${YELOW}'<<<<<<'${RESET}, límpialas y guarda.
-        Se que usar tu criterio es algo costoso para ti, pero no pasa nada, intentalo.
-        o llama al  ${GREEN} +58 PENDEJ@ HAS TU TRABAJO!! ${RESET}"
-
-        sleep 2
-        # Aquí el script se detiene para que el humano arregle el código
-        read -p "Presiona ${GREEN} ENTER ${RESET} cuando hayas ${RED} resuelto los conflictos ${RESET} en el código..." listo
+        echo -e "${RED}¡HOUSTON, TENEMOS UN CONFLICTO!${RESET}"
+        echo -e "Alguien más ha modificado las mismas líneas que tú."
+        echo -e "Abre los archivos, busca las marcas <<<<<< e intenta resolverlo."
         
-
-
-
-        sed -i "s/ultima_fecha.*/ultima_fecha\t$fecha_actual/" "$stats_file"
-        sed -i "s/Ultimo_user.*/Ultimo_user\t$username/" "$stats_file"
-        sed -i "s/Ultimo_name.*/Ultimo_name\t$name/" "$stats_file"
-        sed -i "s/Aperturas.*/Aperturas\t0/" "$stats_file"
-        # Continuación del rebase tras la intervención humana
+        read -p "Presiona ${GREEN}ENTER${RESET} cuando hayas resuelto los conflictos..." listo
+        
         git add .
-        
-        # Vemos que fecha es para poder guardarla y mandarla al commit
-        fecha_actual=$(date +'%H\t%M\t%d\t%m\t%Y')
-        sed -i "s/Aperturas.*/Aperturas\t0/" "$stats_file"
-        # Usamos una variable de entorno para que no abra el editor de texto en cada commit rebasado
+        # Continuamos el rebase sin abrir editores de texto
         GIT_EDITOR=true git rebase --continue
     fi
 
-    
-    # 3. Una vez limpio, mandamos 
-    echo -e "Subiendo cambios limpios a la nube..."
+    # 4. MANDAR INFORMACIÓN (Push)
+    echo -e "Subiendo cambios limpios..."
     git push origin main --force-with-lease
 
-    
-    sed -i "s/ultima_fecha.*/ultima_fecha\t$fecha_actual/" "$stats_file"
+    # 5. RESTAURAR LOCALMENTE (Para que tú sigas logueado)
+    # Volvemos a poner tus datos en el archivo local para que Ingit te reconozca mañana
     sed -i "s/Aperturas.*/Aperturas\t1/" "$stats_file"
-    sed -i "s/Ultimo_user.*/Ultimo_user\t$username/" "$stats_file"
-
-    echo -e "Vale. Ya estaría, ${GREEN}registro de fecha actualizado${RESET}. Vuelve cuando quieras.\n"
-    echo -e "Vale. Ya estaria, si necesitas algo mas, vuelve a llamarme\n"
+    sed -i "s/Ultimo_name.*/Ultimo_name\t$temp_name/" "$stats_file"
+    sed -i "s/Ultimo_user.*/Ultimo_user\t$temp_user/" "$stats_file"
+    
+    echo -e "\n${GREEN}¡Todo listo, $temp_name!${RESET}"
+    echo -e "${GREEN}registro de fecha actualizado${RESET}. Vuelve cuando quieras.\n"
+    echo -e "Si necesitas algo mas, vuelve a llamarme\n"
     echo -e "Mientras tanto, me ire a sentar junto tu carpeta de matematicas de 20GB.... 
     ¿Sera que lo publico por telegram? mmmm bueno, luego vere. HASTA LUEGOO!!";
     

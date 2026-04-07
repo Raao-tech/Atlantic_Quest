@@ -1,4 +1,4 @@
-Aperturas	0
+Aperturas	1
 Ultimo_name	NAN
 Ultimo_user	NAN
-ultima_fecha	12	26	07	04	2026
+ultima_fecha	17	39	07	04	2026

@@ -110,90 +110,88 @@ done
 sleep 1.5
 clear
 if [ "$opcion" == 1 ]; then
-
-    echo -e "\nAntes de empezar, voy a crear un repo, se supone que has descargado esto desde un .zip\n"
+    echo -e "\n${BLUE}--- Configuración Inicial del Repositorio ---${RESET}"
+    echo -e "Parece que estamos empezando de cero (o desde un .zip)."
+    echo -e "POR FAVOR LEE LO QUE TE ESTOY DICIENDO, NO CUESTA MUCHO"
     sleep 0.5
     
-    read -p "¿Correcto? (responde  si, yes, s, y, todo lo demas sera un NO): " respuesta;
-    
-    sleep 0.1
-    echo -e "Ok, otra cosa, Puede que todos los cambios que has hecho antes de iniciar la conexion con la nube";
-    echo -e "SE PIERDANN, osea, TODOOOO, y se impondra lo que haya en la nube, asi que:\n";
-    sleep 0.5
-    
-    read -p "¿Estas seguro de continuar? (responde  si, yes, s, y, todo lo demas sera un NO):" resp_2
-    
-    
-
-    if [[ ! "$respuesta" =~ ^(si|yes|s|y|S|correct)$  ||  ! "$resp_2" =~ ^(si|yes|s|y|S|correct)$ ]]; then
-        sleep 0.3
-        echo -e "Pues ¿que haces aqui? Deja de joder\n";
-        sleep 1;
+    # Verificación de seguridad
+    read -p "¿Confirmas que quieres inicializar este directorio? (s/n): " respuesta
+    if [[ ! "$respuesta" =~ ^(s|S|si|SI|y|Y|yes|YES)$ ]]; then
+        echo -e "${RED}Operación cancelada.${RESET} Ingit se va a dormir un rato..."
         exit 0
     fi
-    clear;
-    sleep 1
-    
 
-    echo -e "Esta bien, ${RED} ya estas advertido ${RESET}.  El que avisa no es traidor....
-    Dicho eso, ${GREEN} empecemos con la magia git ${BLUE} jejeje ${RESET}\n";
-    
-    #Esto es para dejar por default en el sistema el main
-    git config --global init.defaultBranch main
-    
-    echo -e "${GREEN} Iniciando repo en el ${YELOW} directorio actual ${RESET}"
-    git init
+    echo -e "\n${RED}¡PELIGRO!${RESET}"
+    echo -e "Voy a sincronizar con la nube. Si tienes archivos aquí que no están en GitHub,"
+    echo -e "${RED}SE PERDERÁN${RESET} para siempre (serán reemplazados por lo que hay en el repo)."
+    read -p "¿Estás ABSOLUTAMENTE seguro? (escribe 'confirmar'): " resp_2
+
+    if [[ "$resp_2" != "confirmar" ]]; then
+        echo -e "Uff, de la que nos salvamos. Mejor asegúrate y vuelve luego.\n"
+        exit 0
+    fi
+
+    clear
+    echo -e "Iniciando la magia de ${GREEN}Ingit${RESET}...\n"
+
+    # 1. Inicialización silenciosa
+    git init -q
     git branch -m main
 
-    sleep 0.35
-    read -p "cual es tu ${YELOW} USERNAME ${RESET} de github? : " username
-    read -p "cual es tu ${YELOW} EMAIL ${RESET} de github? : " email
-    read -p "Cual es tu ${YELOW} TOKEN ${RESET} de uni? : " token
-    
-    echo -e "Configurando credenciales temporales..."
-    git config --global user.email "$email"
-    git config --global user.name "$username"
+    # 2. Recolección de datos con validación simple
+    while [[ -z "$username" ]]; do read -p "Introduce tu USERNAME de GitHub: " username; done
+    while [[ -z "$email" ]]; do read -p "Introduce tu EMAIL de GitHub: " email; done
+    while [[ -z "$token" ]]; do read -p "Introduce tu TOKEN (PAT): " token; done
 
-    sleep 0.5
-    echo -e "${BLUE} Estableciendo ${RESET} el enlace HTTPS al repo"
-    
-    url_con_token="https://${username}:${token}@github.com/Raao-tech/Game_Violeta_Rafael.git"
-    
-    git remote prune origin
-    git tag -d origin/main
+    # 3. Configuración LOCAL (Solo afecta a esta carpeta)
+    echo -e "\n${BLUE}[1/4]${RESET} Configurando identidad local..."
+    git config user.name "$username"
+    git config user.email "$email"
+    # Evita que Git pregunte por el nombre de la rama al hacer pull
+    git config pull.rebase false 
 
-    echo -e "${BLUE} Obvia lo de arriba ${YELOW} ^^^^ ${RESET}\n"
+    # 4. Configuración del Remoto
+    echo -e "${BLUE}[2/4]${RESET} Conectando con los servidores de la NASA (bueno, GitHub)..."
+    # Limpiamos remotos previos para evitar el error "remote origin already exists"
     git remote remove origin 2>/dev/null
+    
+    # Usamos el repo que definiste al inicio del script
+    url_con_token="https://${username}:${token}@${repo#https://}"
     git remote add origin "$url_con_token"
 
-    sleep 0.5
-    echo -e "${GREEN} Pidiendo ${RESET} datos al repo...\n"
-    git fetch origin
+    # 5. Sincronización destructiva (Reset Hard)
+    echo -e "${BLUE}[3/4]${RESET} Trayendo archivos de la nube..."
+    git fetch origin main -q
     
-    echo -e "${BLUE} Sincronizando ${RESET} con la nube ${RED} (borrando basura local) ${RESET} ...\n"
-    git reset --hard origin/main
-    
-    # Esto conecta tu rama local 'main' con la de GitHub para siempre
-    git branch --set-upstream-to=origin/main main
+    # Comprobar si el fetch funcionó antes de borrar todo
+    if [ $? -eq 0 ]; then
+        git reset --hard origin/main
+        git branch --set-upstream-to=origin/main main
+    else
+        echo -e "${RED}Error:${RESET} No pude conectar. Revisa tu Token o el nombre de usuario."
+        exit 1
+    fi
 
-    # Guardar fecha actual y reiniciar las aperturas para el proximo colabroardor
-    sed -i "s/Aperturas.*/Aperturas\t0/" "$stats_file"
+    # 6. Actualización de Memoria Ingit
+    echo -e "${BLUE}[4/4]${RESET} Actualizando mi memoria interna..."
+    
+    # Formateamos la fecha para el archivo
     fecha_actual=$(date +'%H\t%M\t%d\t%m\t%Y')
-    sed -i "s/Aperturas.*/Aperturas\t0/" "$stats_file"
     
-    git add otros/memoria_ingit.txt
-    git commit -m "Ingreso de ${username} el dia ${fecha_actual}"
-    echo -e "¡Listo! El repo está vinculado y al día.\n"
-    
-
-    
-    sleep 1.5
-    echo -e "Para verificar el estado de su repo, ejecuta    ${YELOW} git status ${RESET}"
-    #Nos aseguramos de que los datos del actual usuario esten en la memoria local de Ingit.
+    # Actualizamos el archivo de stats
     sed -i "s/Aperturas.*/Aperturas\t1/" "$stats_file"
-    sed -i "s/Ultimo_user.*/Ultimo_user\t$username/" "$stats_file"
     sed -i "s/Ultimo_name.*/Ultimo_name\t$name/" "$stats_file"
-    
+    sed -i "s/Ultimo_user.*/Ultimo_user\t$username/" "$stats_file"
+    sed -i "s/ultima_fecha.*/ultima_fecha\t$fecha_actual/" "$stats_file"
+
+    # Creamos un commit de registro del login
+    git add "$stats_file"
+    git commit -m "Registro: $username inició sesión el $(date +'%d/%m/%Y')" > /dev/null
+
+    echo -e "\n${GREEN}¡TODO LISTO, JEFE!${RESET}"
+    echo -e "El repo está vinculado y limpio. Ya puedes empezar a romper cosas."
+    echo -e "Prueba ejecutando: ${YELOW}ls -la${RESET} para ver tus archivos.\n"
 elif [ "$opcion" == 3 ]; then
     read -p "$(echo -e "${YELOW}¿Qué cambios has hecho?${RESET} (Mensaje para el commit): ")" mensaje
 
@@ -219,7 +217,7 @@ elif [ "$opcion" == 3 ]; then
 
     # 3. TRAER CAMBIOS DE LA NUBE Y HACER REBASE
     echo -e "Sincronizando con la nube (Fetch & Rebase)..."
-    git fetch origin main
+    git fetch origin main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
 
     # Intentamos el pull con rebase
     if ! git pull origin main --rebase; then

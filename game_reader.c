@@ -39,23 +39,12 @@ Status game_load_spaces(Game *game, char *filename)
     if (strncmp("#s:", line, 3) == 0)
     {
       toks = strtok(line + 3, "|");
-       if (!toks)
-      {
-        fclose(file);
-        return ERROR;
-      }
+
       id = atol(toks);
        if (id==NO_ID)
-      {
-        fclose(file);
-        return ERROR;
-      }
+
       toks = strtok(NULL, "|");
        if (!toks)
-      {
-        fclose(file);
-        return ERROR;
-      }
       strncpy(name, toks, WORD_SIZE - 1);
 
 #ifdef DEBUG
@@ -350,7 +339,7 @@ Status game_load_links(Game *game, char *filename)
   char line[WORD_SIZE] = "";
   char name[WORD_SIZE] = "";
   char *toks = NULL;
-  Id id = NO_ID, north = NO_ID, east = NO_ID, south = NO_ID, west = NO_ID;
+  Id id = NO_ID, orig_id, dest_id;
   Status status = OK;
   Direction direction=U;
   Bool dest_to_orig=FALSE;
@@ -373,28 +362,33 @@ Status game_load_links(Game *game, char *filename)
       id = atol(toks);
       toks = strtok(NULL, "|");
       strcpy(name, toks);
+      toks = strtok(NULL, "|");
+      orig_id = atol(toks);
+      toks = strtok(NULL, "|");
+      dest_id = atol(toks);
+      toks = strtok(NULL, "|");
+      direction = (Direction)atoi(toks);
+      toks = strtok(NULL, "|");
+      orig_to_dest = (Bool)atoi(toks);
+      toks = strtok(NULL, "|");
+      dest_to_orig = (Bool)atoi(toks);
 
 #ifdef DEBUG
       printf("Leido links: l:%ld|%s|\n", id, name);
 #endif
 
-      space = space_create();
-      if (space != NULL)
+      link = link_create();
+      if (link != NULL)
       {
-        space_set_id(space, id);
-        space_set_name(space, name);
+        link_set_id(link, id);
+        link_set_name(link, name);
+        link_set_origin_id(link, orig_id);
+        link_set_destination_id(link, dest_id);
+        link_set_direction(link, direction);
+        link_set_open_origin_to_dest(link, orig_to_dest);
+        link_set_open_dest_to_origin (link, dest_to_orig);
 
-        /* Try to read gdesc lines (optional, may not be present) */
-        for (i = 0; i < MAX_LINE; i++)
-        {
-          toks = strtok(NULL, "|");
-          if (toks && toks[0] != '\n' && toks[0] != '\0')
-          {
-            space_set_gdesc_line(space, i, toks);
-          }
-        }
-
-        game_add_space(game, space);
+        status=game_add_link(game, link);
       }
     }
   }

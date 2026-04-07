@@ -124,12 +124,12 @@ if [ "$opcion" == 1 ]; then
     fi
 
     echo -e "\n${RED}¡PELIGRO!${RESET}"
-    echo -e "Voy a sincronizar con la nube. Si tienes archivos aquí que no están en GitHub,"
-    echo -e "${RED}SE PERDERÁN${RESET} para siempre (serán reemplazados por lo que hay en el repo)."
-    read -p "¿Estás ABSOLUTAMENTE seguro? (escribe 'confirmar'): " resp_2
+    echo -e "Voy a sincronizatr con la nube. Si tienes archivos aqui que no estan en GitHub,"
+    echo -e "${RED}SE PERDERAN${RESET} para siempre (seran reemplazados por lo que hay en el repo)."
+    read -p "¿Estas ABSOLUTAMENTE seguro? (escribe 'confirmar'): " resp_2
 
     if [[ "$resp_2" != "confirmar" ]]; then
-        echo -e "Uff, de la que nos salvamos. Mejor asegúrate y vuelve luego.\n"
+        echo -e "Uff, de la que nos salvamos. Mejor asegurate y vuelve luego.\n"
         exit 0
     fi
 
@@ -153,7 +153,7 @@ if [ "$opcion" == 1 ]; then
     git config pull.rebase false 
 
     # 4. Configuración del Remoto
-    echo -e "${BLUE}[2/4]${RESET} Conectando con los servidores de la NASA (bueno, GitHub)..."
+    echo -e "${BLUE}[2/4]${RESET} Conectando con los servidores de la NASA (bueno, GitHub pero es para que sea itneresnte)..."
     # Limpiamos remotos previos para evitar el error "remote origin already exists"
     git remote remove origin 2>/dev/null
     

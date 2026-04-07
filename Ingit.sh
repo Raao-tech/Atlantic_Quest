@@ -223,6 +223,13 @@ elif [ "$opcion" == 3 ]; then
         # Aquí el script se detiene para que el humano arregle el código
         read -p "Presiona ${GREEN} ENTER ${RESET} cuando hayas ${RED} resuelto los conflictos ${RESET} en el código..." listo
         
+
+
+
+        sed -i "s/ultima_fecha.*/ultima_fecha\t$fecha_actual/" "$stats_file"
+        sed -i "s/Ultimo_user.*/Ultimo_user\t$username/" "$stats_file"
+        sed -i "s/Ultimo_name.*/Ultimo_name\t$name/" "$stats_file"
+        sed -i "s/Aperturas.*/Aperturas\t0/" "$stats_file"
         # Continuación del rebase tras la intervención humana
         git add .
         

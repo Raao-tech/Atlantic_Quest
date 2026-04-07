@@ -256,9 +256,10 @@ elif [ "$opcion" == 3 ]; then
     ¿Sera que lo publico por telegram? mmmm bueno, luego vere. HASTA LUEGOO!!";
     
     sleep 1.5
-    sed -i "s/ultima_fecha.*/ultima_fecha\t$fecha_actual/" "$stats_file"
-    sed -i "s/Ultimo_user.*/Ultimo_user\t$username/" "$stats_file"
-    sed -i "s/Ultimo_name.*/Ultimo_name\t$name/" "$stats_file"
-    
+    if [$aperturas -eq 0]; then
+        sed -i "s/ultima_fecha.*/ultima_fecha\t$fecha_actual/" "$stats_file"
+        sed -i "s/Ultimo_user.*/Ultimo_user\t$username/" "$stats_file"
+        sed -i "s/Ultimo_name.*/Ultimo_name\t$name/" "$stats_file"
+    fi
 
 fi

@@ -22,7 +22,7 @@ Status game_load_spaces(Game *game, char *filename)
   char line[WORD_SIZE] = "";
   char name[WORD_SIZE] = "";
   char *toks = NULL;
-  Id id = NO_ID, north = NO_ID, east = NO_ID, south = NO_ID, west = NO_ID;
+  Id id = NO_ID;
   Space *space = NULL;
   Status status = OK;
   int i;
@@ -39,9 +39,24 @@ Status game_load_spaces(Game *game, char *filename)
     if (strncmp("#s:", line, 3) == 0)
     {
       toks = strtok(line + 3, "|");
+       if (!toks)
+      {
+        fclose(file);
+        return ERROR;
+      }
       id = atol(toks);
+       if (id==NO_ID)
+      {
+        fclose(file);
+        return ERROR;
+      }
       toks = strtok(NULL, "|");
-      strcpy(name, toks);
+       if (!toks)
+      {
+        fclose(file);
+        return ERROR;
+      }
+      strncpy(name, toks, WORD_SIZE - 1);
 
 #ifdef DEBUG
       printf("Leido space: s:%ld|%s|\n", id, name);
@@ -50,8 +65,13 @@ Status game_load_spaces(Game *game, char *filename)
       space = space_create();
       if (space != NULL)
       {
-        space_set_id(space, id);
-        space_set_name(space, name);
+       if( space_set_id(space, id)==ERROR|| space_set_name(space, name) == ERROR)
+       {
+
+        space_destroy(space);
+        fclose(file);
+        return ERROR;
+       }
 
         /* Try to read gdesc lines (optional, may not be present) */
         for (i = 0; i < MAX_LINE; i++)
@@ -326,7 +346,64 @@ Status game_load_players(Game *game, char *filename)
 /* Format: #l:id|name|origin space ID|destiny space ID|direction (based on the Direction enumeration)|origin to destiny open (0/1)|destiny to origin open (0/1)|*/
 Status game_load_links(Game *game, char *filename)
 {
+  FILE *file = NULL;
+  char line[WORD_SIZE] = "";
+  char name[WORD_SIZE] = "";
+  char *toks = NULL;
+  Id id = NO_ID, north = NO_ID, east = NO_ID, south = NO_ID, west = NO_ID;
+  Status status = OK;
+  Direction direction=U;
+  Bool dest_to_orig=FALSE;
+  Bool orig_to_dest=TRUE;
+  Links *link=NULL;
+  int i;
 
+  if (!game || !filename)
+    return ERROR;
+
+  file = fopen(filename, "r");
+  if (file == NULL)
+    return ERROR;
+
+  while (fgets(line, WORD_SIZE, file))
+  {
+    if (strncmp("#l:", line, 3) == 0)
+    {
+      toks = strtok(line + 3, "|");
+      id = atol(toks);
+      toks = strtok(NULL, "|");
+      strcpy(name, toks);
+
+#ifdef DEBUG
+      printf("Leido links: l:%ld|%s|\n", id, name);
+#endif
+
+      space = space_create();
+      if (space != NULL)
+      {
+        space_set_id(space, id);
+        space_set_name(space, name);
+
+        /* Try to read gdesc lines (optional, may not be present) */
+        for (i = 0; i < MAX_LINE; i++)
+        {
+          toks = strtok(NULL, "|");
+          if (toks && toks[0] != '\n' && toks[0] != '\0')
+          {
+            space_set_gdesc_line(space, i, toks);
+          }
+        }
+
+        game_add_space(game, space);
+      }
+    }
+  }
+
+  if (ferror(file))
+    status = ERROR;
+
+  fclose(file);
+  return status;
 }
 /* ========== Public: Create game from file ========== */
 Status game_create_from_file(Game **game, char *filename)

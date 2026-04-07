@@ -3,8 +3,8 @@
  *
  * @file game.h
  * @author Profesores PROG, Violeta, Rafael and Salvador
- * @version 3.0
- * @date 24-3-2026
+ * @version 3.1
+ * @date 07-04-2026
  * @copyright GNU Public License
  */
 
@@ -363,10 +363,18 @@ Status game_set_last_cmd_status(Game *game, Status status);
  * @author Violeta y Rafa
  *
  * @param game a pointer to the game
- * @return OK, ERROR_attack, Error_chat, ERROR_dir o ERROR (defaults to ERROR if game is NULL) 
+ * @return OK, ERROR_attack, Error_chat, ERROR_dir or ERROR (defaults to ERROR if game is NULL) 
  */
 Status game_get_last_cmd_status(Game *game);
 
+/**
+ * @brief It updates the turn of the active player
+ * @author Salvador
+ *
+ * @param game a pointer to the game
+ * @return OK if turn updated or ERROR otherwise 
+ */
+Status game_turn_update (Game *game);
 
 /* ========== Print (debugging) ========== */
 

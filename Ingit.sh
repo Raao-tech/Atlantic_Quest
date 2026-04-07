@@ -222,7 +222,7 @@ elif [ "$opcion" == 3 ]; then
         read -p "Presiona ${GREEN} ENTER ${RESET} cuando hayas ${RED} resuelto los conflictos ${RESET} en el código..." listo
         
         git add .
-        git rebase --continue
+        git rebase origin --continue
     fi
 
     # Vemos que fecha es para poder guardarla y mandarla al commit

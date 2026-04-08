@@ -28,13 +28,13 @@ int main(int argc, char *argv[])
   Graphic_engine *gengine = NULL;
   int result;
   Command *last_cmd;
-  char* t_file;
+  char* t_file = NULL;
   if (argv != NULL)
   {
   strcpy( t_file, argv[2]);
   if (argv[3] != NULL)
   {
-  char* n_file;
+  char* n_file = NULL;
   strcpy(n_file, argv[3]);
   file = fopen(n_file, "w");
   }

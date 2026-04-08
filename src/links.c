@@ -138,8 +138,8 @@ Direction    link_get_direction(Links *link)
     return link->direction;
 }
 
-/* oppsited direction */
-Direction    link_get_oppsite_direction(Links *link)
+/* opposited direction */
+Direction    link_get_opposite_direction(Links *link)
 {
     if(!link) return U;
     //esto se puede optimizar tla vez usando congruencias, pero  a falta de una idea funcional lo dejare asi
@@ -198,7 +198,7 @@ Status       link_print(Links *link, FILE* output)
 	Bool		open_orig = link_get_open_dest_to_origin(link);
 	Bool		open_dest = link_get_open_origin_to_dest(link);
     Direction   dir = link_get_direction(link); 
-    Direction   dir_opposite = link_get_oppsite_direction(link);
+    Direction   dir_opposite = link_get_opposite_direction(link);
 	char*		name= link_get_name(link);
 
 	/*DEBUG*/

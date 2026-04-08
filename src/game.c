@@ -100,31 +100,24 @@ Status game_destroy(Game *game)
 
 Player **game_get_players(Game *game)
 {
-  if (!game)
-    return NULL;
-
+  if (!game)  return NULL;
   return game->players;
 }
 
 Command *game_get_last_command(Game *game)
 {
-  if (!game)
-    return NULL;
+  if (!game) return NULL;
   return game->last_cmd;
 }
 
 Space *game_get_space(Game *game, Id id)
 {
   int i;
-
-  if (!game || id == NO_ID)
-    return NULL;
+  if (!game || id == NO_ID) return NULL;
 
   for (i = 0; i < game->n_spaces; i++){
-    if (space_get_id(game->spaces[i]) == id)
-      return game->spaces[i];
+    if (space_get_id(game->spaces[i]) == id) return game->spaces[i];
   }
-
   return NULL;
 }
 
@@ -157,18 +150,26 @@ Id game_get_connection(Game *game, Id space, Direction dir)
 Bool game_connection_is_open(Game *game, Id space, Direction dir)
 {
   int i;
+  Direction dir_opp;
+  Direction dir_norm;
+  Id  id_orig;
+  Id  id_dest;
+  Bool is_open_orig;
+  Bool is_open_dest;
+
   if (!game || space == NO_ID || dir == U) return FALSE;
   
   for (i = 0; i < game->n_links; i++)
   {
-    if (link_get_origin_id(game->links[i]) == space && link_get_direction(game->links[i]) == dir)
-    {
-      return link_get_open_orig_to_dest(game->links[i]);
-    }
-    else if (link_get_destiny_id(game->links[i]) == space && link_get_opposite_direction(game->links[i]) == dir)
-    {
-      return link_get_open_dest_to_orig(game->links[i]);
-    }
+    dir_norm =  link_get_direction(game->links[i]);
+    dir_opp =   link_get_opposite_direction(game->links[i]);
+    id_orig =   link_get_origin_id(game->links[i]);
+    id_dest =   link_get_destination_id(game->links[i]);
+    is_open_dest = link_get_open_origin_to_dest(game->links[i]);
+    is_open_orig = link_get_open_dest_to_origin(game->links[i]);
+
+    if ((id_orig == space) && (dir_norm == dir)) return is_open_dest;
+    else if ((id_dest == space) && (dir_opp == dir)) return is_open_orig;
   }
   return FALSE;
 }
@@ -217,9 +218,7 @@ Status game_add_player(Game *game, Player *player)
 
 Status game_add_links(Game *game, Links *link)
 {
-  if (!game || !link || game->n_links >= MAX_LINKS)
-    return ERROR;
-
+  if (!game || !link || game->n_links >= MAX_LINKS) return ERROR;
   game->links[game->n_links] = link;
   game->n_links++;
   return OK;
@@ -230,16 +229,11 @@ Status game_add_links(Game *game, Links *link)
 Object *game_get_object_by_id(Game *game, Id id)
 {
   int i;
+  if (!game || id == NO_ID) return NULL;
 
-  if (!game || id == NO_ID)
-    return NULL;
-
-  for (i = 0; i < game->n_objects; i++)
-  {
-    if (obj_get_id(game->objects[i]) == id)
-      return game->objects[i];
+  for (i = 0; i < game->n_objects; i++){
+    if (obj_get_id(game->objects[i]) == id) return game->objects[i];
   }
-
   return NULL;
 }
 
@@ -247,13 +241,10 @@ Object *game_get_object_by_name(Game *game, char *name)
 {
   int i;
 
-  if (!game || !name)
-    return NULL;
+  if (!game || !name) return NULL;
 
-  for (i = 0; i < game->n_objects; i++)
-  {
-    if (obj_has_name(game->objects[i], name) == TRUE)
-      return game->objects[i];
+  for (i = 0; i < game->n_objects; i++){
+    if (obj_has_name(game->objects[i], name) == TRUE) return game->objects[i];
   }
 
   return NULL;
@@ -262,12 +253,10 @@ Object *game_get_object_by_name(Game *game, char *name)
 Id game_get_object_location(Game *game, Id obj_id)
 {
   int i;
-  if (!game || obj_id == NO_ID)
-    return NO_ID;
+  if (!game || obj_id == NO_ID) return NO_ID;
 
-  for (i = 0; i < game->n_spaces; i++)
-  {
-    if (space_contains_object(game->spaces[i], obj_id) == TRUE)
+  for (i = 0; i < game->n_spaces; i++){
+    if (space_contains_object(game->spaces[i], obj_id) == TRUE) 
       return space_get_id(game->spaces[i]);
   }
 
@@ -277,17 +266,13 @@ Id game_get_object_location(Game *game, Id obj_id)
 
 /* ========== Search: Characters ========== */
 
-Character *game_get_character_by_id(Game *game, Id id)
-{
+Character *game_get_character_by_id(Game *game, Id id){
   int i;
 
-  if (!game || id == NO_ID)
-    return NULL;
+  if (!game || id == NO_ID) return NULL;
 
-  for (i = 0; i < game->n_characters; i++)
-  {
-    if (character_get_id(game->characters[i]) == id)
-      return game->characters[i];
+  for (i = 0; i < game->n_characters; i++){
+    if (character_get_id(game->characters[i]) == id) return game->characters[i];
   }
 
   return NULL;
@@ -296,8 +281,7 @@ Character *game_get_character_by_id(Game *game, Id id)
 Character *game_get_character_by_name(Game *game, char *name)
 {
   int i;
-  if (!game || !name)
-    return NULL;
+  if (!game || !name) return NULL;
 
   for (i = 0; i < game->n_characters; i++)
   {
@@ -312,8 +296,7 @@ Id game_get_character_location(Game *game, Id char_id)
 {
   int i;
 
-  if (!game || char_id == NO_ID)
-    return NO_ID;
+  if (!game || char_id == NO_ID) return NO_ID;
 
   for (i = 0; i < game->n_spaces; i++)
   {

@@ -51,10 +51,10 @@ Status       link_set_open_origin_to_dest(Links *link, Bool status);
 Bool         link_get_open_origin_to_dest(Links *link);
 
 
-/* ============== (set/get/oppsite) direction ====================== */
+/* ============== (set/get/opposite) direction ====================== */
 Status       link_set_direction(Links *link, Direction dir);
 Direction    link_get_direction(Links *link);
-Direction    link_get_oppsite_direction(Links *link);
+Direction    link_get_opposite_direction(Links *link);
 
 
 /* ============== PRINT ====================== */

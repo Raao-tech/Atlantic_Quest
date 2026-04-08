@@ -94,7 +94,8 @@ void game_actions_exit(Game *game) {
 }
 
 void game_actions_next(Game *game){
-  Player *player = game_get_player(game);
+  if(!game) return;
+  Player *player = game_get_n_players(game);
   Id space_id = player_get_location(player);
   Space *space = NULL;
   Id next_id = NO_ID;

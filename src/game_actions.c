@@ -28,6 +28,7 @@ void game_actions_take(Game *game);
 void game_actions_drop(Game *game);
 void game_actions_attack(Game *game);
 void game_actions_chat(Game *game);
+void game_actions_inspect(Game* game);
 
 /**
    Game actions implementation

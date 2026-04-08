@@ -36,7 +36,6 @@ int main(int argc, char *argv[])
   {
   char* n_file;
   strcpy(n_file, argv[3]);
-  memcpy;
   file = fopen(n_file, "w");
   }
   }
@@ -76,7 +75,7 @@ int main(int argc, char *argv[])
     {
       Status status = game_get_last_cmd_status(game);
       char *obj = command_get_obj(last_cmd);
-      CommandCode* comand_c = command_get_code(last_cmd);
+      CommandCode comand_c = command_get_code(last_cmd);
       if (comand_c == EXIT || status == OK)
       {
         fprintf(file, "exit: OK\n");

@@ -2,9 +2,9 @@
  * @brief It implements the player struct
  *
  * @file player.c
- * @author Violeta, Rafael and Salvador
- * @version 1.1
- * @date 25-3-2026
+ * @author Violeta y Rafael
+ * @version 0
+ * @date 04-02-2025
  * @copyright GNU Public License
  */
 
@@ -21,7 +21,7 @@
  */
 struct _Player{
   Entity  *e_player;
- Inventory *backpack;
+  Inventory* backpack;
   Id      location;
 };
 
@@ -82,24 +82,22 @@ Status      player_set_name(Player *player, char *name){
   if (!player || !name) return ERROR;
   return entity_set_name(player->e_player, name);
 }
-
 char        *player_get_name(Player *player){
   if (!player) return NULL;
   return entity_get_name(player->e_player);
 }
+
 
 Bool player_has_name(Player *player, char *name){
       if(!player || !name) return FALSE;
  
       return entity_has_name(player->e_player, name);
 }
-
 /* health */
 Status    player_set_health(Player *player, int life){
     if(!player) return ERROR;
     return  entity_set_health(player->e_player, life);
 }
-
 int       player_get_health(Player *player){
   if(!player || !player->e_player) return ERROR_LIFE;
 

@@ -2,9 +2,9 @@
  * @brief It implements the game structure
  *
  * @file game.c
- * @author Profesores PROG, Violeta, Rafael and Salvador
- * @version 3.1
- * @date 25-3-2026
+ * @author Profesores PPROG
+ * @version 2
+ * @date 27-01-2025
  * @copyright GNU Public License
  */
 
@@ -28,6 +28,7 @@ struct _Game
   Object      *objects[MAX_OBJECTS];
   Space       *spaces[MAX_SPACES];
   Links       *links[MAX_LINKS];
+ 
   Command     *last_cmd;
 
  
@@ -37,12 +38,16 @@ struct _Game
   int     n_objects;
   int     n_characters;
   int     n_links;
+  int     n_LOG;
   Bool    finished;
   Status  last_cmd_status;
+  
 };
 
-/* ========== Create / Destroy ========== */
 
+
+
+/* ========== Create / Destroy ========== */
 Game *game_create()
 {
   int i;

@@ -106,6 +106,7 @@ char*  entity_get_name(Entity *entity){
   return  strdup(entity->name);
 }
 
+
 Bool entity_has_name(Entity *entity, char *name){
     char *entity_name = NULL;
     Bool result = FALSE;
@@ -116,7 +117,6 @@ Bool entity_has_name(Entity *entity, char *name){
     free(entity_name);
     return result;
 }
-
 /* gdesc */
 Status  entity_set_gdesc(Entity *entity, char*  desc){
   int   length_desc;

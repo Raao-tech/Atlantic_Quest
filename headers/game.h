@@ -327,6 +327,15 @@ int game_get_n_characters(Game *game);
  */
 int game_get_n_players(Game *game);
 
+/**
+ * @brief It returns the pointer of player in the turn current
+ * @author Rafa
+ *
+ * @param game a pointer to the game
+ * @return number of the player current, or NULL if exist mistakes
+ */
+Player *game_get_player_by_turn(Game *game);
+
 /* ========== Game state ========== */
 
 /**

@@ -21,10 +21,7 @@ char *cmd_to_str[N_CMD][N_CMDT] = {
   {"", "No command"},
   {"", "Unknown"},
   {"e", "Exit"},
-  {"n", "Next"},
-  {"l", "Left"},
-  {"r", "Right"},
-  {"b", "Back"},
+  {"m", "Move"},
   {"t", "Take"},
   {"d", "Drop"},
   {"a", "Attack"},
@@ -101,9 +98,7 @@ Status command_get_user_input(Command *command){
 
     /* Second token: the object/target name (for take, drop, attack, chat) */
     token = strtok(NULL, " \n");
-    if (token)
-      command->obj = strdup(token);
-
+    if (token)  command->obj = strdup(token);
     return command_set_code(command, cmd);
   }
   else

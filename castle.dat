@@ -18,6 +18,6 @@
 
 #p:1000|knight|11|^C>|5|
 #p:1001|witch|12|*u*|1000|
-#p:1002|happy_person|13|(^O^)|2|
+#p:1002|happy_person|(^O^)|13|5|3
 
 #l:31|Entry|11|12|1|1|1|

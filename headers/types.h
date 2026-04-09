@@ -20,6 +20,7 @@
 #define WORD_SIZE 1000
 #define NO_ID -1
 #define ERROR_MAIN -1
+#define ERROR_GAME -1
 
 /* Colors to prints */
 #define ROJO     "\x1b[31m"

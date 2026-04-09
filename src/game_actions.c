@@ -20,10 +20,7 @@
 */
 void game_actions_unknown(Game *game);
 void game_actions_exit(Game *game);
-void game_actions_next(Game *game);
-void game_actions_back(Game *game);
-void game_actions_left(Game *game);
-void game_actions_right(Game *game);
+void game_actions_move(game);
 void game_actions_take(Game *game);
 void game_actions_drop(Game *game);
 void game_actions_attack(Game *game);
@@ -34,48 +31,22 @@ void game_actions_inspect(Game* game);
    Game actions implementation
 */
 Status game_actions_update(Game *game, Command *command){
+  if(!game || !command) return ERROR;
   CommandCode cmd;
 
-  game_set_last_command(game, command);
-
+  if (game_set_last_command(game, command) == ERROR) return ERROR;
   cmd = command_get_code(command);
 
   switch (cmd){
-    case UNKNOWN:
-      game_actions_unknown(game);
-      break;
-    case EXIT:
-      game_actions_exit(game);
-      break;
-    case NEXT:
-      game_actions_next(game);
-      break;
-    case LEFT:
-      game_actions_left(game);
-      break;
-    case RIGHT:
-      game_actions_right(game);
-      break;
-    case BACK:
-      game_actions_back(game);
-      break;
-    case TAKE:
-      game_actions_take(game);
-      break;
-    case DROP:
-      game_actions_drop(game);
-      break;
-    case ATTACK:
-      game_actions_attack(game);
-      break;
-    case CHAT:
-      game_actions_chat(game);
-      break;
-    case INSPECT:
-      game_actions_inspect(game);
-      break;
-    default:
-      break;
+    case UNKNOWN: game_actions_unknown(game); break;
+    case EXIT:    game_actions_exit(game);    break;
+    case MOVE:    game_actions_move(game);    break;
+    case TAKE:    game_actions_take(game);    break;
+    case DROP:    game_actions_drop(game);    break;
+    case ATTACK:  game_actions_attack(game);  break;
+    case CHAT:    game_actions_chat(game);    break;
+    case INSPECT: game_actions_inspect(game); break;
+    default:                                  break;
   }
 
   return OK;
@@ -85,111 +56,33 @@ Status game_actions_update(Game *game, Command *command){
    Calls implementation for each action (Enfoque B: access Player/Space directly)
 */
 
+/*Accion desconocida (anyway)*/
 void game_actions_unknown(Game *game) {
+  if(!game) return;
   game_set_last_cmd_status(game, ERROR);
 }
 
+/*Accion de salida (e exit)*/
 void game_actions_exit(Game *game) {
+  if(!game) return;
   game_set_last_cmd_status(game, OK);
 }
 
-void game_actions_next(Game *game){
+/*Comandos Moves*/
+void  game_actions_move(Game *game){
   if(!game) return;
-  Player *player = game_get_n_players(game);
-  Id space_id = player_get_location(player);
-  Space *space = NULL;
-  Id next_id = NO_ID;
-
-  if (space_id == NO_ID){
-    game_set_last_cmd_status(game, ERROR_dir);
-    return;
-  }
-
-  space = game_get_space(game, space_id);
-  next_id = space_get_south(space);
-
-  if (next_id != NO_ID){
-    player_set_location(player, next_id);
-    game_set_last_cmd_status(game, OK);
-  } else {
-    game_set_last_cmd_status(game, ERROR_dir);
-  }
-}
-
-void game_actions_back(Game *game){
-  Player *player = game_get_player(game);
-  Id space_id = player_get_location(player);
-  Space *space = NULL;
-  Id back_id = NO_ID;
-
-  if (space_id == NO_ID){
-    game_set_last_cmd_status(game, ERROR_dir);
-    return;
-  }
-
-  space = game_get_space(game, space_id);
-  back_id = space_get_north(space);
-
-  if (back_id != NO_ID){
-    player_set_location(player, back_id);
-    game_set_last_cmd_status(game, OK);
-  } else {
-    game_set_last_cmd_status(game, ERROR_dir);
-  }
-}
-
-void game_actions_left(Game *game){
-  Player *player = game_get_player(game);
-  Id space_id = player_get_location(player);
-  Space *space = NULL;
-  Id left_id = NO_ID;
-
-  if (space_id == NO_ID){
-    game_set_last_cmd_status(game, ERROR_dir);
-    return;
-  }
-
-  space = game_get_space(game, space_id);
-  left_id = space_get_east(space);
-
-  if (left_id != NO_ID){
-    player_set_location(player, left_id);
-    game_set_last_cmd_status(game, OK);
-  } else {
-    game_set_last_cmd_status(game, ERROR_dir);
-  }
-}
-
-void game_actions_right(Game *game){
-  Player *player = game_get_player(game);
-  Id space_id = player_get_location(player);
-  Space *space = NULL;
-  Id right_id = NO_ID;
-
-  if (space_id == NO_ID){
-    game_set_last_cmd_status(game, ERROR_dir);
-    return;
-  }
-
-  space = game_get_space(game, space_id);
-  right_id = space_get_west(space);
-
-  if (right_id != NO_ID){
-    player_set_location(player, right_id);
-    game_set_last_cmd_status(game, OK);
-  } else {
-    game_set_last_cmd_status(game, ERROR_dir);
-  }
+  
 }
 
 /* F12: take <object_name> */
 void game_actions_take(Game *game){
-  Player *player = game_get_player(game);
-  Id space_id = player_get_location(player);
-  Space *space = NULL;
-  char *obj_name = NULL;
-  Object *obj = NULL;
-  Id obj_id = NO_ID;
+  if(!game) return; 
+  Player  *player =   game_get_player_by_turn(game);
+  Space   *space =    NULL;
+  char    *obj_name = NULL;
+  Object  *obj =      NULL;
+  Id      space_id =  player_get_location(player);
+  Id      obj_id =    NO_ID;
 
   if (space_id == NO_ID){
     game_set_last_cmd_status(game, ERROR_take);
@@ -228,12 +121,13 @@ void game_actions_take(Game *game){
 
 /* Drop: drops the first object (or specified by name) */
 void game_actions_drop(Game *game){
-  Player *player = game_get_player(game);
-  Id space_id = player_get_location(player);
-  Space *space = NULL;
-  char *obj_name = NULL;
-  Object *obj = NULL;
-  Id obj_id = NO_ID;
+  if(!game) return;
+  Player  *player =      game_get_player_by_turn(game);
+  Space   *space =       NULL;
+  Object  *obj =         NULL;
+  char    *obj_name =    NULL;
+  Id      space_id =     player_get_location(player);
+  Id      obj_id =       NO_ID;
 
   if (space_id == NO_ID || player_get_n_objects(player) == 0){
     game_set_last_cmd_status(game, ERROR_drop);
@@ -272,15 +166,17 @@ void game_actions_drop(Game *game){
 
 /* F10: attack <character_name> */
 void game_actions_attack(Game *game){
-  Player *player = game_get_player(game);
-  Id space_id = player_get_location(player);
-  Space *space = NULL;
-  char *char_name = NULL;
-  Character *ch = NULL;
-  Id char_id = NO_ID;
-  int roll;
+  if(!game) return;
+  Player    *player =     game_get_player_by_turn(game);
+  Space     *space =      NULL;
+  char      *char_name =  NULL;
+  Character *ch =         NULL;
+  Id        char_id =     NO_ID;
+  Id        space_id =    player_get_location(player);
+  
+  int       roll;
 
-  if (space_id == NO_ID){
+  if (space_id == NO_ID || !player){
     game_set_last_cmd_status(game, ERROR_Attack);
     return;
   }
@@ -342,14 +238,15 @@ void game_actions_attack(Game *game){
 
 /* F11: chat <character_name> */
 void game_actions_chat(Game *game){
-  Player *player = game_get_player(game);
-  Id space_id = player_get_location(player);
-  Space *space = NULL;
-  char *char_name = NULL;
-  Character *ch = NULL;
-  Id char_id = NO_ID;
+  if(!game) return;
+  Player    *player =     game_get_player_by_turn(game);
+  Space     *space =      NULL;
+  char      *char_name =  NULL;
+  Character *ch =         NULL;
+  Id        char_id =     NO_ID;
+  Id        space_id =    player_get_location(player);
 
-  if (space_id == NO_ID){
+  if (space_id == NO_ID || !player){
     game_set_last_cmd_status(game, ERROR_Chat);
     return;
   }
@@ -391,13 +288,12 @@ void game_actions_chat(Game *game){
 }
 
 /* F12: inspect <object_name> */
-void game_actions_inspect(Game* game)
-{
-  char *obj_name = NULL;
-  Object* object;
-  char* description = NULL;
+void game_actions_inspect(Game* game){
+  if(!game) return;
+  char      *obj_name    = NULL;
+  char      *description = NULL;
+  Object    *object      = NULL;
 
-  if (!game) return;
   obj_name = command_get_obj(game_get_last_command(game));
   if (!obj_name){
     game_set_last_cmd_status(game, ERROR_inspect);

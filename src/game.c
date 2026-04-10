@@ -32,15 +32,15 @@ struct _Game
   Command     *last_cmd;
 
  
-  int     turn;
-  int     n_players;
-  int     n_spaces;
-  int     n_objects;
-  int     n_characters;
-  int     n_links;
-  int     n_LOG;
-  Bool    finished;
-  Status  last_cmd_status;
+  int		turn;
+  int		n_players;
+  int		n_spaces;
+  int		n_objects;
+  int		n_characters;
+  int		n_links;
+  int		n_LOG;
+  Bool		finished;
+  Status  	last_cmd_status;
   
 };
 
@@ -328,6 +328,11 @@ Player *game_get_player_by_turn(Game *game){
   if (game->turn < 0 || game->turn >= game->n_players) return NULL;
 
   return  (game_get_players(game)[game->turn]);
+}
+
+int   game_get_turn(Game *game){
+  if(!game) return -1;
+  return game->turn;
 }
 
 /*ID of the space  player is*/

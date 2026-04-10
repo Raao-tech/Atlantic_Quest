@@ -336,6 +336,8 @@ int game_get_n_players(Game *game);
  */
 Player *game_get_player_by_turn(Game *game);
 
+int   game_get_turn(Game *game);
+
 /* ========== Game state ========== */
 
 /**

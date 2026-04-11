@@ -11,8 +11,9 @@ PLY_BIN = player_test
 CHR_BIN = character_test
 GAM_BIN = game_test
 CMD_BIN = command_test
+LNK_BIN = links_test
 
-all: $(SET_BIN) $(ENT_BIN) $(SPC_BIN) $(PLY_BIN) $(CHR_BIN) $(GAM_BIN) $(CMD_BIN)
+all: $(SET_BIN) $(ENT_BIN) $(SPC_BIN) $(PLY_BIN) $(CHR_BIN) $(GAM_BIN) $(CMD_BIN) $(LNK_BIN)
 
 # COMPILATION RULES
 
@@ -37,6 +38,10 @@ $(GAM_BIN): game_test.o ../game.o ../player.o ../character.o ../object.o ../spac
 $(CMD_BIN): command_test.o ../command.o
 	$(CC) $(FLAGS) $^ -o $@
 
+$(LNK_BIN): links_test.o ../links.o
+	$(CC) $(FLAGS) $^ -o $@
+
+
 %.o: %.c
 	$(CC) -c $(FLAGS) $< -o $@
 
@@ -58,6 +63,8 @@ vgam: $(GAM_BIN)
 	$(PREFLAG) ./$(GAM_BIN)
 vcmd: $(CMD_BIN)
 	$(PREFLAG) ./$(CMD_BIN)
+vlnk: $(LNK_BIN)
+	$(PREFLAG) ./$(LNK_BIN)
 
 # RUN SINGLE TEST
 run_set: $(SET_BIN)
@@ -74,6 +81,8 @@ run_gam: $(GAM_BIN)
 	./$(GAM_BIN) $(T)
 run_cmd: $(CMD_BIN)
 	./$(CMD_BIN) $(T)
+run_lnk: $(LNK_BIN)
+	./$(LNK_BIN) $(T)
 
 # CLEANUP
 clean:

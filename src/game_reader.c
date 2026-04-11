@@ -437,23 +437,6 @@ static Status game_load_links(Game *game, char *filename) {
   return status;
 }
 
-/* ================================================================== */
-/*            PUBLIC: Create game from file                            */
-/* ================================================================== */
-/*
- * This is the only public function.  It orchestrates the full load
- * sequence.  The ORDER matters:
- *
- *   1. Spaces    — must be first, because objects, characters, players
- *                  and links all reference space IDs.
- *   2. Objects   — placed into spaces by ID.
- *   3. Characters — placed into spaces by ID.
- *   4. Links     — reference origin/dest space IDs.
- *   5. Players   — reference location space IDs, and set discovered.
- *
- * If any loader fails, we destroy the partially built Game and
- * return ERROR.  The caller gets *game = NULL in that case.
- */
 Status game_create_from_file(Game **game, char *filename) {
   if (!game || !filename) return ERROR;
 

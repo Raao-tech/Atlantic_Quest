@@ -15,7 +15,7 @@
 #include "player_test.h"
 #include "test.h"
 
-#define MAX_TESTS 42
+#define MAX_TESTS 50
 
 int main(int argc, char **argv) {
   int test = 0;
@@ -46,35 +46,43 @@ int main(int argc, char **argv) {
   if (all || test == 11) test3_player_set_name();
   if (all || test == 12) test1_player_get_name();
   if (all || test == 13) test2_player_get_name();
-  if (all || test == 14) test1_player_set_health();
-  if (all || test == 15) test2_player_set_health();
-  if (all || test == 16) test1_player_get_health();
-  if (all || test == 17) test2_player_get_health();
-  if (all || test == 18) test1_player_set_attack();
-  if (all || test == 19) test2_player_set_attack();
-  if (all || test == 20) test1_player_get_attack();
-  if (all || test == 21) test2_player_get_attack();
-  if (all || test == 22) test1_player_add_object();
-  if (all || test == 23) test2_player_add_object();
-  if (all || test == 24) test1_player_contains_object();
-  if (all || test == 25) test2_player_contains_object();
-  if (all || test == 26) test3_player_contains_object();
-  if (all || test == 27) test1_player_delete_object();
-  if (all || test == 28) test2_player_delete_object();
-  if (all || test == 29) test1_player_get_n_objects();
-  if (all || test == 30) test2_player_get_n_objects();
-  if (all || test == 31) test1_player_set_location();
-  if (all || test == 32) test2_player_set_location();
-  if (all || test == 33) test3_player_set_location();
-  if (all || test == 34) test1_player_get_location();
-  if (all || test == 35) test2_player_get_location();
-  if (all || test == 36) test1_player_set_gdesc();
-  if (all || test == 37) test2_player_set_gdesc();
-  if (all || test == 38) test1_player_get_gdesc();
-  if (all || test == 39) test2_player_get_gdesc();
-  if (all || test == 40) test1_player_set_message();
-  if (all || test == 41) test2_player_set_message();
-  if (all || test == 42) test1_player_get_message();
+  if (all || test == 14) test1_player_has_name();
+  if (all || test == 15) test2_player_has_name();
+  if (all || test == 16) test3_player_has_name();
+  if (all || test == 17) test1_player_set_health();
+  if (all || test == 18) test2_player_set_health();
+  if (all || test == 19) test1_player_get_health();
+  if (all || test == 20) test2_player_get_health();
+  if (all || test == 21) test1_player_set_max_objects();
+  if (all || test == 22) test2_player_set_max_objects();
+  if (all || test == 23) test3_player_set_max_objects();
+  if (all || test == 24) test1_player_set_attack();
+  if (all || test == 25) test2_player_set_attack();
+  if (all || test == 26) test1_player_get_attack();
+  if (all || test == 27) test2_player_get_attack();
+  if (all || test == 28) test1_player_add_object();
+  if (all || test == 29) test2_player_add_object();
+  if (all || test == 30) test1_player_add_object_full_inventory();
+  if (all || test == 31) test1_player_contains_object();
+  if (all || test == 32) test2_player_contains_object();
+  if (all || test == 33) test3_player_contains_object();
+  if (all || test == 34) test1_player_delete_object();
+  if (all || test == 35) test2_player_delete_object();
+  if (all || test == 36) test1_player_get_n_objects();
+  if (all || test == 37) test2_player_get_n_objects();
+  if (all || test == 38) test1_player_empty_inventory();
+  if (all || test == 39) test1_player_set_location();
+  if (all || test == 40) test2_player_set_location();
+  if (all || test == 41) test3_player_set_location();
+  if (all || test == 42) test1_player_get_location();
+  if (all || test == 43) test2_player_get_location();
+  if (all || test == 44) test1_player_set_gdesc();
+  if (all || test == 45) test2_player_set_gdesc();
+  if (all || test == 46) test1_player_get_gdesc();
+  if (all || test == 47) test2_player_get_gdesc();
+  if (all || test == 48) test1_player_set_message();
+  if (all || test == 49) test2_player_set_message();
+  if (all || test == 50) test1_player_get_message();
 
   PRINT_PASSED_PERCENTAGE;
 
@@ -157,6 +165,27 @@ void test2_player_get_name() {
   PRINT_TEST_RESULT(player_get_name(NULL) == NULL);
 }
 
+/* ========== player_has_name ========== */
+void test1_player_has_name() {
+  Player *p = player_create();
+  player_set_name(p, "Hero");
+  PRINT_TEST_RESULT(player_has_name(p, "Hero") == TRUE);
+  player_destroy(p);
+}
+
+void test2_player_has_name() {
+  Player *p = player_create();
+  player_set_name(p, "Hero");
+  PRINT_TEST_RESULT(player_has_name(p, "Villain") == FALSE);
+  player_destroy(p);
+}
+
+void test3_player_has_name() {
+  Player *p = player_create();
+  PRINT_TEST_RESULT(player_has_name(p, NULL) == FALSE && player_has_name(NULL, "Hero") == FALSE);
+  player_destroy(p);
+}
+
 /* ========== player_set_health / get_health ========== */
 void test1_player_set_health() {
   Player *p = player_create();
@@ -179,6 +208,23 @@ void test1_player_get_health() {
 
 void test2_player_get_health() {
   PRINT_TEST_RESULT(player_get_health(NULL) == ERROR_LIFE);
+}
+
+/* ========== player_set_max_objects ========== */
+void test1_player_set_max_objects() {
+  Player *p = player_create();
+  PRINT_TEST_RESULT(player_set_max_objects(p, 1) == OK);
+  player_destroy(p);
+}
+
+void test2_player_set_max_objects() {
+  PRINT_TEST_RESULT(player_set_max_objects(NULL, 1) == ERROR);
+}
+
+void test3_player_set_max_objects() {
+  Player *p = player_create();
+  PRINT_TEST_RESULT(player_set_max_objects(p, -1) == ERROR);
+  player_destroy(p);
 }
 
 /* ========== player_set_attack / get_attack ========== */
@@ -212,6 +258,14 @@ void test1_player_add_object() {
 
 void test2_player_add_object() {
   PRINT_TEST_RESULT(player_add_object(NULL, 21) == ERROR);
+}
+
+void test1_player_add_object_full_inventory() {
+  Player *p = player_create();
+  player_set_max_objects(p, 1);
+  player_add_object(p, 21);
+  PRINT_TEST_RESULT(player_add_object(p, 22) == ERROR);
+  player_destroy(p);
 }
 
 void test1_player_contains_object() {
@@ -255,6 +309,12 @@ void test1_player_get_n_objects() {
 void test2_player_get_n_objects() {
   Player *p = player_create();
   PRINT_TEST_RESULT(player_get_n_objects(p) == 0);
+  player_destroy(p);
+}
+
+void test1_player_empty_inventory() {
+  Player *p = player_create();
+  PRINT_TEST_RESULT(player_get_n_objects(p) == 0 && player_contains_object(p, 21) == FALSE && player_delete_object(p, 21) == ERROR);
   player_destroy(p);
 }
 

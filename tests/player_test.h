@@ -32,13 +32,23 @@ void test3_player_set_name();
 void test1_player_get_name();
 void test2_player_get_name();
 
+/* player_has_name */
+void test1_player_has_name();
+void test2_player_has_name();
+void test3_player_has_name();
+
 /* player_set_health / get_health */
 void test1_player_set_health();
 void test2_player_set_health();
 void test1_player_get_health();
 void test2_player_get_health();
 
-/* player_set_attack / get_attack */
+/* player_set_max_objects */
+void test1_player_set_max_objects();
+void test2_player_set_max_objects();
+void test3_player_set_max_objects();
+
+/* player_add_object / contains / delete / get_n */
 void test1_player_set_attack();
 void test2_player_set_attack();
 void test1_player_get_attack();
@@ -47,6 +57,7 @@ void test2_player_get_attack();
 /* player_add_object / contains / delete / get_n */
 void test1_player_add_object();
 void test2_player_add_object();
+void test1_player_add_object_full_inventory();
 void test1_player_contains_object();
 void test2_player_contains_object();
 void test3_player_contains_object();
@@ -54,6 +65,7 @@ void test1_player_delete_object();
 void test2_player_delete_object();
 void test1_player_get_n_objects();
 void test2_player_get_n_objects();
+void test1_player_empty_inventory();
 
 /* player_set_location / get_location */
 void test1_player_set_location();

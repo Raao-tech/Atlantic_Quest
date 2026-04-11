@@ -97,6 +97,20 @@ char*        link_get_name(Links *link)
     return strdup(link->name);
 }
 
+/* ============== (set/get) status ====================== */
+Status       link_set_status(Links *link, Bool status)
+{
+    if(!link) return ERROR;
+    link->status_orig = status;
+    link->status_dest = status;
+    return OK;
+}
+
+Bool         link_get_status(Links *link)
+{
+    if(!link) return FALSE;
+    return link->status_dest && link->status_orig;
+}
 
 /* ============== (set/get) status (dest_to_origin/ origin_to_dest) ====================== */
 

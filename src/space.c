@@ -190,7 +190,6 @@ char*   space_get_gdesc(Space *space, int line){
 
 /* Print */
 Status space_print(Space *space){
-  Id idaux = NO_ID;
 
   /* Error Control */
   if (!space) return ERROR;

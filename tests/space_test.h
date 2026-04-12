@@ -1,10 +1,13 @@
 /**
- * @brief It declares the tests for the space module
+ * @brief It declares the tests for the space module (I3)
+ *
+ * Updated for I3: removed north/south/east/west tests (topology
+ * is now handled by the Link module), added discovered tests.
  *
  * @file space_test.h
  * @author Rafael y Violeta
- * @version 2
- * @date 28-02-2026
+ * @version 3
+ * @date 12-04-2026
  * @copyright GNU Public License
  */
 
@@ -32,30 +35,6 @@ void test3_space_set_name();
 void test1_space_get_name();
 void test2_space_get_name();
 
-/* space_set_north / get_north */
-void test1_space_set_north();
-void test2_space_set_north();
-void test1_space_get_north();
-void test2_space_get_north();
-
-/* space_set_south / get_south */
-void test1_space_set_south();
-void test2_space_set_south();
-void test1_space_get_south();
-void test2_space_get_south();
-
-/* space_set_east / get_east */
-void test1_space_set_east();
-void test2_space_set_east();
-void test1_space_get_east();
-void test2_space_get_east();
-
-/* space_set_west / get_west */
-void test1_space_set_west();
-void test2_space_set_west();
-void test1_space_get_west();
-void test2_space_get_west();
-
 /* space_set_object / contains_object / remove_object / get_n_objects */
 void test1_space_set_object();
 void test2_space_set_object();
@@ -76,6 +55,12 @@ void test1_space_remove_character();
 void test2_space_remove_character();
 void test1_space_get_n_characters();
 void test2_space_get_n_characters();
+
+/* space_set_discovered / get_discovered (F12) */
+void test1_space_set_discovered();
+void test2_space_set_discovered();
+void test1_space_get_discovered();
+void test2_space_get_discovered();
 
 /* space_set_gdesc_line / get_gdesc */
 void test1_space_set_gdesc_line();

@@ -260,9 +260,10 @@ static void game_actions_drop(Game *game) {
  *     same space, hostile, alive → random roll.
  *
  *  2. PvP combat (NEW):
- *     "attack witch" → if no Character found with that name,
+ *     "attack witch" -> if no Character found with that name,
  *     search for a Player with that name → must be in same space,
- *     cannot be yourself → random roll.
+ *     cannot be yourself -> random roll anddd game_turn_update can whit all 
+ *     trust sjsj
  */
 static void game_actions_attack(Game *game) {
   Player    *player    = NULL;

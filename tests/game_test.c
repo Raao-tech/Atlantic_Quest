@@ -111,7 +111,10 @@ void test2_game_destroy() {
 
 void test1_game_get_player() {
   Game *g = game_create();
-  PRINT_TEST_RESULT(game_get_player(g) != NULL);
+  Player *p = player_create();
+  player_set_id(p, 1);
+  game_add_player(g, p);
+  PRINT_TEST_RESULT(game_get_player(g) == p);
   game_destroy(g);
 }
 

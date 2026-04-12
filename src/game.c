@@ -108,6 +108,7 @@ Player **game_get_players(Game *game) {
 }
 
 Player *game_get_player(Game *game) {
+  if (!game) return NULL;
   return game_get_player_by_turn(game);
 }
 

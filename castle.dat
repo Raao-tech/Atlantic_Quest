@@ -14,7 +14,7 @@
 #o:24|Candelabra|12|A silver candelabra, still warm
 
 #c:51|Ghost|(o)|12|5|1|Welcome to my castle... beware!
-#c:52|Skeleton|^M*|13|5|0|...
+#c:52|Skeleton|^M*|13|5|0|What a beautiful watch you're wearing, come on over
 
 #p:1|knight|^C>|11|5|3
 #p:2|witch|*u*|12|5|3

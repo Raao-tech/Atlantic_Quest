@@ -2,9 +2,9 @@
  * @brief It implements a textual graphic engine
  *
  * @file graphic_engine.c
- * @author Profesores PPROG, Javier Jarque and Rafael
- * @version 6
- * @date 11-04-2026
+ * @author Profesores PPROG, Javier Jarque, Salvador Alcalá and Rafael
+ * @version 7
+ * @date 12-04-2026
  * @copyright GNU Public License
  */
 

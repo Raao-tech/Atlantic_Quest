@@ -317,8 +317,18 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     Id loc = game_get_object_location(game, obj_get_id(obj));
     if (loc != NO_ID)
       sprintf(str, "  %s : %ld", obj_get_name(obj), loc);
-    else
-      sprintf(str, "  %s : player", obj_get_name(obj));
+else {
+  char *player_name = NULL;
+  for (int j = 0; j < game_get_n_players(game); j++) {
+    Player *p = game_get_player_at(game, j);
+    if (player_contains_object(p, obj_get_id(obj))) {
+      player_name = player_get_name(p);
+      break;
+    }
+  }
+  sprintf(str, "  %s : %s", obj_get_name(obj), player_name ? player_name : "player");
+  if (player_name) free(player_name);
+}
     screen_area_puts(ge->descript, str);
   }
   screen_area_puts(ge->descript, " ");

@@ -315,8 +315,18 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   for (i = 0; i < game_get_n_objects(game); i++) {
     Object *obj = game_get_object_at(game, i);
     Id loc = game_get_object_location(game, obj_get_id(obj));
-    if (loc != NO_ID)
+     if (loc != NO_ID)
+    {
+      Space *obj_space = game_get_space(game, loc);
+     if(space_get_discovered(obj_space)==TRUE)
+    {
       sprintf(str, "  %s : %ld", obj_get_name(obj), loc);
+    }
+    else
+    {
+      sprintf(str, "  %s : Undiscovered", obj_get_name(obj));
+    }
+  }
 else {
   char *player_name = NULL;
   for (int j = 0; j < game_get_n_players(game); j++) {

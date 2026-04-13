@@ -16,11 +16,11 @@
 /**
  * @brief character
  *
- * This struct stores all the information of a create.
+ * This struct stores all the information of a character.
  */
 struct _Character{
-  Entity *e_character;
-  Bool friendly;
+  Entity *e_character;    /*<! It stores the entity*/
+  Bool friendly;          /*<! It stores hether the character is friendly or not*/
 };
 
 /* create or destroy */

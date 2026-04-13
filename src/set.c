@@ -2,7 +2,7 @@
  * @brief It implements the set structure
  *
  * @file set.c
- * @author Profesores PPROG
+ * @author Rafael Araujo
  * @version 0
  * @date 27-01-2025
  * @copyright GNU Public License
@@ -13,9 +13,14 @@
 #include "set.h"
 
 
+/**
+ * @brief set
+ *
+ * This struct stores all the information of a set.
+ */
 struct _Set{
-    Id*  ids;
-    int  n_ids;
+    Id*  ids;		/*!< Array of ids */
+    int  n_ids;		/*!< Number of ids stored*/
 };
 
 /* create and destroy */

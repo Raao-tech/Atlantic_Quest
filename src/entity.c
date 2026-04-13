@@ -18,11 +18,11 @@
  */
 struct _Entity{
   Id    id;                   /*!< Id number of the object, it must be unique */
-  int   health;
-  int   attack;
-  char  *gdesc;
-  char  *message;
-  char  *name;
+  int   health;               /*!< Health of the entity, it can be positive or negative */
+  int   attack;               /*!< Attack power of the entity */
+  char  *gdesc;               /*!< General description of the entity */
+  char  *message;             /*!< Message associated with the entity */
+  char  *name;                /*!< Name of the entity */
 };
 
 /* create or destroy */

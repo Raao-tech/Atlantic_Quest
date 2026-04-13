@@ -44,49 +44,7 @@ void game_loop_cleanup(Game *game, Graphic_engine *gengine, FILE *log_file);
 /* ========================================================================= */
 /*                                 MAIN                                      */
 /* ========================================================================= */
-/*
- * Usage (F14 of the enunciado):
- *
- *   ./castle dataFile                   (no LOG)
- *   ./castle dataFile -l logFile        (with LOG)
- *
- * argv[0] = executable name
- * argv[1] = data file (.dat)
- * argv[2] = "-l"       (optional)
- * argv[3] = log file   (required if -l present)
- *
- * BUGS FIXED IN THIS VERSION:
- *
- *  BUG 1 (CRASH):  The original code declared:
- *      char *t_file = NULL;
- *    then immediately did:
- *      strcpy(t_file, argv[2]);
- *    This writes to a NULL pointer → instant SEGFAULT.
- *
- *  BUG 2 (CRASH):  Same problem with:
- *      char *n_file = NULL;
- *      strcpy(n_file, argv[3]);
- *
- *  BUG 3 (OUT OF BOUNDS):  argv[2] and argv[3] were accessed
- *    without checking argc first.  If the user runs:
- *      ./castle castle.dat
- *    then argv[2] does not exist → undefined behaviour.
- *
- *  BUG 4 (CRASH):  strcmp(t_file, "-l") was called inside the
- *    game loop even when t_file was NULL → SEGFAULT.
- *
- *  BUG 5 (UNDEFINED):  game_loop_cleanup called fclose(file)
- *    even when file was NULL → undefined behaviour.
- *
- *  BUG 6 (MISSING):  game_turn_update was never called, so
- *    multiplayer turns never advanced (F11).
- *
- *  BUG 7 (FORMAT):  The LOG did not include the object/target
- *    name.  F14 says "take sword: ERROR", not just "take: ERROR".
- *
- *  BUG 8 (WARNING):  The variable `obj` was declared but never
- *    used in the LOG switch → warning under -Wall.
- */
+
 int main(int argc, char *argv[]) {
   FILE           *log_file = NULL;
   Game           *game     = NULL;

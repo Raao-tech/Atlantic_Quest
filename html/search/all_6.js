@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['ficheros_20tt_20dat_20tt_0',['Formato de los ficheros &lt;tt&gt;.dat&lt;/tt&gt;',['../md_README.html#autotoc_md24',1,'']]],
-  ['flujo_20típico_20en_20la_20uni_1',['Flujo típico en la uni',['../md_README.html#autotoc_md7',1,'']]],
-  ['formato_20de_20los_20ficheros_20tt_20dat_20tt_2',['Formato de los ficheros &lt;tt&gt;.dat&lt;/tt&gt;',['../md_README.html#autotoc_md24',1,'']]]
+  ['gestión_20de_20conflictos_20opción_203_0',['Gestión de conflictos (opción 3)',['../md__r_e_a_d_m_e.html#autotoc_md8',1,'']]]
 ];

@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['haunted_20castle_20—_20pprog_20·_20violeta_20rafael_20salva_20javier_0',['The Haunted Castle — PPROG · Violeta &amp; Rafael &amp; Salva &amp; Javier',['../md_README.html',1,'']]]
+  ['acciones_0',['Reglas de las acciones',['../md__r_e_a_d_m_e.html#autotoc_md20',1,'']]],
+  ['arquitectura_20del_20sistema_1',['Arquitectura del sistema',['../md__r_e_a_d_m_e.html#autotoc_md11',1,'']]],
+  ['asistente_20para_20colaboradores_2',['Ingit — Asistente para colaboradores',['../md__r_e_a_d_m_e.html#autotoc_md4',1,'']]]
 ];

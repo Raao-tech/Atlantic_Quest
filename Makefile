@@ -22,8 +22,8 @@
 #		CPPFLAGS	--> Preprocesado (flags)
 #			Según el manual de GNU Make/gcc, esta constante es el hogar de toda flag relacioanda con el preprocesado del compilador C,
 #			para asegurarme de estar hablando el mismo idioma, les recuerdo que el preprocesado es esa parte de la compilación, en el que 
-#			los #includes "..." o #include <...> son fusionados en un sólo archivo, en otras palabras, todas las cabeceras (*.h) llaman a sus *.c 
-#			y los van "INCLUYENDO o definiendo" en su respectivo .c, luego los compila y crea un .o por cada .c compilado.
+#			los #includes "..." o #include <...> son fusionados en un sólo archivo, en otras palabras, todas las cabeceras (*.h) 
+#			se van "INCLUYENDO o definiendo" en su respectivo .c, luego los compila y crea un .o por cada .c compilado.
 #		CFLAGS		--> Procesado (flags)
 #			Ya con nuestros .h incluídos en sus .c, el compilador gcc/cc comenzará a leer, el objetico es ir crear los Objects (.o) de cada .c,
 #			esto implica una traducción del código en C pasado a otro lenguaje llamado Assembler, y éste a su vez pasa directo al binario.
@@ -125,7 +125,7 @@
 #		
 ## =============== TOOLCHAIN ===============
 CC       	= gcc 	#Compilador
-CPPFLAGS	= -I ./headers -DDEBUG #Preprocesado
+CPPFLAGS 	= -I ./headers -DDEBUG -MMD -MP
 CFLAGS  	= -g -Wall -O0 -Wextra  -Wpedantic  #flags para Warnings, Debug, optimizacion en general
 LDFLAGS   	=  
 PREFLAG  	= valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -s
@@ -246,7 +246,7 @@ play: $(TARGET) $(LOG_DIR)
 playv: $(TARGET) $(LOG_DIR)
 	@echo ""
 	@echo "======================================"
-	@echo "   Atlantic Quest — Select Map"
+	@echo "   	Atlantic Quest — Select Map"
 	@echo "======================================"
 	@echo ""
 	@echo "Available data files:"
@@ -262,7 +262,9 @@ playv: $(TARGET) $(LOG_DIR)
 		if [ -z "$$file" ]; then \
 			echo "Invalid number."; exit 1; \
 		fi; \
-	else \
+	else \CPPFLAGS  = -I ./headers -DDEBUG -MMD -MP
+CFLAGS    = -g -Wall -O0 -Wextra -Wpedantic -pthread
+LDFLAGS   =
 		file="$$choice"; \
 	fi; \
 	if [ ! -f "$$file" ]; then \
@@ -322,3 +324,18 @@ mandar_rm:
 
 rm_log:
 	rm -f $(LOG_DIR)/*.log *.log
+
+
+clean:
+	rm -f $(OBJ_DIR)/*.o $(OBJ_DIR)/*.d $(TARGET) *.gch *.log
+	rm -f $(SRC_DIR)/*.o
+	rm -f Game_mandar_RaVi.zip
+
+clean_all: clean
+	rm -rf $(OBJ_DIR) $(DOC_DIR)
+
+.PHONY: all run runv run_log runv_log run_custom run_custom_log \
+        play playv test_cmd doc Ingit mandar mandar_rm rm_log \
+        clean clean_all
+
+-include $(OBJS:.o=.d)

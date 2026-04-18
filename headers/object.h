@@ -2,9 +2,9 @@
  * @brief It defines the object module interface
  *
  * @file object.h
- * @author Violeta y Rafa
- * @version 0
- * @date 04-02-2025
+ * @author Violeta, Rafa and Salvador
+ * @version 1
+ * @date 18-04-2025
  * @copyright GNU Public License
  */
 #ifndef OBJECT_H
@@ -108,6 +108,85 @@ char *obj_get_description(Object *obj);
  * @return the id of object
  */
 Id obj_get_id(Object *obj);
+
+ /* =============Health============= */
+ /**
+ * @brief It sets the health of an object
+ * @author Salvador 
+ *
+ * @param obj a pointer to the object
+ * @param health the health to set
+ * @return OK  if all good, ERROR if pointer is NULL or other case not good
+ */
+Status obj_set_health(Object *obj, int health);
+
+/**
+ * @brief It gets the health of an object
+ * @author Salvador
+ *
+ * @param obj a pointer to the object
+ * @return the health of the object, 0 in case of mistake
+ */
+int obj_get_health(Object *obj);
+
+ /* =============Movable============= */
+ /**
+ * @brief It sets the boolean movable of an object
+ * @author Salvador 
+ *
+ * @param obj a pointer to the object
+ * @param movable the movable value to set
+ * @return OK  if all good, ERROR if pointer is NULL or other case not good
+ */
+Status obj_set_movable(Object *obj, Bool movable);
+/**
+ * @brief It gets the movable status of an object
+ * @author Salvador
+ *
+ * @param obj a pointer to the object
+ * @return the movable status of the object, FALSE in case of mistake
+ */
+Bool obj_get_movable(Object *obj);
+
+ /* =============Open============= */
+  /**
+ * @brief It sets the Id of the link that this object can open
+ * @author Salvador 
+ *
+ * @param obj a pointer to the object
+ * @param open the Id of the link to set
+ * @return OK  if all good, ERROR if pointer is NULL or other case not good
+ */
+Status obj_set_open(Object *obj, Id open);
+
+/**
+ * @brief It gets the Id of the link that this object can open
+ * @author Salvador
+ *
+ * @param obj a pointer to the object
+ * @return the Id of the link that this object can open, NO_ID in case of mistake
+ */
+Id obj_get_open(Object *obj);
+
+ /* =============Dependency============= */
+  /**
+ * @brief It sets the Id of the object that this object depends on
+ * @author Salvador 
+ *
+ * @param obj a pointer to the object
+ * @param dependency the Id of the dependent object to set
+ * @return OK  if all good, ERROR if pointer is NULL or other case not good
+ */
+Status obj_set_dependency(Object *obj, Id dependency);
+
+/**
+ * @brief It gets the Id of the object that this object depends on
+ * @author Salvador
+ *
+ * @param obj a pointer to the object
+ * @return the Id of the object that this object depends on, NO_ID in case of mistake
+ */
+Id obj_get_dependency(Object *obj);
 
 /**
  * @brief It prints the object information

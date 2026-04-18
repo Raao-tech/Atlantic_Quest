@@ -94,6 +94,18 @@ char *link_get_name(Links *link) {
   if (!link || !link->name) return NULL;
   return strdup(link->name);
 }
+/*Será falso a no ser que coincidan*/
+Bool link_has_name(Links* link, char* name){
+  Bool is_equal = FALSE;
+  if(!link || !name) return is_equal;
+  
+  char* name_link = link_get_name(link);
+
+  if(strcmp(name_link, name) == 0) is_equal = TRUE;
+  free(name_link);
+  return is_equal;
+
+}
 
 /* ========== Generic status (sets/gets BOTH directions) ========== */
 

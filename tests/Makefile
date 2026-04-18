@@ -106,18 +106,19 @@ run_all: $(SET_BIN) $(ENT_BIN) $(SPC_BIN) $(PLY_BIN) $(CHR_BIN) $(GAM_BIN) $(CMD
 	@echo -e "$(ROJO)$(OBJ_BIN)$(RESET)\n" && ./$(OBJ_BIN) $(T)
 
 runv_all: $(SET_BIN) $(ENT_BIN) $(SPC_BIN) $(PLY_BIN) $(CHR_BIN) $(GAM_BIN) $(CMD_BIN) $(LNK_BIN) $(OBJ_BIN)
-	@echo -e "$(ROJO)$(SET_BIN)$(RESET)\n" && ./$(VALGRIND) $(SET_BIN) $(T)
-	@echo -e "$(ROJO)$(ENT_BIN)$(RESET)\n" && ./$(VALGRIND) $(ENT_BIN) $(T)
-	@echo -e "$(ROJO)$(SPC_BIN)$(RESET)\n" && ./$(VALGRIND) $(SPC_BIN) $(T)
-	@echo -e "$(ROJO)$(PLY_BIN)$(RESET)\n" && ./$(VALGRIND) $(PLY_BIN) $(T)
-	@echo -e "$(ROJO)$(CHR_BIN)$(RESET)\n" && ./$(VALGRIND) $(CHR_BIN) $(T)
-	@echo -e "$(ROJO)$(GAM_BIN)$(RESET)\n" && ./$(VALGRIND) $(GAM_BIN) $(T)
-	@echo -e "$(ROJO)$(LNK_BIN)$(RESET)\n" && ./$(VALGRIND) $(LNK_BIN) $(T)
-	@echo -e "$(ROJO)$(OBJ_BIN)$(RESET)\n" && ./$(VALGRIND) $(OBJ_BIN) $(T)
+	@echo -e "$(ROJO)$(SET_BIN)$(RESET)\n" && $(PREFLAG) ./$(SET_BIN)
+	@echo -e "$(ROJO)$(ENT_BIN)$(RESET)\n" && $(PREFLAG) ./$(ENT_BIN)
+	@echo -e "$(ROJO)$(SPC_BIN)$(RESET)\n" && $(PREFLAG) ./$(SPC_BIN)
+	@echo -e "$(ROJO)$(PLY_BIN)$(RESET)\n" && $(PREFLAG) ./$(PLY_BIN)
+	@echo -e "$(ROJO)$(CHR_BIN)$(RESET)\n" && $(PREFLAG) ./$(CHR_BIN)
+	@echo -e "$(ROJO)$(GAM_BIN)$(RESET)\n" && $(PREFLAG) ./$(GAM_BIN)
+	@echo -e "$(ROJO)$(LNK_BIN)$(RESET)\n" && $(PREFLAG) ./$(LNK_BIN)
+	@echo -e "$(ROJO)$(OBJ_BIN)$(RESET)\n" && $(PREFLAG) ./$(OBJ_BIN)
 
 	
 # CLEANUP
 clean:
 	@rm -f *.o ../*.o $(SET_BIN) $(ENT_BIN) $(SPC_BIN) $(PLY_BIN) $(CHR_BIN) $(GAM_BIN) $(CMD_BIN) $(LNK_BIN) $(OBJ_BIN)
-
+	cd ..
+	rm *.o
 .PHONY: clean all vset vent vspc vply vchr vgam vcmd vlnk vobj

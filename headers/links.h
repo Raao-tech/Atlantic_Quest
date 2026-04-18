@@ -75,7 +75,14 @@ Status       link_set_name(Links *link, char *name);
  */
 char*        link_get_name(Links *link);
 
-
+/**
+ * @brief It say equal or no your name
+ * @author Rafa
+ *
+ * @param link a pointer to the link
+ * @return  TRUE if names are equal, and FALSE and other case
+ */
+Bool link_has_name(Links* link, char* name);
 /* ============== (set/get) status ====================== */
 /**
  * @brief It sets the status of a link

@@ -24,33 +24,33 @@ echo -e "-------------------------------------------\n"
 #==============================================
 cd ./tests/
 #==================Ejecución total, si no hay name_file ========================
-if [ -z ${name_file} ]; then 
-    echo -e "Name File is not avaible, so it, i testing all\n"
-    #Se ejecuta todo COn valgrind
-    if [ ${choice} == 0 ]; then 
+if [[ -z "${name_file}" || ! -f "${name_file}_test.c" ]]; then 
+    echo -e "\033[1;36mName File is not avaible, so it, i am testing all\033[0m\n"
+    sleep 5
+    
+    #Se ejecuta todo sin valgrind
+    if [ "${choice}" == "0" ]; then 
         make run_all
-        exit
     fi
-    #Se ejecuta todo sin Valgrind
-    if [ ${choice} == 1 ]; then 
+    #Se ejecuta todo Con valgrind
+    if [ "${choice}" == "1" ]; then 
         make runv_all
-        exit
     fi
-    echo -e "Ready. Good Bye!!\n"
+    echo -e "\033[1;36mReady. Good Bye!!\033[0m\n"
     exit
 fi
 #=================================================================================
-
 #============================Ejecucion del file indicado ===========================================
 #Sin valgrind
-if [ ${choice} == 0 ]; then 
+if [ "${choice}" == "0" ]; then 
     make run_${name_file}
 fi
 #Con valgrind
-if [ ${choice} == 1 ]; then 
+if [ "${choice}" == "1" ]; then 
     make v${name_file}
 fi
-echo -e "Ready. Good Bye!!\n"
+
+echo -e "\033[1;36mReady. Good Bye!!\033[0m\n"
 exit
 
 #echo -e "su eleccion fue ${choice} y su archivo es : ${name_file}\n";

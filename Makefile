@@ -314,7 +314,8 @@ doc:
 
 Ingit: Ingit.sh
 	./Ingit.sh
-
+Tests: automatic_test.sh
+	./automatic_test.sh
 mandar: clean
 	zip -r Game_mandar_RaVi.zip ./
 	@echo "Packaged into Game_mandar_RaVi.zip"
@@ -332,7 +333,7 @@ clean:
 	rm -f Game_mandar_RaVi.zip
 
 clean_all: clean
-	rm -rf $(OBJ_DIR) $(DOC_DIR)
+	rm -rf $(OBJ_DIR) $(DOC_DIR) tests/*.o tests/*_test
 
 .PHONY: all run runv run_log runv_log run_custom run_custom_log \
         play playv test_cmd doc Ingit mandar mandar_rm rm_log \

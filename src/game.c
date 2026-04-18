@@ -361,6 +361,7 @@ Links *game_get_link_by_name(Game *game, char *name) {
   for (i = 0; i < game->n_links; i++) {
     if (link_has_name(game->links[i], name) == TRUE)
       return game->links[i];
+    
   }
   return NULL;
 }

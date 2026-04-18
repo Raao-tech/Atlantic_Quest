@@ -2,9 +2,9 @@
  * @brief It implements the object struct
  *
  * @file object.c
- * @author Violeta, Rafael and Javier Jarque
- * @version 2
- * @date 08-04-2026
+ * @author Violeta, Rafael, Javier Jarque and Salvador Alcalá
+ * @version 3
+ * @date 18-04-2026
  * @copyright GNU Public License
  */
 
@@ -23,6 +23,10 @@ struct _Object {
   Id   id;                            /*!< Id number of the object, it must be unique */
   char name[WORD_SIZE + 1];           /*!< Name of the object */
   char description[WORD_SIZE + 1];    /*!< Description of the object (for inspect command) */
+  int health;                        /*!< Health of the object (for use command) */
+  Bool movable;                       /*!< Whether the object can be taken or not */
+  Id open;                            /*!< Id of the link that this object can open (for use command) */
+  Id dependency;                      /*!< Id of the object that this object depends on (for use command) */
   /*
    * BUG FIX: The original code was missing the semicolon after
    * description[WORD_SIZE + 1].  The line read:
@@ -104,14 +108,62 @@ char *obj_get_description(Object *obj) {
   if (!obj) return NULL;
   return obj->description;
 }
+/* ========== Health ========== */
+Status obj_set_health(Object *obj, int health) {
+  if (!obj) return ERROR;
+  obj->health = health;
+  return OK;
+}
+
+int obj_get_health(Object *obj) {
+  if (!obj) return 0;
+  return obj->health;
+}
+/* ========== Movable ========== */
+
+Status obj_set_movable(Object *obj, Bool movable) {
+  if (!obj) return ERROR;
+  obj->movable = movable;
+  return OK;
+}
+
+Bool obj_get_movable(Object *obj) {
+  if (!obj) return FALSE;
+  return obj->movable;
+}
+
+/* ========== Open ========== */
+Status obj_set_open(Object *obj, Id open) {
+  if (!obj) return ERROR;
+  obj->open = open;
+  return OK;
+}
+
+Id obj_get_open(Object *obj) {
+  if (!obj) return NO_ID;
+  return obj->open;
+}
+
+/* ========== Dependency ========== */
+
+Status obj_set_dependency(Object *obj, Id dependency) {
+  if (!obj) return ERROR;
+  obj->dependency = dependency;
+  return OK;
+}
+
+Id obj_get_dependency(Object *obj) {
+  if (!obj) return NO_ID;
+  return obj->dependency;
+}
 
 /* ========== Print ========== */
 
 Status obj_print(Object *obj) {
   if (!obj) return ERROR;
 
-  fprintf(stdout, "--> Object (Id: %ld; Name: %s; Desc: %s)\n",
-          obj->id, obj->name, obj->description);
+  fprintf(stdout, "--> Object (Id: %ld; Name: %s; Desc: %s; Health: %d; Movable: %s; Open: %ld; Dependency: %ld)\n",
+          obj->id, obj->name, obj->description, obj->health, obj->movable ? "Yes" : "No", obj->open == NO_ID ? "None": obj->open, obj->dependency == NO_ID ? "None": obj->dependency);
 
   return OK;
 }

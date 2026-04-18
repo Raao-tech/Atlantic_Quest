@@ -9,14 +9,12 @@
  */
 
 #include "game_actions.h"
-#include "raylib.h" /*esto es una prueba*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
 #include <time.h>
-
 
 /**
  * Private function prototypes.
@@ -30,6 +28,7 @@ static void game_actions_drop(Game *game);
 static void game_actions_attack(Game *game);
 static void game_actions_chat(Game *game);
 static void game_actions_inspect(Game *game);
+static void game_actions_use(Game *game);
 
 /**
  * @brief Converts a direction string to a Direction enum value
@@ -43,15 +42,8 @@ static Direction ge_parse_direction(const char *str);
 /* ========================================================================= */
 /*                          PUBLIC: DISPATCHER                               */
 /* ========================================================================= */
-/*
-* La idea seria que ahora no solo seactivaran las caciones ,por medio del teclado. esto se mantendrá, pero
-* el comando central tiene que ser el input del usario por medio del teclado,  player 1 y 2 pueden mverse 
-* gracias a "wasd" o a las flechas "Up, Down, Right, Left" y tendrànm posibildiad de hacer otras cosas con otras "KEYs" 
-* del teclado. Tal vez lo del Keyboards no es el tipo de dato, eso se pued equitar, era para no olvidar que ese cambio se tienme que hacer
-*  Pero ta,mbien hay que mantender ewl command porque las pruebas automatixadas se hacen atraves de texto, asi que eso se debe de jdjar
-* para los logs, luego veré como hago coo 
-*/
-Status game_actions_update(Game *game, Command *command, KeyboardKey KEY_O) {
+
+Status game_actions_update(Game *game, Command *command) {
   CommandCode cmd;
 
   if (!game || !command) return ERROR;
@@ -68,6 +60,7 @@ Status game_actions_update(Game *game, Command *command, KeyboardKey KEY_O) {
     case ATTACK:  game_actions_attack(game);  break;
     case CHAT:    game_actions_chat(game);    break;
     case INSPECT: game_actions_inspect(game); break;
+    case USE:     game_actions_use(game);     break;
     default:      break;
   }
 
@@ -511,7 +504,63 @@ static void game_actions_inspect(Game *game) {
   game_set_last_cmd_status(game, OK);
 }
 
+/* ========================================================================= */
+/*           USE: use <object_name>                             */
+/* ========================================================================= */
+static void game_actions_use(Game *game)
+{
+  Player *player   = NULL;
+  Space  *space    = NULL;
+  Object *obj      = NULL;
+  char   *obj_name = NULL;
+  Id      obj_id, space_id;
+  Bool    in_inventory=FALSE;
+  int     obj_health=0;
+  if (!game) return;
 
+  player = game_get_player_by_turn(game);
+  if (!player) {
+    game_set_last_cmd_status(game, ERROR_use);
+    return;
+  }
+  
+  obj_name = command_get_obj(game_get_last_command(game));
+  if (!obj_name) {
+    game_set_last_cmd_status(game, ERROR_use);
+    return;
+  }
+
+  obj = game_get_object_by_name(game, obj_name);
+  if (!obj) {
+    game_set_last_cmd_status(game, ERROR_use);
+    return;
+  }
+
+  obj_id   = obj_get_id(obj);
+
+  /* Object must be accessible: in inventory */
+
+  in_inventory = player_contains_object(player, obj_id);
+
+  if (in_inventory == FALSE) {
+    game_set_last_cmd_status(game, ERROR_use);
+    return;
+  }
+
+  obj_health = obj_get_health(obj);
+
+  /*Object of health or damage*/
+  if (obj_health != 0) { 
+  player_set_health(player, player_get_health(player) + obj_health);
+  player_delete_object(player, obj_id);
+  game_set_last_cmd_status(game, OK);
+  return;
+  }
+  /*****************************/
+  
+  game_set_last_cmd_status(game, OK);
+  return;
+}
 /* ========================================================================= */
 /*                      HELPER: PARSE DIRECTION                              */
 /* ========================================================================= */

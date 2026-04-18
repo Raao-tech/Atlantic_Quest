@@ -166,7 +166,7 @@ Status obj_print(Object *obj) {
   if (!obj) return ERROR;
 
   fprintf(stdout, "--> Object (Id: %ld; Name: %s; Desc: %s; Health: %d; Movable: %s; Open: %ld; Dependency: %ld)\n",
-          obj->id, obj->name, obj->description, obj->health, obj->movable ? "Yes" : "No", obj->open == NO_ID ? "None": obj->open, obj->dependency == NO_ID ? "None": obj->dependency);
+          obj->id, obj->name, obj->description, obj->health, obj->movable ? "Yes" : "No", obj->open , obj->dependency );
 
   return OK;
 }

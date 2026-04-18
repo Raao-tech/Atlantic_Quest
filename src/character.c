@@ -166,12 +166,14 @@ Status character_print(Character *character){
   char *name = NULL;
   char *gdesc = NULL;
   char *message = NULL;
+  Id    following = NO_ID;
 
   if(!character) return ERROR;
 
   name = character_get_name(character);
   gdesc = character_get_gdesc(character);
   message = character_get_message(character);
+  following = character_get_following(character);
 
   fprintf(stdout, "\n--- Character ---\n");
   fprintf(stdout, "|| ID:       %ld\n", character_get_id(character));
@@ -180,7 +182,7 @@ Status character_print(Character *character){
   fprintf(stdout, "|| HEALTH:   %d\n", character_get_health(character));
   fprintf(stdout, "|| FRIENDLY: %s\n", character_get_friendly(character) == TRUE ? "YES" : "NO");
   fprintf(stdout, "|| MESSAGE:  %s\n", message ? message : "N/A");
-   fprintf(stdout, "|| FOLLOWING:  %ld\n", character_get_following(character)!=NO_ID ? character_get_following(character) : "N/A");
+  fprintf(stdout, "|| FOLLOWING:  %ld\n", following!=NO_ID ? following : NO_ID);
   fprintf(stdout, "-----------------\n");
 
   if(name) free(name);

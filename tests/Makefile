@@ -13,6 +13,8 @@ GAM_BIN = game_test
 CMD_BIN = command_test
 LNK_BIN = links_test
 OBJ_BIN = object_test
+ROJO=\033[1;35m
+RESET=\033[0m
 
 all: $(SET_BIN) $(ENT_BIN) $(SPC_BIN) $(PLY_BIN) $(CHR_BIN) $(GAM_BIN) $(CMD_BIN) $(LNK_BIN) $(OBJ_BIN)
 
@@ -53,43 +55,67 @@ $(OBJ_BIN): object_test.o ../object.o
 # RUN WITH VALGRIND
 vset: $(SET_BIN)
 	$(PREFLAG) ./$(SET_BIN)
-vent: $(ENT_BIN)
+ventity: $(ENT_BIN)
 	$(PREFLAG) ./$(ENT_BIN)
-vspc: $(SPC_BIN)
+vspace: $(SPC_BIN)
 	$(PREFLAG) ./$(SPC_BIN)
-vply: $(PLY_BIN)
+vplayer: $(PLY_BIN)
 	$(PREFLAG) ./$(PLY_BIN)
-vchr: $(CHR_BIN)
+vcharacter: $(CHR_BIN)
 	$(PREFLAG) ./$(CHR_BIN)
-vgam: $(GAM_BIN)
+vgame: $(GAM_BIN)
 	$(PREFLAG) ./$(GAM_BIN)
-vcmd: $(CMD_BIN)
+vcommand: $(CMD_BIN)
 	$(PREFLAG) ./$(CMD_BIN)
-vlnk: $(LNK_BIN)
+vlinks: $(LNK_BIN)
 	$(PREFLAG) ./$(LNK_BIN)
-vobj: $(OBJ_BIN)
+vobject: $(OBJ_BIN)
 	$(PREFLAG) ./$(OBJ_BIN)
+
+
 
 # RUN SINGLE TEST
 run_set: $(SET_BIN)
 	./$(SET_BIN) $(T)
-run_ent: $(ENT_BIN)
+run_entity: $(ENT_BIN)
 	./$(ENT_BIN) $(T)
-run_spc: $(SPC_BIN)
+run_space: $(SPC_BIN)
 	./$(SPC_BIN) $(T)
-run_ply: $(PLY_BIN)
+run_player: $(PLY_BIN)
 	./$(PLY_BIN) $(T)
-run_chr: $(CHR_BIN)
+run_character: $(CHR_BIN)
 	./$(CHR_BIN) $(T)
-run_gam: $(GAM_BIN)
+run_game: $(GAM_BIN)
 	./$(GAM_BIN) $(T)
-run_cmd: $(CMD_BIN)
+run_command: $(CMD_BIN)
 	./$(CMD_BIN) $(T)
-run_lnk: $(LNK_BIN)
+run_links: $(LNK_BIN)
 	./$(LNK_BIN) $(T)
-run_obj: $(OBJ_BIN)
+run_object: $(OBJ_BIN)
 	./$(OBJ_BIN) $(T)
 
+
+run_all: $(SET_BIN) $(ENT_BIN) $(SPC_BIN) $(PLY_BIN) $(CHR_BIN) $(GAM_BIN) $(CMD_BIN) $(LNK_BIN) $(OBJ_BIN)
+	@echo -e "$(ROJO)$(SET_BIN)$(RESET)\n" && ./$(SET_BIN) $(T)
+	@echo -e "$(ROJO)$(ENT_BIN)$(RESET)\n" && ./$(ENT_BIN) $(T)
+	@echo -e "$(ROJO)$(SPC_BIN)$(RESET)\n" && ./$(SPC_BIN) $(T)
+	@echo -e "$(ROJO)$(PLY_BIN)$(RESET)\n" && ./$(PLY_BIN) $(T)
+	@echo -e "$(ROJO)$(CHR_BIN)$(RESET)\n" && ./$(CHR_BIN) $(T)
+	@echo -e "$(ROJO)$(GAM_BIN)$(RESET)\n" && ./$(GAM_BIN) $(T)
+	@echo -e "$(ROJO)$(LNK_BIN)$(RESET)\n" && ./$(LNK_BIN) $(T)
+	@echo -e "$(ROJO)$(OBJ_BIN)$(RESET)\n" && ./$(OBJ_BIN) $(T)
+
+runv_all: $(SET_BIN) $(ENT_BIN) $(SPC_BIN) $(PLY_BIN) $(CHR_BIN) $(GAM_BIN) $(CMD_BIN) $(LNK_BIN) $(OBJ_BIN)
+	@echo -e "$(ROJO)$(SET_BIN)$(RESET)\n" && ./$(VALGRIND) $(SET_BIN) $(T)
+	@echo -e "$(ROJO)$(ENT_BIN)$(RESET)\n" && ./$(VALGRIND) $(ENT_BIN) $(T)
+	@echo -e "$(ROJO)$(SPC_BIN)$(RESET)\n" && ./$(VALGRIND) $(SPC_BIN) $(T)
+	@echo -e "$(ROJO)$(PLY_BIN)$(RESET)\n" && ./$(VALGRIND) $(PLY_BIN) $(T)
+	@echo -e "$(ROJO)$(CHR_BIN)$(RESET)\n" && ./$(VALGRIND) $(CHR_BIN) $(T)
+	@echo -e "$(ROJO)$(GAM_BIN)$(RESET)\n" && ./$(VALGRIND) $(GAM_BIN) $(T)
+	@echo -e "$(ROJO)$(LNK_BIN)$(RESET)\n" && ./$(VALGRIND) $(LNK_BIN) $(T)
+	@echo -e "$(ROJO)$(OBJ_BIN)$(RESET)\n" && ./$(VALGRIND) $(OBJ_BIN) $(T)
+
+	
 # CLEANUP
 clean:
 	@rm -f *.o ../*.o $(SET_BIN) $(ENT_BIN) $(SPC_BIN) $(PLY_BIN) $(CHR_BIN) $(GAM_BIN) $(CMD_BIN) $(LNK_BIN) $(OBJ_BIN)

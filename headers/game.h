@@ -274,40 +274,40 @@ Id game_get_object_location(Game *game, Id obj_id);
 
 
 /* ========================================================================= */
-/*                        SEARCH: CHARACTERS                                 */
+/*                        SEARCH: NUMENS                                 */
 /* ========================================================================= */
 
 /**
- * @brief It finds a character by its id
+ * @brief It finds a numen by its id
  * @author Violeta y Rafa
  *
  * @param game a pointer to the game
- * @param id the id of the character to find
- * @return pointer to the character, or NULL if not found
+ * @param id the id of the numen to find
+ * @return pointer to the numen, or NULL if not found
  */
-Character *game_get_character_by_id(Game *game, Id id);
+Numen *game_get_numen_by_id(Game *game, Id numen_id);
 
 /**
- * @brief It finds a character by its name
+ * @brief It finds a numen by its name
  * @author Violeta y Rafa
  *
  * Uses character_has_name for case-sensitive comparison.
  *
  * @param game a pointer to the game
- * @param name the name of the character to find
+ * @param name the name of the numen to find
  * @return pointer to the character, or NULL if not found
  */
-Character *game_get_character_by_name(Game *game, char *name);
+Character *game_get_numen_by_name(Game *game, char *numen_name);
 
 /**
- * @brief It finds which space contains a given character
- * @author Violeta y Rafa
+ * @brief It get location numen
+ * @author Rafa
  *
  * @param game a pointer to the game
  * @param char_id the id of the character to locate
  * @return the id of the space containing the character, or NO_ID
  */
-Id game_get_character_location(Game *game, Id char_id);
+Id game_get_numen_location(Game *game, Id numen_id);
 
 
 /* ========================================================================= */

@@ -15,11 +15,11 @@
 #include <string.h>
 
 /**
- * @brief Space
- *
- * This struct stores all the information of a space.
- * In I3, the neighbour Ids (north, south, east, west) have been
- * removed — topology is now handled entirely by the Link module.
+ * @brief Space  (hay que pasar esto por translate)
+ *  
+ *  Esto declara la estrucutra de space, va a contener
+ * 
+ * 
  */
 struct _Space {
   Id    id;                             /*!< Id number of the space, must be unique */

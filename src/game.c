@@ -267,7 +267,8 @@ Numen *game_get_numen_by_id(Game *game, Id id_numen) {
   int i;
   if (!game || id_numen == NO_ID) return NULL;
   for (i = 0; i < game->n_numens; i++) {
-    if (numen_get_id(game->numens[i]) == id_numen) return game->numens[i];
+    if (numen_get_id(game->numens[i]) == id_numen)
+      return game->numens[i];
   }
   return NULL;
 }
@@ -276,20 +277,12 @@ Numen *game_get_numen_by_name(Game *game, char *name_numen) {
   int i;
   if (!game || !name_numen) return NULL;
   for (i = 0; i < game->n_numens; i++) {
-    if (numen_has_name(game->numens[i], name_numen) == TRUE) return game->numens[i];
+    if (numen_has_name(game->numens[i], name_numen) == TRUE)
+      return game->numens[i];
   }
   return NULL;
 }
 
-Id game_get_character_location(Game *game, Id char_id) {
-  int i;
-  if (!game || char_id == NO_ID) return NO_ID;
-  for (i = 0; i < game->n_spaces; i++) {
-    if (space_contains_character(game->spaces[i], char_id) == TRUE)
-      return space_get_id(game->spaces[i]);
-  }
-  return NO_ID;
-}
 
 
 /* ========================================================================= */
@@ -371,9 +364,9 @@ Object *game_get_object_at(Game *game, int position) {
   return game->objects[position];
 }
 
-Character *game_get_character_at(Game *game, int position) {
-  if (!game || position < 0 || position >= game->n_characters) return NULL;
-  return game->characters[position];
+Character *game_get_numen_at(Game *game, int position) {
+  if (!game || position < 0 || position >= game->n_numens) return NULL;
+  return game->numens[position];
 }
 
 Player *game_get_player_at(Game *game, int position) {
@@ -396,9 +389,9 @@ int game_get_n_objects(Game *game) {
   return game->n_objects;
 }
 
-int game_get_n_characters(Game *game) {
+int game_get_n_numens(Game *game) {
   if (!game) return -1;
-  return game->n_characters;
+  return game->n_numens;
 }
 
 int game_get_n_players(Game *game) {
@@ -504,11 +497,11 @@ void game_print(Game *game) {
   }
 
   /* Characters */
-  printf("\n=> Characters (%d):\n", game->n_characters);
-  for (i = 0; i < game->n_characters; i++) {
-    loc = game_get_character_location(game,
-            character_get_id(game->characters[i]));
-    character_print(game->characters[i]);
+  printf("\n=> Characters (%d):\n", game->n_numens);
+  for (i = 0; i < game->n_numens; i++) {
+    loc = numen_get_location(game,
+            numen_get_id(game->numens[i]));
+    character_print(game->numens[i]);
     if (loc != NO_ID)
       printf("   Located in space: %ld\n", loc);
   }

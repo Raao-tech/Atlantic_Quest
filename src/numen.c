@@ -12,5 +12,6 @@
 struct _Numen
 {
     Character* c_numen;
-    Character* c_numen;
+    Bool    is_corrupt;
+    
 };

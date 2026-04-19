@@ -343,26 +343,27 @@ else {
   }
   screen_area_puts(ge->descript, " ");
 
-  /* Characters */
-  sprintf(str, " Characters:");
+  /* Numens*/
+  sprintf(str, " Numens:");
   screen_area_puts(ge->descript, str);
-  for (i = 0; i < game_get_n_characters(game); i++) {
-    Character *ch  = game_get_character_at(game, i);
-    char      *cn  = character_get_name(ch);
-    char      *cg  = character_get_gdesc(ch);
-    Id         loc = game_get_character_location(game, character_get_id(ch));
-    int        hp  = character_get_health(ch);
-    Bool       fri = character_get_friendly(ch);
+  for (i = 0; i < game_get_n_numen(game); i++) {
+    Numen     *numen         = game_get_numen_at(game, i);
+    char      *name          = numen_get_name(numen);
+    char      *gdesc         = numen_get_gdesc(numen);
+    Id         loc           = numen_get_location(game, numen_get_id(numen));
+    int        health        = numen_get_health(numen);
+    Bool       is_corrupt    = numen_get_is_corrupt(numen);
+    Bool       is_errant     = numen_get_is_errant(numen);
 
-    ge_hp_bar(hp, hpb, sizeof(hpb));
+    ge_hp_bar(health, hpb, sizeof(hpb));
     sprintf(str, "  %s %-10s %s",
-            fri ? "[ALLY] " : "[ENEMY]", cn ? cn : "?", cg ? cg : "?");
+            is_corrupt ? "[PURO] " : "[CORRUPT]", name ? name : "?", gdesc ? gdesc : "?");
     screen_area_puts(ge->descript, str);
-    sprintf(str, "    HP: %s %-6s loc:%ld", hpb, ge_hp_warn(hp), loc);
+    sprintf(str, "    HP: %s %-6s loc:%ld", hpb, ge_hp_warn(health), loc);
     screen_area_puts(ge->descript, str);
 
-    if (cn) free(cn);
-    if (cg) free(cg);
+    if (name) free(name);
+    if (gdesc) free(gdesc);
   }
   screen_area_puts(ge->descript, " ");
 

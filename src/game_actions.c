@@ -748,17 +748,7 @@ static void game_actions_open(Game *game)
     return;
   }
 
-  /*
-    Preguntas si está abierto, pero, ¿en qué sentido está abierto?
-      desde   origin ---> destiny     destiny ---> origin 
-  */
-  if (game_link_is_open(link) == TRUE)
-  {
-    game_set_last_cmd_status(game, ERROR_use);
-    return;
-  }
-
-  /*
+    /*
     Esta linea de codigo no la vi en la iteracion 3, Es un error de lógica
     Antes de mi modficación solo comprobaba que el space en el que estoy sea el 
     "Origin" del link, pero eso es un error de semántica,  un link bidireccional
@@ -766,13 +756,37 @@ static void game_actions_open(Game *game)
     los extremos, por ejemplo A, y moverte a B, o vicerversa. Por eso hay que hacer
     la comprobación de sis estoy en el supuesto "origen" o estoy en el "destino"
   */
+  /*
+    Preguntas si está abierto, pero, ¿en qué sentido está abierto?
+      desde   origin ---> destiny     destiny ---> origin 
+    cambie la funcion que habia link_is_open   por game_connection_is_open que verifca
+    si esta abierto tanto ṕor el origen como por el destino, porque puedes
+    estar en cualqueira de los dos extremos
+  */
+  if (game_connection_is_open(game, space_id, link_get_direction(link_id)) == TRUE)
+  {
+    game_set_last_cmd_status(game, ERROR_use);
+    return;
+  }
+
+
   if(link_get_origin_id(link)!=space_id && link_get_destination_id(link)!=space_id)
   {
     game_set_last_cmd_status(game, ERROR_use);
     return;
-  }else if( )
+  }
 
-  game_link_set_open(link, TRUE);
+  /*
+    Como key no dice en cuál de los sentidos se abre el link 
+    (dest -> orig) o (orig -> dest) , lo abro en los dos sentidos
+    pero esto es momentaneo, debería de haber un atributo o algo en key
+    para saber en cuál de los setnido se abre el link.    
+      Alguien puede ir de l space 4 al space 5 pero al llegar al 5
+      no puede regresaar al 4, por lo que debe de buscar un key que 
+      pueda abrir en el sentido opuesto (link_get_opposite_dir)
+  */
+  link_set_open_dest_to_origin(link, TRUE);
+  link_set_open_origin_to_dest(link, TRUE);
   game_set_last_cmd_status(game, OK);
   return;
 

@@ -170,6 +170,9 @@ LDLIBS = $(LIBSCREEN_A) $(RAYLIB_A) $(RAYLIB_SYS_LIBS)
 #            BUILD TARGETS
 #######################################
 
+prueba_deleteme: window_prueba.c
+	gcc window_prueba.c $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS) -o prueba
+
 all: $(TARGET)
 
 $(OBJ_DIR):

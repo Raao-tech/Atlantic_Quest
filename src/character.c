@@ -39,6 +39,7 @@ struct _Character{
   Bool friendly;          /*<! It stores hether the character is friendly or not*/
   Id following;           /*<! It stores the id of the character that this character is following*/
   Stats stats;            /*<! It stores the stats of a character (health, attack, energy)*/
+  
 };
 
 
@@ -169,7 +170,7 @@ Status character_set_energy(Character* character, int energy){
     return OK;
   }
   character->stats.energy =energy;
-  return OK
+  return OK;
 }
 int character_get_energy(Character *character){
   if(!character) return ERROR_ENGY;
@@ -195,7 +196,6 @@ Status character_set_following(Character *character, Id id_following)
   character->following=id_following;
   return OK;
 }
-
 Id character_get_following(Character *character)
 {
   if(!character) return NO_ID;

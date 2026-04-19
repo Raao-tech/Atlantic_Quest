@@ -51,8 +51,19 @@ static Direction ge_parse_direction(const char *str);
 * del teclado. Tal vez lo del Keyboards no es el tipo de dato, eso se pued equitar, era para no olvidar que ese cambio se tienme que hacer
 *  Pero ta,mbien hay que mantender ewl command porque las pruebas automatixadas se hacen atraves de texto, asi que eso se debe de jdjar
 * para los logs, luego veré como hago coo 
+*
+*   Punto importante:                         Modo de Juego (SourceInput)
+*       Modo Test                                     Modo Juego
+*  (Textual, no visual)                         (keys de Keyboard, Visual)
+*  (comandos por player, No en paralelo)        (comandos dependientes de "wasd" o flechas, en paralelo)
+*
+*  Una posible propuesta de adaptación es la siguiente:
+*      la estrctura de command tendrá : {}
+*
+*
+*
 */
-Status game_actions_update(Game *game, Command *command, KeyboardKey KEY_O)
+Status game_actions_update(Game *game, Command *command)
 {
   CommandCode cmd;
 
@@ -150,7 +161,7 @@ static void game_actions_move(Game *game)
     return;
   }
 
-  dir_str = command_get_obj(game_get_last_command(game));
+  dir_str = command_get_target(game_get_last_command(game));
   if (!dir_str)
   {
     game_set_last_cmd_status(game, ERROR_dir);
@@ -201,6 +212,12 @@ static void game_actions_take(Game *game)
   if (!game)
     return;
 
+
+    /*
+    * Este tipo de comprobaciones hay que ponerlas en mira, para la solución del multijugador
+    * en paralelo, hay que ver que jugador esta haciendo la ccion, pero no es por turnos. Hay una cantida
+    * n de jugadores establecida en alguna macro que dependerá de la enumaercaicon de tipos de datos PLY
+    */
   player = game_get_player_by_turn(game);
   if (!player)
   {
@@ -208,14 +225,14 @@ static void game_actions_take(Game *game)
     return;
   }
 
-  space_id = player_get_location(player);
+  space_id = player_get_zone(player);
   if (space_id == NO_ID)
   {
     game_set_last_cmd_status(game, ERROR_take);
     return;
   }
 
-  obj_name = command_get_obj(game_get_last_command(game));
+  obj_name = command_get_target(game_get_last_command(game));
   if (!obj_name)
   {
     game_set_last_cmd_status(game, ERROR_take);
@@ -287,14 +304,14 @@ static void game_actions_drop(Game *game)
     return;
   }
 
-  space_id = player_get_location(player);
+  space_id = player_get_zone(player);
   if (space_id == NO_ID)
   {
     game_set_last_cmd_status(game, ERROR_drop);
     return;
   }
 
-  obj_name = command_get_obj(game_get_last_command(game));
+  obj_name = command_get_target(game_get_last_command(game));
   if (!obj_name)
   {
     game_set_last_cmd_status(game, ERROR_drop);
@@ -365,7 +382,7 @@ static void game_actions_attack(Game *game)
     return;
   }
 
-  name = command_get_obj(game_get_last_command(game));
+  name = command_get_target(game_get_last_command(game));
   if (!name)
   {
     game_set_last_cmd_status(game, ERROR_Attack);
@@ -515,7 +532,7 @@ static void game_actions_chat(Game *game)
     return;
   }
 
-  char_name = command_get_obj(game_get_last_command(game));
+  char_name = command_get_target(game_get_last_command(game));
   if (!char_name)
   {
     game_set_last_cmd_status(game, ERROR_Chat);
@@ -571,7 +588,7 @@ static void game_actions_inspect(Game *game)
     return;
   }
 
-  obj_name = command_get_obj(game_get_last_command(game));
+  obj_name = command_get_target(game_get_last_command(game));
   if (!obj_name)
   {
     game_set_last_cmd_status(game, ERROR_inspect);
@@ -631,7 +648,7 @@ static void game_actions_use(Game *game)
     return;
   }
 
-  obj_name = command_get_obj(game_get_last_command(game));
+  obj_name = command_get_target(game_get_last_command(game));
   if (!obj_name)
   {
     game_set_last_cmd_status(game, ERROR_use);
@@ -678,9 +695,9 @@ static void game_actions_use(Game *game)
 static void game_actions_open(Game *game)
 {
   Player *player = NULL;
-  Object *obj = NULL;
-  char *obj_name = NULL;
-  Id obj_id, space_id, link_id = NO_ID;
+  Object *key = NULL;
+  char *key_name = NULL;
+  Id key_id, space_id, link_id = NO_ID;
   Bool in_inventory = FALSE;
   int obj_health = 0;
   Links *link = NULL;
@@ -695,25 +712,25 @@ static void game_actions_open(Game *game)
     return;
   }
 
-  obj_name = command_get_obj(game_get_last_command(game));
-  if (!obj_name)
+  key_name = command_get_target(game_get_last_command(game));
+  if (!key_name)
   {
     game_set_last_cmd_status(game, ERROR_use);
     return;
   }
 
-  obj = game_get_object_by_name(game, obj_name);
-  if (!obj)
+  key = game_get_object_by_name(game, key_name);
+  if (!key)
   {
     game_set_last_cmd_status(game, ERROR_use);
     return;
   }
 
-  obj_id = obj_get_id(obj);
+  key_id = obj_get_id(key);
 
   /* Object must be accessible: in inventory */
 
-  in_inventory = player_contains_object(player, obj_id);
+  in_inventory = player_contains_object(player, key_id);
 
   if (in_inventory == FALSE)
   {
@@ -723,7 +740,7 @@ static void game_actions_open(Game *game)
 
   space_id = player_get_location(player);
  
-  link_id = obj_get_open(obj);
+  link_id = obj_get_open(key);
   link = game_get_link_by_id(game, link_id);
   if (!link)
   {
@@ -731,17 +748,29 @@ static void game_actions_open(Game *game)
     return;
   }
 
+  /*
+    Preguntas si está abierto, pero, ¿en qué sentido está abierto?
+      desde   origin ---> destiny     destiny ---> origin 
+  */
   if (game_link_is_open(link) == TRUE)
   {
     game_set_last_cmd_status(game, ERROR_use);
     return;
   }
 
+  /*
+    Esta linea de codigo no la vi en la iteracion 3, Es un error de lógica
+    Antes de mi modficación solo comprobaba que el space en el que estoy sea el 
+    "Origin" del link, pero eso es un error de semántica,  un link bidireccional
+    no tiene origine ni destino, tiene "extremos A y B"  y puedes estar en uno de }
+    los extremos, por ejemplo A, y moverte a B, o vicerversa. Por eso hay que hacer
+    la comprobación de sis estoy en el supuesto "origen" o estoy en el "destino"
+  */
   if(link_get_origin_id(link)!=space_id && link_get_destination_id(link)!=space_id)
   {
     game_set_last_cmd_status(game, ERROR_use);
     return;
-  }
+  }else if( )
 
   game_link_set_open(link, TRUE);
   game_set_last_cmd_status(game, OK);

@@ -12,6 +12,22 @@
 
 
 #define TAM 6
+#define  MIN_LIFE 0
+#define  MIN_ATTACK 0
+#define  MIN_ENGY 0
+#define  MAX_LIFE 10
+#define  ERROR_LIFE -1
+#define  ERROR_ATTACK -1
+#define  ERROR_ENGY -1
+
+/**
+ * @brief Estadísticas de un character
+ */
+typedef struct {
+  int health;   /*!< Salud: puede ser positiva o negativa */
+  int attack;   /*!< Poder de ataque */
+  int energy;   /*!< Puntos de energía o maná */
+} Stats;
 
 /**
  * @brief character
@@ -22,7 +38,10 @@ struct _Character{
   Entity *e_character;    /*<! It stores the entity*/
   Bool friendly;          /*<! It stores hether the character is friendly or not*/
   Id following;           /*<! It stores the id of the character that this character is following*/
+  Stats stats;            /*<! It stores the stats of a character (health, attack, energy)*/
 };
+
+
 
 /* create or destroy */
 Character *character_create(){
@@ -37,18 +56,19 @@ Character *character_create(){
     free(newCharacter);
     return NULL;
   };
+  
 
   newCharacter->friendly = TRUE;
   newCharacter->following = NO_ID;
+  newCharacter->stats.attack = MIN_ATTACK;
+  newCharacter->stats.energy = MIN_ENGY;
+  newCharacter->stats.health = MIN_LIFE;
 
   return newCharacter;
 }
 Status character_destroy(Character *character)
 {
-  if (!character){
-    return ERROR;
-  }
-
+  if (!character) return ERROR;
   entity_destroy(character->e_character);
   free(character);
 
@@ -114,30 +134,52 @@ char      *character_get_message(Character *character){
 /* health */
 Status character_set_health(Character *character, int life){
   if(!character) return ERROR;
-  return entity_set_health(character->e_character, life);
+  if(life < MIN_LIFE){
+    character->stats.health =MIN_LIFE;
+    return OK;
+  }
+  character->stats.health =life;
+  return OK;
 }
 int character_get_health(Character *character){
   if(!character) return ERROR_LIFE;
-  return entity_get_health(character->e_character);
+  return character->stats.health;
 }
 
 /* attack */
-Status character_set_attack(Character *character, int value){
+Status character_set_attack(Character *character, int attack){
   if(!character) return ERROR;
-  return entity_set_attack(character->e_character, value);
+    if(attack< MIN_ATTACK){
+    character->stats.attack =MIN_ATTACK;
+    return OK;
+  }
+  character->stats.attack = attack;
+  return OK;
 }
 int character_get_attack(Character *character){
   if(!character) return ERROR_ATTACK;
-  return entity_get_attack(character->e_character);
+  return character->stats.attack;
+}
+
+/* energy */
+Status character_set_energy(Character* character, int energy){
+  if(!character) return ERROR;
+  if(energy < MIN_ENGY){
+    character->stats.energy =MIN_ENGY;
+    return OK;
+  }
+  character->stats.energy =energy;
+  return OK
+}
+int character_get_attack(Character *character){
+  if(!character) return ERROR_ENGY;
+  return character->stats.energy;
 }
 
 /* friendly */
 Status character_set_friendly(Character *character, Bool value){
-
   if (!character) return ERROR;
-
   character->friendly=value;
-
   return OK;
 }
 Bool character_get_friendly(Character *character){
@@ -163,10 +205,13 @@ Id character_get_following(Character *character)
 /* ================ PRINT ============================ */
 
 Status character_print(Character *character){
-  char *name = NULL;
-  char *gdesc = NULL;
-  char *message = NULL;
+  char *name =      NULL;
+  char *gdesc =     NULL;
+  char *message =   NULL;
   Id    following = NO_ID;
+  int   health =    0;
+  int   attack =    0;
+  int   energy =    0;
 
   if(!character) return ERROR;
 
@@ -174,12 +219,18 @@ Status character_print(Character *character){
   gdesc = character_get_gdesc(character);
   message = character_get_message(character);
   following = character_get_following(character);
+  health = character_get_health(character);
+  attack = character_get_attack(character);
+  energy = character_get_energy(character);
+
 
   fprintf(stdout, "\n--- Character ---\n");
   fprintf(stdout, "|| ID:       %ld\n", character_get_id(character));
   fprintf(stdout, "|| NAME:     %s\n", name ? name : "N/A");
   fprintf(stdout, "|| GDESC:    %s\n", gdesc ? gdesc : "N/A");
-  fprintf(stdout, "|| HEALTH:   %d\n", character_get_health(character));
+  fprintf(stdout, "|| HEALTH:   %d\n", health);
+  fprintf(stdout, "|| ATTACK:   %d\n", attack);
+  fprintf(stdout, "|| HEALTH:   %d\n", energy);
   fprintf(stdout, "|| FRIENDLY: %s\n", character_get_friendly(character) == TRUE ? "YES" : "NO");
   fprintf(stdout, "|| MESSAGE:  %s\n", message ? message : "N/A");
   fprintf(stdout, "|| FOLLOWING:  %ld\n", following!=NO_ID ? following : NO_ID);

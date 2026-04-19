@@ -90,45 +90,10 @@ Bool player_has_name(Player *player, char *name);
 
 /* ========== Health ========== */
 
-/**
- * @brief It sets the health of a player
- * @author Violeta y Rafa
- *
- * @param player a pointer to the player
- * @param life the health points to set
- * @return OK, if everything goes well, or ERROR if out of bounds
- */
-Status player_set_health(Player *player, int life);
 
-/**
- * @brief It gets the health of a player
- * @author Violeta y Rafa
- *
- * @param player a pointer to the player
- * @return the health value, or ERROR_LIFE if player is NULL
- */
-int player_get_health(Player *player);
 
 /* ========== Attack ========== */
 
-/**
- * @brief It sets the attack value of a player
- * @author Violeta y Rafa
- *
- * @param player a pointer to the player
- * @param value the attack value to set
- * @return OK, if everything goes well, or ERROR if there was some mistake
- */
-Status player_set_attack(Player *player, int value);
-
-/**
- * @brief It gets the attack value of a player
- * @author Violeta y Rafa
- *
- * @param player a pointer to the player
- * @return the attack value, or ERROR_ATTACK if player is NULL
- */
-int player_get_attack(Player *player);
 
 /* ========== Objects (Inventory) ========== */
 
@@ -184,27 +149,38 @@ int player_get_n_objects(Player *player);
  * @return OK if successful, ERROR if player is NULL or max < 0
  */
 Status player_set_max_objects(Player *player, int max);
+/* ========== Numens ==========*/
 
-/* ========== Location ========== */
+Status player_add_numen(Player *player, Id new_numen); /*!< Agrega a este Numen*/
+
+Status player_delete_numen(Player *player, Id trash_numen); /*!< ELimina a este Numen*/
+
+Bool player_contains_numen(Player *player, Id ref_numen); /*!< Lo contiene?*/
+
+int player_get_n_numens(Player *player); /*!< Cuántos tiene?*/
+
+Status player_set_max_numens(Player *player, int max_numens); /*!< El máximo es...*/
+
+/* ========== Zone   ========== */
 
 /**
- * @brief It sets the location of a player
+ * @brief It sets the Zone of a player
  * @author Violeta y Rafa
  *
  * @param player a pointer to the player
- * @param new_location the id of the space where the player is
+ * @param new_Zone the id of the space where the player is
  * @return OK, if everything goes well, or ERROR if there was some mistake
  */
-Status player_set_location(Player *player, Id new_location);
+Status player_set_zone(Player *player, Id new_zone);
 
 /**
- * @brief It gets the location of a player
+ * @brief It gets the Zone of a player
  * @author Violeta y Rafa
  *
  * @param player a pointer to the player
  * @return the id of the space the player is in, or NO_ID if player is NULL
  */
-Id player_get_location(Player *player);
+Id player_get_zone(Player *player);
 
 /* ========== Message ========== */
 

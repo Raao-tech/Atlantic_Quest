@@ -21,15 +21,16 @@
 #include "types.h"
 #include "player.h"
 #include "object.h"
-#include "character.h"
+#include "numen.h" /*Nota: Character se cambia por Numen, ya no se usa character hay que ahcer ese cambio en el modulo game*/
 #include "links.h"
 
+/*Usar ctrl + f para escanear todo lo que diga charcter, y adpatarlo a numens*/
 /** @brief Maximum number of spaces the game can hold */
 #define MAX_SPACES     100
 /** @brief Maximum number of objects the game can hold */
 #define MAX_OBJECTS    100
-/** @brief Maximum number of characters the game can hold */
-#define MAX_CHARACTERS 100
+/** @brief Maximum number of NUMENS the game can hold */
+#define MAX_NUMENS 100
 /** @brief Maximum number of players the game can hold */
 #define MAX_PLAYERS    10
 /** @brief Maximum number of links the game can hold */

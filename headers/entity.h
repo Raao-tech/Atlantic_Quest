@@ -14,12 +14,10 @@
 #include "types.h"
 #include "set.h"
 
-#define  MIN_LIFE 0
-#define  MIN_ATTACK 0
-#define  MAX_LIFE 10
-#define  ERROR_LIFE -1
-#define  ERROR_ATTACK -1
 
+/** 
+*   @struct it Defines the entity (player, character)
+*/
 typedef struct _Entity Entity;
 
 /**
@@ -125,26 +123,6 @@ Status entity_set_message(Entity *entity, char *message);
  */
 char *entity_get_message(Entity *entity);
 
-/**
- * @brief It sets the health value of an entity
- * @author Violeta
- *
- * @param entity a pointer to the entity
- * @param value the health points to set
- * @return OK, if everything goes well, or ERROR if value is out of bounds
- */
-Status entity_set_health(Entity *entity, int value);
 
-/**
- * @brief It gets the health value of an entity
- * @author Violeta
- *
- * @param entity a pointer to the entity
- * @return the health value, or ERROR_LIFE if the pointer is NULL
- */
-int entity_get_health(Entity *entity);
-
-Status  entity_set_attack(Entity *entity, int value);
-int entity_get_attack(Entity *entity);
 
 #endif

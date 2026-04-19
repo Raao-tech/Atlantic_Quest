@@ -10,6 +10,12 @@
 
 #include "entity.h"
 
+typedef struct
+{
+  float x;
+  float y;
+}Position;
+
 
 /**
  * @brief Entity
@@ -18,27 +24,25 @@
  */
 struct _Entity{
   Id    id;                   /*!< Id number of the object, it must be unique */
-  int   health;               /*!< Health of the entity, it can be positive or negative */
-  int   attack;               /*!< Attack power of the entity */
   char  *gdesc;               /*!< General description of the entity */
   char  *message;             /*!< Message associated with the entity */
   char  *name;                /*!< Name of the entity */
 };
+
 
 /* create or destroy */
 Entity *entity_create(){
   Entity *newEntity = NULL;
 
   newEntity = (Entity *)malloc(sizeof(Entity));
-  if (newEntity == NULL) {return NULL;}
+  if (newEntity == NULL) return NULL;
 
   /* Initialization of an empty character*/
-  newEntity->id = NO_ID;
-  newEntity->gdesc = NULL;
-  newEntity->name = NULL;
-  newEntity->message = NULL;
-  newEntity->health = 0;
-  newEntity->attack = 0;
+  newEntity->id =       NO_ID;
+  newEntity->gdesc =    NULL;
+  newEntity->name =     NULL;
+  newEntity->message =  NULL;
+
   
   return newEntity;
 }
@@ -72,9 +76,7 @@ Id  entity_get_id(Entity *entity){
 Status  entity_set_name(Entity *entity, char*  name){
   int   length_name;
 
-  if(!entity || !name){
-    return  ERROR;
-  }
+  if(!entity || !name) return  ERROR;
 
   /* Calculamos el tamaño del name sin el \0  */
   length_name = strlen(name);
@@ -89,9 +91,7 @@ Status  entity_set_name(Entity *entity, char*  name){
   entity->name = (char *) calloc(length_name + 1, sizeof(char));
 
   /* VALIDAR la reserva de memoria antes de copiar */
-  if (entity->name == NULL) {
-    return ERROR;
-  }
+  if (entity->name == NULL) return ERROR;
 
   /* Copiamos (strcpy copia los caracteres y el \0 automáticamente) */
   strcpy(entity->name, name);
@@ -99,10 +99,7 @@ Status  entity_set_name(Entity *entity, char*  name){
   return OK;
 }
 char*  entity_get_name(Entity *entity){
-  if(!entity || !entity->name){
-    return NULL;
-  }
-
+  if(!entity || !entity->name) return NULL;
   return  strdup(entity->name);
 }
 
@@ -188,32 +185,4 @@ char*  entity_get_message(Entity *entity){
   }
 
   return  strdup(entity->message);
-}
-
-
-/* health */
-Status  entity_set_health(Entity *entity, int value){
-  if(!entity || value < MIN_LIFE || value > MAX_LIFE) return  ERROR;
-  
-  entity->health = value;
-  return OK;
-}
-int entity_get_health(Entity *entity){
-  if(!entity) return ERROR_LIFE;
-
-  return  entity->health;
-}
-
-
-/* attack */
-Status  entity_set_attack(Entity *entity, int value){
-  if(!entity || value < MIN_ATTACK) return  ERROR;
-  
-  entity->attack = value;
-  return OK;
-}
-int entity_get_attack(Entity *entity){
-  if(!entity) return ERROR_ATTACK;
-
-  return  entity->attack;
 }

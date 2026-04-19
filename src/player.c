@@ -18,8 +18,9 @@
  */
 struct _Player {
   Entity    *e_player;   /*!< Entity base (id, name, gdesc, message, health, attack) */
-  Inventory *backpack;   /*!< Inventory of object IDs the player carries */
-  Id         location;   /*!< Id of the space where the player is */
+  Inventory *backpack_items;   /*!< Inventory of object IDs the player carries */
+  Inventory *backpack_numens;   /*!< Inventory of nuemns IDs the player carries */
+  Id         zone;   /*!< Id of the space where the player is */
 };
 
 /* ========== Create / Destroy ========== */
@@ -28,7 +29,7 @@ Player *player_create() {
   Player *newPlayer = (Player *)malloc(sizeof(Player));
   if (!newPlayer) return NULL;
 
-  newPlayer->location = NO_ID;
+  newPlayer->zone = NO_ID;
 
   newPlayer->e_player = entity_create();
   if (!newPlayer->e_player) {
@@ -36,8 +37,15 @@ Player *player_create() {
     return NULL;
   }
 
-  newPlayer->backpack = inventory_create();
-  if (!newPlayer->backpack) {
+  newPlayer->backpack_items = inventory_create();
+  if (!newPlayer->backpack_items) {
+    entity_destroy(newPlayer->e_player);
+    free(newPlayer);
+    return NULL;
+  }
+  newPlayer->backpack_numens = inventory_create();
+  if (!newPlayer->backpack_numens) {
+    inventory_destroy(newPlayer->backpack_items);
     entity_destroy(newPlayer->e_player);
     free(newPlayer);
     return NULL;
@@ -49,8 +57,9 @@ Player *player_create() {
 Status player_destroy(Player *player) {
   if (!player) return ERROR;
 
-  entity_destroy(player->e_player);
-  inventory_destroy(player->backpack);
+  entity_destroy(player->e_player); /*!< Destroy pointer to entity*/
+  inventory_destroy(player->backpack_items);/*!< Destroy pointer to backpack of intems*/
+  inventory_destroy(player->backpack_numens);/*!< Destroy pointer to backpack of numens*/
   free(player);
 
   return OK;
@@ -87,66 +96,72 @@ Bool player_has_name(Player *player, char *name) {
 
 /* ========== Health ========== */
 
-Status player_set_health(Player *player, int life) {
-  if (!player) return ERROR;
-  return entity_set_health(player->e_player, life);
-}
-
-int player_get_health(Player *player) {
-  if (!player || !player->e_player) return ERROR_LIFE;
-  return entity_get_health(player->e_player);
-}
-
 /* ========== Attack ========== */
 
-Status player_set_attack(Player *player, int value) {
-  if (!player) return ERROR;
-  return entity_set_attack(player->e_player, value);
-}
-
-int player_get_attack(Player *player) {
-  if (!player) return ERROR_ATTACK;
-  return entity_get_attack(player->e_player);
-}
-
-/* ========== Objects (Inventory) ========== */
+/* ========== Backpack_items (Inventory) ========== */
 
 Status player_add_object(Player *player, Id new_obj) {
   if (!player) return ERROR;
-  return inventory_add(player->backpack, new_obj);
-}
-
-Bool player_contains_object(Player *player, Id ref_obj) {
-  if (!player) return FALSE;
-  return inventory_contains_object(player->backpack, ref_obj);
+  return inventory_add(player->backpack_items, new_obj);
 }
 
 Status player_delete_object(Player *player, Id trash_obj) {
   if (!player) return ERROR;
-  return inventory_delete_obj(player->backpack, trash_obj);
+  return inventory_delete_obj(player->backpack_items, trash_obj);
+}
+
+Bool player_contains_object(Player *player, Id ref_obj) {
+  if (!player) return FALSE;
+  return inventory_contains_object(player->backpack_items, ref_obj);
 }
 
 int player_get_n_objects(Player *player) {
   if (!player) return ERROR_MAIN;
-  return inventory_get_n_ids(player->backpack);
+  return inventory_get_n_ids(player->backpack_items);
 }
 
 Status player_set_max_objects(Player *player, int max) {
   if (!player) return ERROR;
-  return inventory_set_max_objs(player->backpack, max);
+  return inventory_set_max_objs(player->backpack_items, max);
 }
 
-/* ========== Location ========== */
+/* =========== Backpack_Numens (Inventory) ==========*/
+Status player_add_numen(Player *player, Id new_numen) {
+  if (!player) return ERROR;
+  return inventory_add(player->backpack_numens, new_numen);
+}
 
-Status player_set_location(Player *player, Id new_location) {
-  if (!player || new_location == NO_ID) return ERROR;
-  player->location = new_location;
+Status player_delete_numen(Player *player, Id trash_numen) {
+  if (!player) return ERROR;
+  return inventory_delete_obj(player->backpack_numens, trash_numen);
+}
+
+Bool player_contains_numen(Player *player, Id ref_numen) {
+  if (!player) return FALSE;
+  return inventory_contains_object(player->backpack_numens, ref_numen);
+}
+
+int player_get_n_numens(Player *player) {
+  if (!player) return ERROR_MAIN;
+  return inventory_get_n_ids(player->backpack_numens);
+}
+
+Status player_set_max_numens(Player *player, int max_numens) {
+  if (!player) return ERROR;
+  return inventory_set_max_objs(player->backpack_numens, max_numens);
+}
+
+/* ========== Zone ========== */
+
+Status player_set_zone(Player *player, Id new_zone) {
+  if (!player || new_zone == NO_ID) return ERROR;
+  player->zone = new_zone;
   return OK;
 }
 
-Id player_get_location(Player *player) {
+Id player_get_zone(Player *player) {
   if (!player) return NO_ID;
-  return player->location;
+  return player->zone;
 }
 
 /* ========== Message ========== */
@@ -177,10 +192,8 @@ char *player_get_gdesc(Player *player) {
 
 Status player_print(Player *player) {
   Id    player_id;
-  Id    player_location;
+  Id    player_zone;
   int   player_n_objects;
-  int   player_health;
-  int   player_attack;
   char *player_name    = NULL;
   char *player_gdesc   = NULL;
   char *player_message = NULL;
@@ -188,22 +201,18 @@ Status player_print(Player *player) {
   if (!player) return ERROR;
 
   player_id        = player_get_id(player);
-  player_location  = player_get_location(player);
+  player_zone      = player_get_zone(player);
   player_n_objects = player_get_n_objects(player);
-  player_health    = player_get_health(player);
-  player_attack    = player_get_attack(player);
   player_name      = player_get_name(player);
   player_gdesc     = player_get_gdesc(player);
   player_message   = player_get_message(player);
 
-  fprintf(stdout, "--> Player (Id: %ld; Name: %s; Gdesc: %s; Location: %ld; "
-                  "Health: %d; Attack: %d; Objects: %d; Message: %s)\n",
+  fprintf(stdout, "--> Player (Id: %ld; Name: %s; Gdesc: %s; Zone: %ld; "
+                  "Objects: %d; Message: %s)\n",
           player_id,
           player_name    ? player_name    : "NULL",
           player_gdesc   ? player_gdesc   : "NULL",
-          player_location,
-          player_health,
-          player_attack,
+          player_zone,
           player_n_objects,
           player_message ? player_message : "NULL");
 

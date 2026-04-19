@@ -49,17 +49,11 @@ int main(int argc, char **argv) {
   if (all || test == 14) test1_player_has_name();
   if (all || test == 15) test2_player_has_name();
   if (all || test == 16) test3_player_has_name();
-  if (all || test == 17) test1_player_set_health();
-  if (all || test == 18) test2_player_set_health();
-  if (all || test == 19) test1_player_get_health();
-  if (all || test == 20) test2_player_get_health();
+
   if (all || test == 21) test1_player_set_max_objects();
   if (all || test == 22) test2_player_set_max_objects();
   if (all || test == 23) test3_player_set_max_objects();
-  if (all || test == 24) test1_player_set_attack();
-  if (all || test == 25) test2_player_set_attack();
-  if (all || test == 26) test1_player_get_attack();
-  if (all || test == 27) test2_player_get_attack();
+
   if (all || test == 28) test1_player_add_object();
   if (all || test == 29) test2_player_add_object();
   if (all || test == 30) test1_player_add_object_full_inventory();
@@ -71,11 +65,19 @@ int main(int argc, char **argv) {
   if (all || test == 36) test1_player_get_n_objects();
   if (all || test == 37) test2_player_get_n_objects();
   if (all || test == 38) test1_player_empty_inventory();
-  if (all || test == 39) test1_player_set_location();
-  if (all || test == 40) test2_player_set_location();
-  if (all || test == 41) test3_player_set_location();
-  if (all || test == 42) test1_player_get_location();
-  if (all || test == 43) test2_player_get_location();
+
+  /*Falta por hacer los tests de player_(add/delete/contain/max/n_*cantidad*)_numens*/
+  /*player_add_numen*/
+  /*player_delete_numen*/
+  /*player_contains_numen*/
+  /*player_n_numens*/
+  /*player_max_numens*/
+  
+  if (all || test == 39) test1_player_set_zone();
+  if (all || test == 40) test2_player_set_zone();
+  if (all || test == 41) test3_player_set_zone();
+  if (all || test == 42) test1_player_get_zone();
+  if (all || test == 43) test2_player_get_zone();
   if (all || test == 44) test1_player_set_gdesc();
   if (all || test == 45) test2_player_set_gdesc();
   if (all || test == 46) test1_player_get_gdesc();
@@ -99,7 +101,7 @@ void test1_player_create() {
 
 void test2_player_create() {
   Player *p = player_create();
-  PRINT_TEST_RESULT(player_get_location(p) == NO_ID);
+  PRINT_TEST_RESULT(player_get_zone(p) == NO_ID);
   player_destroy(p);
 }
 
@@ -185,27 +187,6 @@ void test3_player_has_name() {
   PRINT_TEST_RESULT(player_has_name(NULL, "Hero") == FALSE);
 }
 
-/* ========== player_set_health / get_health ========== */
-void test1_player_set_health() {
-  Player *p = player_create();
-  PRINT_TEST_RESULT(player_set_health(p, 5) == OK);
-  player_destroy(p);
-}
-
-void test2_player_set_health() {
-  PRINT_TEST_RESULT(player_set_health(NULL, 5) == ERROR);
-}
-
-void test1_player_get_health() {
-  Player *p = player_create();
-  player_set_health(p, 5);
-  PRINT_TEST_RESULT(player_get_health(p) == 5);
-  player_destroy(p);
-}
-
-void test2_player_get_health() {
-  PRINT_TEST_RESULT(player_get_health(NULL) == ERROR_LIFE);
-}
 
 /* ========== player_set_max_objects ========== */
 void test1_player_set_max_objects() {
@@ -223,28 +204,11 @@ void test3_player_set_max_objects() {
   PRINT_TEST_RESULT(player_set_max_objects(p, -1) == ERROR);
   player_destroy(p);
 }
+/* ========== player_set_health / get_health ========== */
+
 
 /* ========== player_set_attack / get_attack ========== */
-void test1_player_set_attack() {
-  Player *p = player_create();
-  PRINT_TEST_RESULT(player_set_attack(p, 3) == OK);
-  player_destroy(p);
-}
 
-void test2_player_set_attack() {
-  PRINT_TEST_RESULT(player_set_attack(NULL, 3) == ERROR);
-}
-
-void test1_player_get_attack() {
-  Player *p = player_create();
-  player_set_attack(p, 3);
-  PRINT_TEST_RESULT(player_get_attack(p) == 3);
-  player_destroy(p);
-}
-
-void test2_player_get_attack() {
-  PRINT_TEST_RESULT(player_get_attack(NULL) == ERROR_ATTACK);
-}
 
 /* ========== player_add_object / contains / delete / get_n ========== */
 
@@ -326,32 +290,32 @@ void test1_player_empty_inventory() {
   player_destroy(p);
 }
 
-/* ========== player_set_location / get_location ========== */
-void test1_player_set_location() {
+/* ========== player_set_zone / get_zone ========== */
+void test1_player_set_zone() {
   Player *p = player_create();
-  PRINT_TEST_RESULT(player_set_location(p, 11) == OK);
+  PRINT_TEST_RESULT(player_set_zone(p, 11) == OK);
   player_destroy(p);
 }
 
-void test2_player_set_location() {
-  PRINT_TEST_RESULT(player_set_location(NULL, 11) == ERROR);
+void test2_player_set_zone() {
+  PRINT_TEST_RESULT(player_set_zone(NULL, 11) == ERROR);
 }
 
-void test3_player_set_location() {
+void test3_player_set_zone() {
   Player *p = player_create();
-  PRINT_TEST_RESULT(player_set_location(p, NO_ID) == ERROR);
+  PRINT_TEST_RESULT(player_set_zone(p, NO_ID) == ERROR);
   player_destroy(p);
 }
 
-void test1_player_get_location() {
+void test1_player_get_zone() {
   Player *p = player_create();
-  player_set_location(p, 11);
-  PRINT_TEST_RESULT(player_get_location(p) == 11);
+  player_set_zone(p, 11);
+  PRINT_TEST_RESULT(player_get_zone(p) == 11);
   player_destroy(p);
 }
 
-void test2_player_get_location() {
-  PRINT_TEST_RESULT(player_get_location(NULL) == NO_ID);
+void test2_player_get_zone() {
+  PRINT_TEST_RESULT(player_get_zone(NULL) == NO_ID);
 }
 
 /* ========== player_set_gdesc / get_gdesc ========== */

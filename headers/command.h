@@ -47,7 +47,7 @@ CommandCode command_get_code(Command *command);
 
 /*========== (Get or Read) User Input  =========== */
 Status  command_get_user_input(Command *command);
-char    *command_get_obj(Command *command);
+char    *command_get_target(Command *command);
 
 
 #endif

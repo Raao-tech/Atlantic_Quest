@@ -9,7 +9,6 @@
  */
 
 #include "game.h"
-#include "links.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,8 +21,8 @@
  */
 struct _Game {
   Player    *players[MAX_PLAYERS];       /*!< Array of player pointers */
-  Character *characters[MAX_CHARACTERS]; /*!< Array of character pointers */
-  Object    *objects[MAX_OBJECTS];        /*!< Array of object pointers */
+  Numen		*numens[MAX_NUMENS];     /*!< Array of  numens pointers */
+  Object    *objects[MAX_OBJECTS];       /*!< Array of object pointers */
   Space     *spaces[MAX_SPACES];         /*!< Array of space pointers */
   Links     *links[MAX_LINKS];           /*!< Array of link pointers */
 
@@ -33,7 +32,7 @@ struct _Game {
   int    n_players;       /*!< Current number of players */
   int    n_spaces;        /*!< Current number of spaces */
   int    n_objects;       /*!< Current number of objects */
-  int    n_characters;    /*!< Current number of characters */
+  int    n_numens;    /*!< Current number of numens */
   int    n_links;         /*!< Current number of links */
   Bool   finished;        /*!< TRUE if the game is over */
   Status last_cmd_status; /*!< Result of the last command (OK, ERROR, etc.) */
@@ -55,7 +54,7 @@ Game *game_create() {
   for (i = 0; i < MAX_PLAYERS; i++)    game->players[i] = NULL;
   for (i = 0; i < MAX_SPACES; i++)     game->spaces[i] = NULL;
   for (i = 0; i < MAX_OBJECTS; i++)    game->objects[i] = NULL;
-  for (i = 0; i < MAX_CHARACTERS; i++) game->characters[i] = NULL;
+  for (i = 0; i < MAX_NUMENS; i++) 	   game->numens[i] = NULL;
   for (i = 0; i < MAX_LINKS; i++)      game->links[i] = NULL;
 
   /*
@@ -67,7 +66,7 @@ Game *game_create() {
   game->n_players      = 0;
   game->n_spaces       = 0;
   game->n_objects      = 0;
-  game->n_characters   = 0;
+  game->n_numens	   = 0;
   game->n_links        = 0;
   game->finished       = FALSE;
   game->last_cmd_status = OK;
@@ -88,7 +87,7 @@ Status game_destroy(Game *game) {
 
   for (i = 0; i < game->n_spaces; i++)      space_destroy(game->spaces[i]);
   for (i = 0; i < game->n_objects; i++)     obj_destroy(game->objects[i]);
-  for (i = 0; i < game->n_characters; i++)  character_destroy(game->characters[i]);
+  for (i = 0; i < game->n_numens; i++)      numen_destroy(game->numens[i]);
   for (i = 0; i < game->n_players; i++)     player_destroy(game->players[i]);
   for (i = 0; i < game->n_links; i++)       link_destroy(game->links[i]);
 
@@ -200,11 +199,10 @@ Status game_add_object(Game *game, Object *obj) {
   return OK;
 }
 
-Status game_add_character(Game *game, Character *character) {
-  if (!game || !character || game->n_characters >= MAX_CHARACTERS)
-    return ERROR;
-  game->characters[game->n_characters] = character;
-  game->n_characters++;
+Status game_add_numen(Game *game, Numen *numen) {
+  if (!game || !numen || game->n_numens >= MAX_NUMENS) return ERROR;
+  game->numens[game->n_numens] = numen;
+  game->n_numens++;
   return OK;
 }
 
@@ -262,25 +260,23 @@ Id game_get_object_location(Game *game, Id obj_id) {
 
 
 /* ========================================================================= */
-/*                        SEARCH: CHARACTERS                                 */
+/*                        SEARCH: NUMENS                               */
 /* ========================================================================= */
 
-Character *game_get_character_by_id(Game *game, Id id) {
+Numen *game_get_numen_by_id(Game *game, Id id_numen) {
   int i;
-  if (!game || id == NO_ID) return NULL;
-  for (i = 0; i < game->n_characters; i++) {
-    if (character_get_id(game->characters[i]) == id)
-      return game->characters[i];
+  if (!game || id_numen == NO_ID) return NULL;
+  for (i = 0; i < game->n_numens; i++) {
+    if (numen_get_id(game->numens[i]) == id_numen) return game->numens[i];
   }
   return NULL;
 }
 
-Character *game_get_character_by_name(Game *game, char *name) {
+Numen *game_get_numen_by_name(Game *game, char *name_numen) {
   int i;
-  if (!game || !name) return NULL;
-  for (i = 0; i < game->n_characters; i++) {
-    if (character_has_name(game->characters[i], name) == TRUE)
-      return game->characters[i];
+  if (!game || !name_numen) return NULL;
+  for (i = 0; i < game->n_numens; i++) {
+    if (numen_has_name(game->numens[i], name_numen) == TRUE) return game->numens[i];
   }
   return NULL;
 }

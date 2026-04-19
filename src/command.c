@@ -32,8 +32,21 @@ char *cmd_to_str[N_CMD][N_CMDT] = {
 };
 
 struct _Command {
-  char *obj;
+  char *target;
   CommandCode code;
+  /* PlayerCode player------> Es una posible  solución para nuestro multijugador simultaneo 7
+  * typedef enum{            que nos digan constantemente quién está ejecutando el comando por
+  *   NO_PLY,                cada frame (para graphic_engine_raylib()) y  por cada línea presente 
+  *   PLY_1,                 en el game1.cmd (las pruebas de integración automatizadas).
+  *   PLY_2
+  * }PlayerCode;
+  *                           Posiblers consescuencias: 
+  *                  La máxima cantidad de jugadores, vendría definido por una macro en test.h o en el
+  *                   propio command de la misma forma que se ecnuentra en CMD.  podemos establecerlo en 
+  *                 el game->turn  = MAX_PLY para no cmabiar muchas lineas de codigo,pero todo estaría con
+  *                   esta enumeracion de tipos de datos.
+  *
+  */
 };
 
 Command *command_create(){
@@ -43,14 +56,14 @@ Command *command_create(){
   if (newCommand == NULL) return NULL;
 
   newCommand->code = NO_CMD;
-  newCommand->obj = NULL;
+  newCommand->target = NULL;
   return newCommand;
 }
 
 Status command_destroy(Command *command){
   if (!command) return ERROR;
 
-  if (command->obj) free(command->obj);
+  if (command->target) free(command->target);
 
   free(command);
   return OK;
@@ -66,12 +79,15 @@ CommandCode command_get_code(Command *command){
   if (!command) return NO_CMD;
   return command->code;
 }
-
-char *command_get_obj(Command *command){
+/*======= obtener la entidad señalada en la que se basa la accion (CommandCode)=============*/
+char *command_get_target(Command *command){
   if (!command) return NULL;
-  return command->obj;
+  return command->target;
 }
 
+
+
+/*======= Eje central, Input del usuario =============*/
 Status command_get_user_input(Command *command){
   char input[CMD_LENGHT] = "";
   char *token = NULL;
@@ -80,9 +96,9 @@ Status command_get_user_input(Command *command){
 
   if (!command) return ERROR;
 
-  if (command->obj) {
-    free(command->obj);
-    command->obj = NULL;
+  if (command->target) {
+    free(command->target);
+    command->target = NULL;
   }
 
   if (fgets(input, CMD_LENGHT, stdin)){
@@ -96,9 +112,9 @@ Status command_get_user_input(Command *command){
       else  i++;
     }
 
-    /* Second token: the object/target name (for take, drop, attack, chat, inspect, use) */
+    /* Second token: the target name (for take, drop, attack, chat, inspect, use) */
     token = strtok(NULL, " \n");
-    if (token)  command->obj = strdup(token);
+    if (token)  command->target = strdup(token);
     return command_set_code(command, cmd);
   }
   else

@@ -32,7 +32,8 @@ typedef enum {
   CHAT,
   INSPECT,
   USE,
-  OPEN
+  OPEN,
+  SAVE
 } CommandCode;
 
 typedef struct _Command Command;

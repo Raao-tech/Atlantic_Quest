@@ -433,6 +433,25 @@ Player *game_get_player_at(Game *game, int position);
 Id game_get_space_id_at(Game *game, int position);
 
 /**
+ * @brief It gets a numen by its position in the array
+ * @author Salvador
+ *
+ * @param game a pointer to the game
+ * @param position the zero-based index in the numens array
+ * @return pointer to the numen, or NULL if out of range
+ */
+Numen *game_get_numen__at(Game *game, int position);
+
+/**
+ * @brief It gets a link by its position in the array
+ * @author Salvador
+ *
+ * @param game a pointer to the game
+ * @param position the zero-based index in the links array
+ * @return pointer to the link, or NULL if out of range
+ */
+Links *game_get_link_at(Game *game, int position);
+/**
  * @brief It returns the number of spaces in the game
  * @author Violeta y Rafa
  *

@@ -1,14 +1,14 @@
 /**
- * @brief It reads information from files to create the game
+ * @brief It reads information from files to create the game and saves it when required
  *
- * @file game_reader.c
- * @author Violeta y Rafael
+ * @file game_management.c
+ * @author Violeta, Rafael, Salvador and Javier Jarque
  * @version 3
- * @date 08-04-2026
+ * @date 20-04-2026
  * @copyright GNU Public License
  */
 
-#include "game_reader.h"
+#include "game_management.h"
 #include "links.h"
 
 #include <stdio.h>
@@ -26,6 +26,7 @@
 #define F_OBJE "#o:"
 #define F_CHAR "#c:"
 #define F_LINK "#l:"
+#define F_NUMEN "#n:"
 
 /**
  * Private function prototypes — one loader per entity type.
@@ -38,7 +39,8 @@ static Status game_load_characters(Game *game, char *filename);
 static Status game_load_players(Game *game, char *filename);
 static Status game_load_links(Game *game, char *filename);
 
-static Status game_load_spaces(Game *game, char *filename) {
+static Status game_load_spaces(Game *game, char *filename)
+{
   FILE *file = NULL;
   char line[WORD_SIZE] = "";
   char name[WORD_SIZE] = "";
@@ -49,24 +51,30 @@ static Status game_load_spaces(Game *game, char *filename) {
   int tam_format;
   int i;
 
-  if (!game || !filename) return ERROR;
+  if (!game || !filename)
+    return ERROR;
 
   file = fopen(filename, "r");
-  if (file == NULL) return ERROR;
+  if (file == NULL)
+    return ERROR;
 
   tam_format = strlen(F_SPAC);
 
-  while (fgets(line, WORD_SIZE, file)) {
-    if (strncmp(F_SPAC, line, tam_format) == 0) {
+  while (fgets(line, WORD_SIZE, file))
+  {
+    if (strncmp(F_SPAC, line, tam_format) == 0)
+    {
 
       /* --- id --- */
       toks = strtok(line + tam_format, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       id = atol(toks);
 
       /* --- name --- */
       toks = strtok(NULL, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       strcpy(name, toks);
 
 #ifdef DEBUG
@@ -74,14 +82,17 @@ static Status game_load_spaces(Game *game, char *filename) {
 #endif
 
       space = space_create();
-      if (space != NULL) {
+      if (space != NULL)
+      {
         space_set_id(space, id);
         space_set_name(space, name);
 
         /* Try to read up to MAX_LINE gdesc lines (optional) */
-        for (i = 0; i < MAX_LINE; i++) {
+        for (i = 0; i < MAX_LINE; i++)
+        {
           toks = strtok(NULL, "|");
-          if (toks && toks[0] != '\n' && toks[0] != '\0') {
+          if (toks && toks[0] != '\n' && toks[0] != '\0')
+          {
             space_set_gdesc_line(space, i, toks);
           }
         }
@@ -91,13 +102,15 @@ static Status game_load_spaces(Game *game, char *filename) {
     }
   }
 
-  if (ferror(file)) status = ERROR;
+  if (ferror(file))
+    status = ERROR;
 
   fclose(file);
   return status;
 }
 
-static Status game_load_objects(Game *game, char *filename) {
+static Status game_load_objects(Game *game, char *filename)
+{
   FILE *file = NULL;
   char line[WORD_SIZE] = "";
   char name[WORD_SIZE] = "";
@@ -109,35 +122,45 @@ static Status game_load_objects(Game *game, char *filename) {
   Status status = OK;
   int tam_format;
 
-  if (!game || !filename) return ERROR;
+  if (!game || !filename)
+    return ERROR;
 
   tam_format = strlen(F_OBJE);
   file = fopen(filename, "r");
-  if (file == NULL) return ERROR;
+  if (file == NULL)
+    return ERROR;
 
-  while (fgets(line, WORD_SIZE, file)) {
-    if (strncmp(F_OBJE, line, tam_format) == 0) {
+  while (fgets(line, WORD_SIZE, file))
+  {
+    if (strncmp(F_OBJE, line, tam_format) == 0)
+    {
 
       /* --- id --- */
       toks = strtok(line + tam_format, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       id = atol(toks);
 
       /* --- name --- */
       toks = strtok(NULL, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       strcpy(name, toks);
 
       /* --- space_id --- */
       toks = strtok(NULL, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       space_id = atol(toks);
 
       /* --- description (rest of the line, optional) --- */
       toks = strtok(NULL, "\n");
-      if (toks) {
+      if (toks)
+      {
         strcpy(description, toks);
-      } else {
+      }
+      else
+      {
         description[0] = '\0';
       }
 
@@ -146,28 +169,33 @@ static Status game_load_objects(Game *game, char *filename) {
 #endif
 
       obj = obj_create();
-      if (obj != NULL) {
+      if (obj != NULL)
+      {
         obj_set_id(obj, id);
         obj_set_name(obj, name);
-        if (description[0] != '\0') {
+        if (description[0] != '\0')
+        {
           obj_set_description(obj, description);
         }
         game_add_object(game, obj);
 
         /* Place object in its space */
         space = game_get_space(game, space_id);
-        if (space) space_set_object(space, id);
+        if (space)
+          space_set_object(space, id);
       }
     }
   }
 
-  if (ferror(file)) status = ERROR;
+  if (ferror(file))
+    status = ERROR;
 
   fclose(file);
   return status;
 }
 
-static Status game_load_characters(Game *game, char *filename) {
+static Status game_load_characters(Game *game, char *filename)
+{
   FILE *file = NULL;
   char line[WORD_SIZE] = "";
   char name[WORD_SIZE] = "";
@@ -181,50 +209,63 @@ static Status game_load_characters(Game *game, char *filename) {
   Status status = OK;
   int tam_format;
 
-  if (!game || !filename) return ERROR;
+  if (!game || !filename)
+    return ERROR;
 
   tam_format = strlen(F_CHAR);
   file = fopen(filename, "r");
-  if (file == NULL) return ERROR;
+  if (file == NULL)
+    return ERROR;
 
-  while (fgets(line, WORD_SIZE, file)) {
-    if (strncmp(F_CHAR, line, tam_format) == 0) {
+  while (fgets(line, WORD_SIZE, file))
+  {
+    if (strncmp(F_CHAR, line, tam_format) == 0)
+    {
 
       /* --- id --- */
       toks = strtok(line + tam_format, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       id = atol(toks);
 
       /* --- name --- */
       toks = strtok(NULL, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       strcpy(name, toks);
 
       /* --- gdesc --- */
       toks = strtok(NULL, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       strcpy(gdesc, toks);
 
       /* --- space_id (position) --- I3 ORDER: before health */
       toks = strtok(NULL, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       space_id = atol(toks);
 
       /* --- health --- */
       toks = strtok(NULL, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       health = atoi(toks);
 
       /* --- friendly (0 or 1) --- */
       toks = strtok(NULL, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       friendly = atoi(toks);
 
       /* --- message (rest of line, may contain spaces) --- */
       toks = strtok(NULL, "\n");
-      if (toks) {
+      if (toks)
+      {
         strcpy(message, toks);
-      } else {
+      }
+      else
+      {
         message[0] = '\0';
       }
 
@@ -234,7 +275,8 @@ static Status game_load_characters(Game *game, char *filename) {
 #endif
 
       ch = character_create();
-      if (ch != NULL) {
+      if (ch != NULL)
+      {
         character_set_id(ch, id);
         character_set_name(ch, name);
         character_set_gdesc(ch, gdesc);
@@ -245,18 +287,21 @@ static Status game_load_characters(Game *game, char *filename) {
 
         /* Place character in its space */
         space = game_get_space(game, space_id);
-        if (space) space_set_character(space, id);
+        if (space)
+          space_set_character(space, id);
       }
     }
   }
 
-  if (ferror(file)) status = ERROR;
+  if (ferror(file))
+    status = ERROR;
 
   fclose(file);
   return status;
 }
 
-static Status game_load_players(Game *game, char *filename) {
+static Status game_load_players(Game *game, char *filename)
+{
   FILE *file = NULL;
   char line[WORD_SIZE] = "";
   char name[WORD_SIZE] = "";
@@ -271,43 +316,53 @@ static Status game_load_players(Game *game, char *filename) {
   Status status = OK;
   int tam_format;
 
-  if (!game || !filename) return ERROR;
+  if (!game || !filename)
+    return ERROR;
 
   tam_format = strlen(F_PLAY);
   file = fopen(filename, "r");
-  if (!file) return ERROR;
+  if (!file)
+    return ERROR;
 
-  while (fgets(line, WORD_SIZE, file)) {
-    if (strncmp(F_PLAY, line, tam_format) == 0) {
+  while (fgets(line, WORD_SIZE, file))
+  {
+    if (strncmp(F_PLAY, line, tam_format) == 0)
+    {
 
       /* --- id --- */
       toks = strtok(line + tam_format, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       id = atol(toks);
 
       /* --- name --- */
       toks = strtok(NULL, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       strcpy(name, toks);
 
       /* --- gdesc --- */
       toks = strtok(NULL, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       strcpy(gdesc, toks);
 
       /* --- location --- */
       toks = strtok(NULL, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       location = atol(toks);
 
       /* --- health --- */
       toks = strtok(NULL, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       health = atoi(toks);
 
       /* --- max_bag --- */
       toks = strtok(NULL, "|\n");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       max_bag = atoi(toks);
 
 #ifdef DEBUG
@@ -316,7 +371,8 @@ static Status game_load_players(Game *game, char *filename) {
 #endif
 
       player = player_create();
-      if (player != NULL) {
+      if (player != NULL)
+      {
         player_set_id(player, id);
         player_set_name(player, name);
         player_set_gdesc(player, gdesc);
@@ -326,20 +382,23 @@ static Status game_load_players(Game *game, char *filename) {
         player_set_max_objects(player, max_bag);
 
         game_add_player(game, player);
-        
+
         space = game_get_space(game, location);
-        if (space) space_set_discovered(space, TRUE);
+        if (space)
+          space_set_discovered(space, TRUE);
       }
     }
   }
 
-  if (ferror(file)) status = ERROR;
+  if (ferror(file))
+    status = ERROR;
 
   fclose(file);
   return status;
 }
 
-static Status game_load_links(Game *game, char *filename) {
+static Status game_load_links(Game *game, char *filename)
+{
   FILE *file = NULL;
   char line[WORD_SIZE] = "";
   char name[WORD_SIZE] = "";
@@ -348,56 +407,69 @@ static Status game_load_links(Game *game, char *filename) {
   Id id = NO_ID;
   Id origin = NO_ID, dest = NO_ID;
   int dir_num = 0;
-  int open_otd = 1;   /* open origin-to-dest */
-  int open_dto = 1;   /* open dest-to-origin */
+  int open_otd = 1; /* open origin-to-dest */
+  int open_dto = 1; /* open dest-to-origin */
   Status status = OK;
   int tam_format;
 
-  if (!game || !filename) return ERROR;
+  if (!game || !filename)
+    return ERROR;
 
   tam_format = strlen(F_LINK);
   file = fopen(filename, "r");
-  if (!file) return ERROR;
+  if (!file)
+    return ERROR;
 
-  while (fgets(line, WORD_SIZE, file)) {
-    if (strncmp(F_LINK, line, tam_format) == 0) {
+  while (fgets(line, WORD_SIZE, file))
+  {
+    if (strncmp(F_LINK, line, tam_format) == 0)
+    {
 
       /* --- id --- */
       toks = strtok(line + tam_format, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       id = atol(toks);
 
       /* --- name --- */
       toks = strtok(NULL, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       strcpy(name, toks);
 
       /* --- origin id --- */
       toks = strtok(NULL, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       origin = atol(toks);
 
       /* --- destination id --- */
       toks = strtok(NULL, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       dest = atol(toks);
 
       /* --- direction (numeric: N=0 S=1 E=2 W=3) --- */
       toks = strtok(NULL, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       dir_num = atoi(toks);
 
       /* --- open_orig_to_dest --- */
       toks = strtok(NULL, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       open_otd = atoi(toks);
 
       /* --- open_dest_to_orig (bidirectional extension) --- */
       toks = strtok(NULL, "|\n");
-      if (toks) {
+      if (toks)
+      {
         open_dto = atoi(toks);
-      } else {
-        /* if only 6 fields are present (standard enunciado format), 
+      }
+      else
+      {
+        /* if only 6 fields are present (standard enunciado format),
         use the same value for both directions, making the link symmetric.*/
         open_dto = open_otd;
       }
@@ -408,7 +480,8 @@ static Status game_load_links(Game *game, char *filename) {
 #endif
 
       link = link_create();
-      if (link != NULL) {
+      if (link != NULL)
+      {
         link_set_id(link, id);
         link_set_name(link, name);
         link_set_origin_id(link, origin);
@@ -431,47 +504,157 @@ static Status game_load_links(Game *game, char *filename) {
     }
   }
 
-  if (ferror(file)) status = ERROR;
+  if (ferror(file))
+    status = ERROR;
 
   fclose(file);
   return status;
 }
 
-Status game_create_from_file(Game **game, char *filename) {
-  if (!game || !filename) return ERROR;
+Status game_create_from_file(Game **game, char *filename)
+{
+  if (!game || !filename)
+    return ERROR;
 
   *game = game_create();
-  if (*game == NULL) return ERROR;
+  if (*game == NULL)
+    return ERROR;
 
-  if (game_load_spaces(*game, filename) == ERROR) {
+  if (game_load_spaces(*game, filename) == ERROR)
+  {
     game_destroy(*game);
     *game = NULL;
     return ERROR;
   }
 
-  if (game_load_objects(*game, filename) == ERROR) {
+  if (game_load_objects(*game, filename) == ERROR)
+  {
     game_destroy(*game);
     *game = NULL;
     return ERROR;
   }
 
-  if (game_load_characters(*game, filename) == ERROR) {
+  if (game_load_characters(*game, filename) == ERROR)
+  {
     game_destroy(*game);
     *game = NULL;
     return ERROR;
   }
 
-  if (game_load_links(*game, filename) == ERROR) {
+  if (game_load_links(*game, filename) == ERROR)
+  {
     game_destroy(*game);
     *game = NULL;
     return ERROR;
   }
 
-  if (game_load_players(*game, filename) == ERROR) {
+  if (game_load_players(*game, filename) == ERROR)
+  {
     game_destroy(*game);
     *game = NULL;
     return ERROR;
   }
 
+  return OK;
+}
+
+Status game_save_file(Game **game)
+{
+  Space *space = NULL;
+  Object *object = NULL;
+  Player *player = NULL;
+  Numen *numen = NULL;
+  Links *link = NULL;
+  Id id = NO_ID, location = NO_ID, origin = NO_ID, dest = NO_ID, skills[MAX_HELD_SKILLS], dependency, following;
+  int check = 0, bucle, pos_x = 0, pos_y = 0, health, attack, energy, speed;
+  Bool friendly, open_otd, open_dto, consumable;
+  char *name = NULL, *gdesc = NULL, *OST = NULL, *message = NULL;
+  FILE *new_sfile = NULL;
+  if (!game)
+    return ERROR;
+  new_sfile = fopen("../savefile/savefile.dat", "w");
+  if (!new_sfile)
+    return ERROR;
+  check = game_get_n_spaces(*game);
+  for (bucle = 0; bucle < check; bucle++)
+  {
+    id = game_get_space_id_at(game, bucle);
+    space = game_get_space(*game, id);
+    name = space_get_name(space);
+    gdesc = space_get_gdesc(space); /*Hay que cambialo por una ruta string*/
+    OST = space_get_ost(space);     /*Hay que implementarlo*/
+
+    fprintf(new_sfile, "#s:%d|%s|%s|%s|\n", (int)id, name,
+            gdesc == NULL ? "" : gdesc, OST == NULL ? "" : OST);
+    free(name);
+    free(gdesc);
+    free(OST);
+  }
+
+  check = game_get_n_objects(*game);
+  for (bucle = 0; bucle < check; bucle++)
+  {
+    object = game_get_object_at(game, bucle);
+    id = obj_get_id(object);
+    name = obj_get_name(object);
+    location = obj_get_location(object);
+    pos_x = obj_get_pos_x(object);
+    pos_y = obj_get_pos_y(object);
+    message = obj_get_description(object);
+    gdesc = obj_get_gdesc(object); /*Hay que cambialo por una ruta string*/
+    health = obj_get_health(object);
+    attack = obj_get_attack(object);
+    energy = obj_get_energy(object);
+    speed = obj_get_speed(object);
+    consumable = obj_get_consumable(object);
+
+    fprintf(new_sfile, "#o:%d|%s|%d|%d|%d|%s|%s|%d|%d|%d|%d|%d|%d|\n", (int)id, name, (int)location, pos_x, pos_y, message, gdesc == NULL ? "" : gdesc, consumable == TRUE ? 1 : 0, health, energy, attack, speed, dependency == NO_ID ? "" : (int)dependency);
+    free(name);
+    free(gdesc);
+    free(message);
+  }
+
+  check = game_get_n_numens(*game);
+  for (bucle = 0; bucle < check; bucle++)
+  {
+    numen = game_get_numen_at(game, bucle);
+    id = numen_get_id(numen);
+    name = numen_get_name(numen);
+    location = numen_get_location(numen);
+    pos_x = numen_get_pos_x(numen);
+    pos_y = numen_get_pos_y(numen);
+    gdesc = numen_get_gdesc(numen); /*Hay que cambialo por una ruta string*/
+    health = numen_get_health(numen);
+    attack = numen_get_attack(numen);
+    energy = numen_get_energy(numen);
+    speed = numen_get_speed(numen);
+    skills[0] = numen_get_skill(numen, 0);
+    skills[1] = numen_get_skill(numen, 1);
+    skills[2] = numen_get_skill(numen, 2);
+    skills[3] = numen_get_skill(numen, 3);
+    following = numen_get_following(numen);
+
+    fprintf(new_sfile, "#n:%d|%s|%d|%d|%d|%s|%d|%d|%d|%d|%d|%d|%d|%d|%d|\n", (int)id, name, (int)location, pos_x, pos_y, gdesc == NULL ? "" : gdesc, health, energy, attack, speed, skills[0], skills[1], skills[2], skills[3], following == NO_ID ? "" : (int)following);
+    free(name);
+    free(gdesc);
+  }
+
+  check = game_get_n_players(*game);
+  for (bucle = 0; bucle < check; bucle++)
+  {
+    player = game_get_player_at(game, bucle);
+    id = player_get_id(player);
+    name = player_get_name(player);
+    location = player_get_location(player);
+    pos_x = player_get_pos_x(player);
+    pos_y = player_get_pos_y(player);
+    gdesc = player_get_gdesc(player); /*Hay que cambialo por una ruta string*/
+
+    fprintf(new_sfile, "#n:%d|%s|%d|%d|%d|%s|\n", (int)id, name, (int)location, pos_x, pos_y, gdesc == NULL ? "" : gdesc, health, energy, attack, speed, skills[0], skills[1], skills[2], skills[3], following == NO_ID ? "" : (int)following);
+    free(name);
+    free(gdesc);
+    /*Para guardar el inventario de player, el id location que se guarda en el object tiene que ser el id del player, de otra forma, hay que hacer un load inventory*/
+  }
+  fclose(new_sfile);
   return OK;
 }

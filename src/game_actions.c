@@ -755,8 +755,7 @@ static void game_actions_open(Game *game)
     no tiene origine ni destino, tiene "extremos A y B"  y puedes estar en uno de }
     los extremos, por ejemplo A, y moverte a B, o vicerversa. Por eso hay que hacer
     la comprobación de sis estoy en el supuesto "origen" o estoy en el "destino"
-  */
-  /*
+
     Preguntas si está abierto, pero, ¿en qué sentido está abierto?
       desde   origin ---> destiny     destiny ---> origin 
     cambie la funcion que habia link_is_open   por game_connection_is_open que verifca

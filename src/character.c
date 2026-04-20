@@ -12,22 +12,9 @@
 
 
 #define TAM 6
-#define  MIN_LIFE 0
-#define  MIN_ATTACK 0
-#define  MIN_ENGY 0
-#define  MAX_LIFE 10
-#define  ERROR_LIFE -1
-#define  ERROR_ATTACK -1
-#define  ERROR_ENGY -1
 
-/**
- * @brief Estadísticas de un character
- */
-typedef struct {
-  int health;   /*!< Salud: puede ser positiva o negativa */
-  int attack;   /*!< Poder de ataque */
-  int energy;   /*!< Puntos de energía o maná */
-} Stats;
+
+
 
 /**
  * @brief character

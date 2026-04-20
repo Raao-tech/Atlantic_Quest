@@ -123,6 +123,19 @@ Status entity_set_message(Entity *entity, char *message);
  */
 char *entity_get_message(Entity *entity);
 
+Status  entity_set_health(Entity *entity, int health);
+int  entity_get_health(Entity *entity);
+Status  entity_set_speed(Entity *entity, int speed);
+int  entity_get_speed(Entity *entity);
+Status  entity_set_energy(Entity *entity, int energy);
+int  entity_get_energy(Entity *entity);
+Status  entity_set_attack(Entity *entity, int attack);
+int  entity_get_attack(Entity *entity);
+Status  entity_set_stats(Entity *entity, int energy, int health, int speed, int attack);
+Status  entity_set_(Entity *entity, int x, int y);
+int  entity_get_energy(Entity *entity);
+Status  entity_set_Position(Entity *entity, int x, int y);
+
 
 
 #endif

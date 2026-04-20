@@ -14,8 +14,6 @@
 #define TAM 6
 
 
-
-
 /**
  * @brief character
  *
@@ -25,7 +23,6 @@ struct _Character{
   Entity *e_character;    /*<! It stores the entity*/
   Bool friendly;          /*<! It stores hether the character is friendly or not*/
   Id following;           /*<! It stores the id of the character that this character is following*/
-  Stats stats;            /*<! It stores the stats of a character (health, attack, energy)*/
   
 };
 
@@ -48,9 +45,6 @@ Character *character_create(){
 
   newCharacter->friendly = TRUE;
   newCharacter->following = NO_ID;
-  newCharacter->stats.attack = MIN_ATTACK;
-  newCharacter->stats.energy = MIN_ENGY;
-  newCharacter->stats.health = MIN_LIFE;
 
   return newCharacter;
 }
@@ -122,47 +116,43 @@ char      *character_get_message(Character *character){
 /* health */
 Status character_set_health(Character *character, int life){
   if(!character) return ERROR;
-  if(life < MIN_LIFE){
-    character->stats.health =MIN_LIFE;
-    return OK;
-  }
-  character->stats.health =life;
-  return OK;
+  return entity_set_health(character->e_character, life);
 }
 int character_get_health(Character *character){
   if(!character) return ERROR_LIFE;
-  return character->stats.health;
+  return entity_get_health(character->e_character);
 }
 
 /* attack */
 Status character_set_attack(Character *character, int attack){
   if(!character) return ERROR;
-    if(attack< MIN_ATTACK){
-    character->stats.attack =MIN_ATTACK;
-    return OK;
-  }
-  character->stats.attack = attack;
-  return OK;
+  return entity_set_attack(character->e_character, attack);
 }
 int character_get_attack(Character *character){
   if(!character) return ERROR_ATTACK;
-  return character->stats.attack;
+  return entity_get_attack(character->e_character);
 }
 
 /* energy */
 Status character_set_energy(Character* character, int energy){
   if(!character) return ERROR;
-  if(energy < MIN_ENGY){
-    character->stats.energy =MIN_ENGY;
-    return OK;
-  }
-  character->stats.energy =energy;
-  return OK;
+  return entity_set_energy(character->e_character, energy);
 }
 int character_get_energy(Character *character){
   if(!character) return ERROR_ENGY;
-  return character->stats.energy;
+  return entity_get_energy(character->e_character);
 }
+
+/* Speed */
+Status character_set_speed(Character* character, int speed){
+  if(!character) return ERROR;
+  return entity_set_spedd(character->e_character, speed);
+}
+int character_get_speed(Character *character){
+  if(!character) return 0;
+  return entity_set_spedd(character->e_character);
+}
+
 
 /* friendly */
 Status character_set_friendly(Character *character, Bool value){

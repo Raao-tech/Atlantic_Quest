@@ -33,15 +33,12 @@ struct _Position{
   int pos_x;   /*!< Posicion x en el space*/
   int pos_y;   /*!< Posicion y en el space*/
 };
-
-
 /* create or destroy */
 Entity *entity_create(){
   Entity *newEntity = NULL;
 
   newEntity = (Entity *)malloc(sizeof(Entity));
   if (!newEntity) return NULL;
-
   /* Initialization of an empty character*/
   newEntity->id =       NO_ID;
   newEntity->gdesc =    NULL;
@@ -53,6 +50,7 @@ Entity *entity_create(){
   newEntity->stats.speed = 0;
   newEntity->stats.health= MIN_LIFE;
   newEntity->stats.energy= MIN_ENGY;
+  
   return newEntity;
 }
 Status entity_destroy(Entity *entity){
@@ -195,7 +193,6 @@ char*  entity_get_message(Entity *entity){
 
   return  strdup(entity->message);
 }
-
 
 /*=======Stats ========*/
 /*healt*/

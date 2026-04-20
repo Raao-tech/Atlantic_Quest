@@ -63,6 +63,7 @@ typedef enum
     U /*Unknown*/
 } Direction;
 
+
 /**
  * @brief Estadísticas de un entity
  */

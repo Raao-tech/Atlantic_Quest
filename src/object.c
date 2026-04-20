@@ -24,6 +24,7 @@ struct _Object {
   Bool movable;                       /*!< Whether the object can be taken or not */
   Id open;                            /*!< Id of the link that this object can open (for use command) */
   Id dependency;                      /*!< Id of the object that this object depends on (for use command) */
+
 };
 
 /* ========== Create / Destroy ========== */
@@ -39,7 +40,6 @@ Object *obj_create() {
     free(newObj);
     return NULL;
   }
-
   newObj->movable = FALSE;
   newObj->open = NO_ID;
   newObj->dependency = NO_ID;
@@ -56,7 +56,7 @@ Status obj_destroy(Object *obj) {
 
 Status obj_set_id(Object *obj, Id id) {
   if (!obj) return ERROR;
-  return entity_set_id(obj->e_obj);
+  return entity_set_id(obj->e_obj, id);
 }
 
 Id obj_get_id(Object *obj) {
@@ -68,12 +68,12 @@ Id obj_get_id(Object *obj) {
 
 Status obj_set_name(Object *obj, char *name) {
   if (!obj || !name) return ERROR;
-  return entity_set_name(obj->e_obj);
+  return entity_set_name(obj->e_obj, name);
 }
 
 Bool obj_has_name(Object *obj, char *name) {
   if (!obj || !name) return FALSE;
-  return entity_has_name(obj->e_obj);
+  return entity_has_name(obj->e_obj, name);
 }
 
 char *obj_get_name(Object *obj) {
@@ -88,21 +88,13 @@ Status obj_set_description(Object *obj, char *description) {
   return entity_set_message(obj->e_obj, description);
 }
 
+
 char *obj_get_description(Object *obj) {
   if (!obj) return NULL;
   return entity_get_message(obj->e_obj);
 }
 /* ========== Health ========== */
-Status obj_set_health(Object *obj, int health) {
-  if (!obj) return ERROR;
-  obj->health = health;
-  return OK;
-}
 
-int obj_get_health(Object *obj) {
-  if (!obj) return 0;
-  return obj->health;
-}
 /* ========== Movable ========== */
 
 Status obj_set_movable(Object *obj, Bool movable) {
@@ -141,13 +133,85 @@ Id obj_get_dependency(Object *obj) {
   return obj->dependency;
 }
 
+
+/*
+* Effects in Players or character (Numens)
+*/
+
+Status obj_set_stats(Object *obj, int speed, int health, int energy, int attack){
+  if(!obj) return ERROR;
+  entity_set_speed(obj->e_obj,speed);
+
+  if(entity_set_attack(obj->e_obj,attack) == ERROR_ATTACK) return ERROR;
+  if(entity_set_health(obj->e_obj,health) == ERROR_LIFE) return ERROR;
+  if(entity_set_attack(obj->e_obj,energy) == ERROR_ENGY) return ERROR;
+  return OK;
+}
+/*Health add*/
+Status obj_set_health(Object *obj, int health){
+  if(!obj) return ERROR;
+  return entity_set_health(obj->e_obj,health);
+}
+int obj_get_health(Object *obj){
+  if(!obj) return ERROR;
+  return entity_get_health(obj->e_obj);
+}
+/*Speed add*/
+Status obj_set_speed(Object *obj, int speed){
+  if(!obj) return ERROR;
+  return entity_set_speed(obj->e_obj,speed);
+}
+int obj_get_speed(Object *obj){
+  if(!obj) return ERROR;
+  return entity_get_speed(obj->e_obj);
+}
+/*Attack add*/
+Status obj_set_attack(Object *obj, int attack){
+  if(!obj) return ERROR;
+  return entity_set_attack(obj->e_obj,attack);
+}
+int obj_get_attack(Object *obj){
+  if(!obj) return ERROR;
+  return entity_get_attack(obj->e_obj);
+}
+/*Speed add*/
+Status obj_set_energy(Object *obj, int energy){
+  if(!obj) return ERROR;
+  return entity_set_energy(obj->e_obj,energy);
+}
+int obj_get_energy(Object *obj){
+  if(!obj) return ERROR;
+  return entity_get_energy(obj->e_obj);
+}
+
 /* ========== Print ========== */
 
 Status obj_print(Object *obj) {
   if (!obj) return ERROR;
+  char* name = entity_get_name(obj->e_obj);
+  char* desc = entity_get_message(obj->e_obj);
+  Id    id   = entity_get_id(obj->e_obj);
+  /*stats*/
+  int health = entity_get_health(obj->e_obj);
+  int speed = entity_get_speed(obj->e_obj);
+  int energy = entity_get_energy(obj->e_obj);
+  int attack = entity_get_attack(obj->e_obj);
 
   fprintf(stdout, "--> Object (Id: %ld; Name: %s; Desc: %s; Health: %d; Movable: %s; Open: %ld; Dependency: %ld)\n",
-          obj->id, obj->name, obj->description, obj->health, obj->movable ? "Yes" : "No", obj->open , obj->dependency );
+          id,
+          name, 
+          desc, 
+          obj->movable ? "Yes" : "No", 
+          obj->open , 
+          obj->dependency);
+  fprintf(stdout, "This Object has effects in:  Health += %d, Speed += %d, Attack += %d, Energy += %d\n",
+        health,
+        speed,
+        attack,
+        energy);
+  
+  free(name);
+  free(desc);
 
   return OK;
 }

@@ -14,6 +14,7 @@
 #include "space.h"
 #include "types.h"
 #include "player.h"
+#include "entity.h"
 
 typedef struct _Object Object;
 
@@ -187,6 +188,16 @@ Status obj_set_dependency(Object *obj, Id dependency);
  * @return the Id of the object that this object depends on, NO_ID in case of mistake
  */
 Id obj_get_dependency(Object *obj);
+
+Status obj_set_stats(Object *obj, int speed, int health, int energy, int attack);
+Status obj_set_health(Object *obj, int health);
+int obj_get_health(Object *obj);
+Status obj_set_speed(Object *obj, int speed);
+int obj_get_speed(Object *obj);
+Status obj_set_attack(Object *obj, int attack);
+int obj_get_attack(Object *obj);
+Status obj_set_energy(Object *obj, int energy);
+int obj_get_energy(Object *obj);
 
 /**
  * @brief It prints the object information

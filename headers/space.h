@@ -170,6 +170,9 @@ Status space_remove_character(Space *space, Id id_chara);
  * @return number of characters, or ERROR_MAIN if space is NULL
  */
 int space_get_n_characters(Space *space);
+/* ========== Grid ====================== */
+Status space_set_grid_by_line(Space* space, int line, char* content);
+int* space_get_grid_by_line(Space* space, int line);
 
 /* ========== Discovered (F12) ========== */
 

@@ -162,6 +162,36 @@ int space_get_n_characters(Space *space) {
   return set_get_n_ids(space->characters_id);
 }
 
+/* ========== Grid ================ */
+
+Status space_set_grid_by_line(Space* space, int line, char* content){
+  int i;
+  char* token = NULL;
+  char* cpy_content = NULL;
+  if(!space || !content || line < 0 || line >= HIGHT_SCREEN) return ERROR;
+
+  cpy_content = calloc(WORD_SIZE+1,sizeof(char));
+  if(!cpy_content) return ERROR; 
+  i = 0;
+  strncpy(cpy_content,content, WORD_SIZE);
+  cpy_content[WORD_SIZE] = '\0';
+  token = strtok(cpy_content, ",");
+  while(token && i < WIDHT_SCREEN){
+    space->grid[line][i] = atoi(token);
+    token = strtok(NULL, ",");
+  }
+  free(cpy_content);
+  
+ return OK;
+}
+
+int* space_get_grid_by_line(Space* space, int line){
+  if(!space || line < 0 || line >= HIGHT_SCREEN) return NULL;
+  return space->grid[line];
+}
+
+
+
 /* ========== Discovered ========== */
 
 Status space_set_discovered(Space *space, Bool value) {

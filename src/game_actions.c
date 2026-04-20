@@ -272,4 +272,45 @@ Status  entity_set_Position(Entity *entity, int x, int y){
   entity->position.pos_x = x;
   entity->position.pos_y = y;
   return OK;
+
+ 
+/* ========================================================================= */
+/*                      SAVE: save                                           */
+/* ========================================================================= */
+static void game_actions_save(Game *game)
+{
+  if(!game)
+  {
+    game_set_last_cmd_status(game, ERROR_save);
+    return;
+  }
+
+  if(game_save_file(game)==OK)
+  game_set_last_cmd_status(game, OK);
+  else{
+    game_set_last_cmd_status(game, ERROR_save);
+  }
+  return;
+}
+
+
+/* ========================================================================= */
+/*                      HELPER: PARSE DIRECTION                              */
+/* ========================================================================= */
+
+static Direction ge_parse_direction(const char *str)
+{
+  if (!str)
+    return U;
+
+  if (strcasecmp(str, "north") == 0 || strcasecmp(str, "n") == 0)
+    return N;
+  if (strcasecmp(str, "south") == 0 || strcasecmp(str, "s") == 0)
+    return S;
+  if (strcasecmp(str, "east") == 0 || strcasecmp(str, "e") == 0)
+    return E;
+  if (strcasecmp(str, "west") == 0 || strcasecmp(str, "w") == 0)
+    return W;
+
+  return U;
 }

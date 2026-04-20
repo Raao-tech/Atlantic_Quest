@@ -50,8 +50,9 @@ typedef enum
     FULL_OF_LOVE,
     ERROR_inspect,
     ERROR_use,
-    ERROR_open
-} Status;
+    ERROR_open,
+    ERROR_save
+   } Status;
 
 typedef enum
 {

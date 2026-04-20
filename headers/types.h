@@ -63,4 +63,25 @@ typedef enum
     U /*Unknown*/
 } Direction;
 
+/**
+ * @brief Estadísticas de un entity
+ */
+typedef struct _Stats Stats;
+
+/**
+ * @brief Posición de un entity
+ */
+typedef struct _Position Position;
+
+#define  MIN_LIFE 0
+#define  MIN_ATTACK 0
+#define  MIN_ENGY 0
+#define  MAX_LIFE 10
+#define  MAX_ENGY 100
+#define  MAX_ATTACK 10
+#define  ERROR_LIFE -1
+#define  ERROR_ATTACK -1
+#define  ERROR_ENGY -1
+
+
 #endif

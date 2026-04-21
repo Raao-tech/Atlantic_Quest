@@ -10,6 +10,7 @@
 
 #include "game_management.h"
 #include "links.h"
+#include "inventory.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -579,9 +580,11 @@ Status game_save_file(Game **game)
   Player *player = NULL;
   Numen *numen = NULL;
   Links *link = NULL;
+  Inventory *inv = NULL;
+  Direction dir=U;
   Id id = NO_ID, location = NO_ID, origin = NO_ID, dest = NO_ID, skills[MAX_HELD_SKILLS], dependency, following;
-  int check = 0, bucle, pos_x = 0, pos_y = 0, health, attack, energy, speed;
-  Bool friendly, open_otd, open_dto, consumable;
+  int check = 0, bucle, pos_x = 0, pos_y = 0, health, attack, energy, speed, max_bag, max_numens;
+  Bool friendly, open_otd, open_dto, consumable, movable;
   char *name = NULL, *gdesc = NULL, *OST = NULL, *message = NULL;
   FILE *new_sfile = NULL;
   if (!game)
@@ -605,6 +608,25 @@ Status game_save_file(Game **game)
     free(OST);
   }
 
+  check = game_get_n_players(*game);
+  for (bucle = 0; bucle < check; bucle++)
+  {
+    player = game_get_player_at(game, bucle);
+    id = player_get_id(player);
+    name = player_get_name(player);
+    location = player_get_location(player);
+    pos_x = player_get_pos_x(player); /*Por implementar en player.c y player.h junto al set y su inicialización (están en entity)*/
+    pos_y = player_get_pos_y(player); /*Por implementar en player.c y player.h junto al set y su inicialización (están en entity)*/
+    gdesc = player_get_gdesc(player); /*Hay que cambialo por una ruta string*/
+    max_bag = player_get_max_objects(player); /*Por implementar en player.c y player.h*/
+    max_numens = player_get_max_numens (player); /*Por implementar en player.c y player.h junto al set y su inicialización (están en entity)*/
+   
+    fprintf(new_sfile, "#p:%d|%s|%d|%d|%d|%s|%d|%d|\n", (int)id, name, (int)location, pos_x, pos_y, gdesc == NULL ? "" : gdesc, health, energy, attack, speed, skills[0], skills[1], skills[2], skills[3], following == NO_ID ? "" : (int)following, max_bag, max_numens);
+    free(name);
+    free(gdesc);
+    /*Para guardar el inventario de player, el id location que se guarda en el object tiene que ser el id del player, de otra forma, hay que hacer un load inventory*/
+  }
+
   check = game_get_n_objects(*game);
   for (bucle = 0; bucle < check; bucle++)
   {
@@ -621,8 +643,9 @@ Status game_save_file(Game **game)
     energy = obj_get_energy(object);/*Por implementar en object.c y object.h junto al set y su inicialización (están en entity)*/
     speed = obj_get_speed(object);/*Por implementar en object.c y object.h junto al set y su inicialización (están en entity)*/
     consumable = obj_get_consumable(object);/*Por implementar en object.c y object.h y añadir boolean consumable a la estructura object e inicializarlo en el create*/
+    movable = obj_get_movable(object);
 
-    fprintf(new_sfile, "#o:%d|%s|%d|%d|%d|%s|%s|%d|%d|%d|%d|%d|%d|\n", (int)id, name, (int)location, pos_x, pos_y, message, gdesc == NULL ? "" : gdesc, consumable == TRUE ? 1 : 0, health, energy, attack, speed, dependency == NO_ID ? "" : (int)dependency);
+    fprintf(new_sfile, "#o:%d|%s|%d|%d|%d|%s|%s|%d|%d|%d|%d|%d|%d|%d|\n", (int)id, name, (int)location, pos_x, pos_y, message, gdesc == NULL ? "" : gdesc, consumable == TRUE ? 1 : 0, health, energy, attack, speed, dependency == NO_ID ? "" : (int)dependency, movable == TRUE ? 1 : 0);
     free(name);
     free(gdesc);
     free(message);
@@ -656,22 +679,23 @@ Status game_save_file(Game **game)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          NIGGA
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  check = game_get_n_players(*game);
+
+  check = game_get_n_links(*game);
   for (bucle = 0; bucle < check; bucle++)
   {
-    player = game_get_player_at(game, bucle);
-    id = player_get_id(player);
-    name = player_get_name(player);
-    location = player_get_location(player);
-    pos_x = player_get_pos_x(player); /*Por implementar en player.c y player.h junto al set y su inicialización (están en entity)*/
-    pos_y = player_get_pos_y(player); /*Por implementar en player.c y player.h junto al set y su inicialización (están en entity)*/
-    gdesc = player_get_gdesc(player); /*Hay que cambialo por una ruta string*/
+    link = game_get_link_at(game, bucle);      
+    id = link_get_id(numen);      
+    name = link_get_name(numen);     
+    origin = link_get_origin_id (link);
+    dest = link_get_destination_id(link);
+    dir = link_get_direction(link);
+    open_otd = link_get_open_origin_to_dest(link);
+    open_dto = link_get_open_dest_to_origin(link);
 
-    fprintf(new_sfile, "#p:%d|%s|%d|%d|%d|%s|\n", (int)id, name, (int)location, pos_x, pos_y, gdesc == NULL ? "" : gdesc, health, energy, attack, speed, skills[0], skills[1], skills[2], skills[3], following == NO_ID ? "" : (int)following);
+    fprintf(new_sfile, "#n:%d|%s|%d|%d|%d|%d|%d|\n", (int)id, name, (int)origin, (int)dest, (int)dir, open_otd == TRUE ? 1 : 0, open_dto == TRUE ? 1 : 0);
     free(name);
-    free(gdesc);
-    /*Para guardar el inventario de player, el id location que se guarda en el object tiene que ser el id del player, de otra forma, hay que hacer un load inventory*/
   }
+
   fclose(new_sfile);
   return OK;
 }

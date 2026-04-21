@@ -527,6 +527,13 @@ Status game_create_from_file(Game **game, char *filename)
     return ERROR;
   }
 
+ if (game_load_players(*game, filename) == ERROR)
+  {
+    game_destroy(*game);
+    *game = NULL;
+    return ERROR;
+  }
+
   if (game_load_objects(*game, filename) == ERROR)
   {
     game_destroy(*game);
@@ -548,7 +555,14 @@ Status game_create_from_file(Game **game, char *filename)
     return ERROR;
   }
 
-  if (game_load_players(*game, filename) == ERROR)
+    if (game_load_numens(*game, filename) == ERROR)
+  {
+    game_destroy(*game);
+    *game = NULL;
+    return ERROR;
+  }
+ 
+    if (game_load_inventory(*game, filename) == ERROR)
   {
     game_destroy(*game);
     *game = NULL;
@@ -581,8 +595,8 @@ Status game_save_file(Game **game)
     id = game_get_space_id_at(game, bucle);
     space = game_get_space(*game, id);
     name = space_get_name(space);
-    gdesc = space_get_gdesc(space); /*Hay que cambialo por una ruta string*/
-    OST = space_get_ost(space);     /*Hay que implementarlo*/
+    gdesc = space_get_gdesc(space); 
+    OST = space_get_ost(space);     /*Por implementar en space.c y space.h, además de definir en la estructura space la variable char *ost y su inicialización y destrucción */
 
     fprintf(new_sfile, "#s:%d|%s|%s|%s|\n", (int)id, name,
             gdesc == NULL ? "" : gdesc, OST == NULL ? "" : OST);
@@ -597,16 +611,16 @@ Status game_save_file(Game **game)
     object = game_get_object_at(game, bucle);
     id = obj_get_id(object);
     name = obj_get_name(object);
-    location = obj_get_location(object);
-    pos_x = obj_get_pos_x(object);
-    pos_y = obj_get_pos_y(object);
+    location = game_get_object_location(game, id);
+    pos_x = obj_get_pos_x(object); /*Por implementar en object.c y object.h junto al set y su inicialización(están en entity)*/
+    pos_y = obj_get_pos_y(object);/*Por implementar en object.c y object.h junto al set y su inicialización (están en entity)*/
     message = obj_get_description(object);
-    gdesc = obj_get_gdesc(object); /*Hay que cambialo por una ruta string*/
+    gdesc = obj_get_gdesc(object); /*Por implementar en object.c y object.h junto al set y su inicialización (están en entity)*/
     health = obj_get_health(object);
-    attack = obj_get_attack(object);
-    energy = obj_get_energy(object);
-    speed = obj_get_speed(object);
-    consumable = obj_get_consumable(object);
+    attack = obj_get_attack(object);/*Por implementar en object.c y object.h junto al set y su inicialización (están en entity)*/
+    energy = obj_get_energy(object);/*Por implementar en object.c y object.h junto al set y su inicialización (están en entity)*/
+    speed = obj_get_speed(object);/*Por implementar en object.c y object.h junto al set y su inicialización (están en entity)*/
+    consumable = obj_get_consumable(object);/*Por implementar en object.c y object.h y añadir boolean consumable a la estructura object e inicializarlo en el create*/
 
     fprintf(new_sfile, "#o:%d|%s|%d|%d|%d|%s|%s|%d|%d|%d|%d|%d|%d|\n", (int)id, name, (int)location, pos_x, pos_y, message, gdesc == NULL ? "" : gdesc, consumable == TRUE ? 1 : 0, health, energy, attack, speed, dependency == NO_ID ? "" : (int)dependency);
     free(name);
@@ -614,16 +628,17 @@ Status game_save_file(Game **game)
     free(message);
   }
 
+  /**Hay que implementar todas las funciones de numen aquí junto a las create y set (tomar de referencia character) */
   check = game_get_n_numens(*game);
   for (bucle = 0; bucle < check; bucle++)
   {
-    numen = game_get_numen_at(game, bucle);
-    id = numen_get_id(numen);
-    name = numen_get_name(numen);
-    location = numen_get_location(numen);
+    numen = game_get_numen_at(game, bucle);      
+    id = numen_get_id(numen);      
+    name = numen_get_name(numen);     
+    location = game_get_numen_location(game, id); /*Por implementar en game.c y game.h, junto al array de numens en space */
     pos_x = numen_get_pos_x(numen);
     pos_y = numen_get_pos_y(numen);
-    gdesc = numen_get_gdesc(numen); /*Hay que cambialo por una ruta string*/
+    gdesc = numen_get_gdesc(numen); 
     health = numen_get_health(numen);
     attack = numen_get_attack(numen);
     energy = numen_get_energy(numen);
@@ -638,7 +653,9 @@ Status game_save_file(Game **game)
     free(name);
     free(gdesc);
   }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                          NIGGA
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   check = game_get_n_players(*game);
   for (bucle = 0; bucle < check; bucle++)
   {
@@ -646,11 +663,11 @@ Status game_save_file(Game **game)
     id = player_get_id(player);
     name = player_get_name(player);
     location = player_get_location(player);
-    pos_x = player_get_pos_x(player);
-    pos_y = player_get_pos_y(player);
+    pos_x = player_get_pos_x(player); /*Por implementar en player.c y player.h junto al set y su inicialización (están en entity)*/
+    pos_y = player_get_pos_y(player); /*Por implementar en player.c y player.h junto al set y su inicialización (están en entity)*/
     gdesc = player_get_gdesc(player); /*Hay que cambialo por una ruta string*/
 
-    fprintf(new_sfile, "#n:%d|%s|%d|%d|%d|%s|\n", (int)id, name, (int)location, pos_x, pos_y, gdesc == NULL ? "" : gdesc, health, energy, attack, speed, skills[0], skills[1], skills[2], skills[3], following == NO_ID ? "" : (int)following);
+    fprintf(new_sfile, "#p:%d|%s|%d|%d|%d|%s|\n", (int)id, name, (int)location, pos_x, pos_y, gdesc == NULL ? "" : gdesc, health, energy, attack, speed, skills[0], skills[1], skills[2], skills[3], following == NO_ID ? "" : (int)following);
     free(name);
     free(gdesc);
     /*Para guardar el inventario de player, el id location que se guarda en el object tiene que ser el id del player, de otra forma, hay que hacer un load inventory*/

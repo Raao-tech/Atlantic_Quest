@@ -13,6 +13,9 @@
 
 #include "game.h"
 
+
+#define POS_X_INIT 0
+#define POS_Y_INIT 0
 /**
  * @brief Graphic_engine ADT (opaque type)
  *

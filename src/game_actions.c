@@ -636,7 +636,7 @@ static void game_actions_use(Game *game)
   Object *obj = NULL;
   char *obj_name = NULL;
   Id obj_id;
-  Bool in_inventory = FALSE;
+  Bool in_inventory = FALSE, consumable;
   int obj_health = 0;
   if (!game)
     return;
@@ -674,13 +674,19 @@ static void game_actions_use(Game *game)
     return;
   }
 
+  consumable = obj_get_consumable (obj);
+ 
   obj_health = obj_get_health(obj);
 
   /*Object of health or damage*/
   if (obj_health != 0)
   {
-    player_set_health(player, player_get_health(player) + obj_health);
-    player_delete_object(player, obj_id);
+    player_set_health(player, player_get_health(player) + obj_health); 
+    if (consumable == TRUE)
+  {
+     player_delete_object(player, obj_id);
+  }
+  
     game_set_last_cmd_status(game, OK);
     return;
   }

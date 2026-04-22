@@ -94,8 +94,19 @@ Bool player_has_name(Player *player, char *name) {
   return entity_has_name(player->e_player, name);
 }
 
-/* ========== Health ========== */
+/* ===========================
+Stats (No usar, el tema es que necesito compilar el codigo
+para probar el graphic ENgine y para ello obviaré que en game action se esta haciendo pvp y por eso se llama a set/get de health de player
+====================== */
+Status player_set_health(Player *player, int health) {
+  if (!player) return ERROR;
+  return entity_set_health(player->e_player, health);
+}
 
+int player_get_health(Player *player) {
+  if (!player) return ERROR_LIFE;
+  return entity_get_health(player->e_player);
+}
 /* ========== Attack ========== */
 
 /* ========== Backpack_items (Inventory) ========== */

@@ -47,139 +47,115 @@ void game_loop_cleanup(Game *game, Graphic_engine *gengine, FILE *log_file);
 /* ========================================================================= */
 
 int main(int argc, char *argv[]) {
-  FILE           *log_file = NULL;
-  Game           *game     = NULL;
-  Graphic_engine *gengine  = NULL;
-  Command        *last_cmd = NULL;
+  FILE           *log_file    = NULL;
+  Game           *game        = NULL;
+  Graphic_engine *gengine     = NULL;
+  Command        *last_cmd    = NULL;
   int             result;
   Bool            log_enabled = FALSE;
 
-  /* ---- Validate minimum arguments ---- */
   if (argc < 2) {
-    fprintf(stderr, "Use: %s <game_data_file> [-l <log_file>] [-d <log_file>]\n", argv[0]);
+    fprintf(stderr, "Use: %s <game_data_file> [-l <log_file>]\n", argv[0]);
     return 1;
   }
 
-  /* ---- Parse optional LOG arguments ---- */
-  /* We check argc >= 4 AND argv[2] == "-l" before opening the log file.*/
   if (argc >= 4 && strcmp(argv[2], "-l") == 0) {
     log_file = fopen(argv[3], "w");
     if (!log_file) {
-      fprintf(stderr, "Error: cannot open log file '%s' for writing.\n", argv[3]);
+      fprintf(stderr, "Error: Don't open the file '%s'\n", argv[3]);
       return 1;
     }
     log_enabled = TRUE;
   }
 
-  /* Seed random number generator for attack rolls */
   srand(time(NULL));
 
-  /* ---- Initialize game and graphic engine ---- */
   result = game_loop_init(&game, &gengine, argv[1]);
-
-  switch (result) {
-    case 0:  break;
-    case 1:  fprintf(stderr, "Error while initializing game.\n");
-             if (log_file) fclose(log_file);
-             return 1;
-    case 2:  fprintf(stderr, "Error while initializing graphic engine.\n");
-             if (log_file) fclose(log_file);
-             return 1;
-    default: fprintf(stderr, "Error: unknown initialization failure.\n");
-             if (log_file) fclose(log_file);
-             return 1;
+  if (result != 0) {
+    fprintf(stderr, "Error inizialiting game (%d)\n", result);
+    if (log_file) fclose(log_file);
+    return 1;
   }
 
-  /* ---- Get the command struct (reused every turn) ---- */
   last_cmd = game_get_last_command(game);
   if (!last_cmd) {
-    fprintf(stderr, "Error: could not get command struct.\n");
     game_loop_cleanup(game, gengine, log_file);
     return 1;
   }
 
-/*===========  MENU INIT   GAME =====================*/
-graphic_engine_menu_init(gengine, game);
+  /* ── Abrir la ventana UNA SOLA VEZ ── */
+  InitWindow(WIDHT_SCREEN, HIGHT_SCREEN, "Atlantic Quest");
+  SetTargetFPS(60);
 
-/*===========  MENU NUMENS GAME =====================*/
+  /* ── Menú (dibuja dentro de la ventana ya abierta) ── */
+  graphic_engine_menu_init(gengine, game);
 
+  /* ── Bucle principal: UN SOLO while ── */
+  while (!WindowShouldClose() &&
+         command_get_code(last_cmd) != EXIT &&
+         game_get_finished(game)    == FALSE) {
 
-/* ===========  GAME LOOP   ================= */
-  InitWindow(WIDHT_SCREEN, HIGHT_SCREEN, "Atlantitc Quest");
-  while (command_get_code(last_cmd) != EXIT &&
-         game_get_finished(game) == FALSE) {
-
-
-
-
-    while (!WindowShouldClose())
-    {
-      /* 1. RENDER — paint the current state */
-      graphic_engine_paint_game(gengine, game);
-      /* 2. INPUT — read the next command from stdin */
-      command_get_user_input(last_cmd);
-      /* 3. UPDATE — apply the command to the game state */
-      game_actions_update(game, last_cmd);
-      /* 4. LOG — if enabled, write the command and its result */
-      if (log_enabled && log_file) {
-      Status      status   = game_get_last_cmd_status(game);
-      CommandCode cmd_code = command_get_code(last_cmd);
-      char       *obj_name = command_get_obj(last_cmd);
-      const char *result_str = (status == OK) ? "OK" : "ERROR";
+    graphic_engine_paint_game(gengine, game);  /* 1. Render  */
+    command_get_user_input(last_cmd);           /* 2. Input   */
+    game_actions_update(game, last_cmd);     
+    /* 4. LOG — if enabled, write the command and its result */
+    if (log_enabled && log_file) {
+    Status      status   = game_get_last_cmd_status(game);
+    CommandCode cmd_code = command_get_code(last_cmd);
+    char       *obj_name = command_get_target(last_cmd);
+    const char *result_str = (status == OK) ? "OK" : "ERROR";
 
 
-      switch (cmd_code) {
-        case EXIT:
-          fprintf(log_file, "exit: %s\n", result_str);
-          break;
-        case MOVE:
-          fprintf(log_file, "move %s: %s\n",
-                  obj_name ? obj_name : "", result_str);
-          break;
-        case TAKE:
-          fprintf(log_file, "take %s: %s\n",
-                  obj_name ? obj_name : "", result_str);
-          break;
-        case DROP:
-          fprintf(log_file, "drop %s: %s\n",
-                  obj_name ? obj_name : "", result_str);
-          break;
-        case ATTACK:
-          fprintf(log_file, "attack %s: %s\n",
-                  obj_name ? obj_name : "", result_str);
-          break;
-        case CHAT:
-          fprintf(log_file, "chat %s: %s\n",
-                  obj_name ? obj_name : "", result_str);
-          break;
-        case INSPECT:
-          fprintf(log_file, "inspect %s: %s\n",
-                  obj_name ? obj_name : "", result_str);
-          break;
-        case USE:
-          fprintf(log_file, "use %s: %s\n",
-                  obj_name ? obj_name : "", result_str);
-          break;
-        case OPEN:
-          fprintf(log_file, "open %s: %s\n",
-                  obj_name ? obj_name : "", result_str);
-          break;
-        case SAVE:
-          fprintf(log_file, "save: %s\n", result_str);
-          break;
-        default:
-          break;
-      }
-    }
-      /* 5. TURN — advance to the next player (F11 multiplayer) */
-      game_turn_update(game);
+    switch (cmd_code) {
+      case EXIT:
+        fprintf(log_file, "exit: %s\n", result_str);
+        break;
+      case MOVE:
+        fprintf(log_file, "move %s: %s\n",
+                obj_name ? obj_name : "", result_str);
+        break;
+      case TAKE:
+        fprintf(log_file, "take %s: %s\n",
+                obj_name ? obj_name : "", result_str);
+        break;
+      case DROP:
+        fprintf(log_file, "drop %s: %s\n",
+                obj_name ? obj_name : "", result_str);
+        break;
+      case ATTACK:
+        fprintf(log_file, "attack %s: %s\n",
+                obj_name ? obj_name : "", result_str);
+        break;
+      case CHAT:
+        fprintf(log_file, "chat %s: %s\n",
+                obj_name ? obj_name : "", result_str);
+        break;
+      case INSPECT:
+        fprintf(log_file, "inspect %s: %s\n",
+                obj_name ? obj_name : "", result_str);
+        break;
+      case USE:
+        fprintf(log_file, "use %s: %s\n",
+                obj_name ? obj_name : "", result_str);
+        break;
+      case OPEN:
+        fprintf(log_file, "open %s: %s\n",
+                obj_name ? obj_name : "", result_str);
+        break;
+      case SAVE:
+        fprintf(log_file, "save: %s\n", result_str);
+        break;
+      default:
+        break;
     }
   }
-    /* ---- Cleanup ---- */
-  game_loop_cleanup(game, gengine, log_file);
+    /* 5. TURN — advance to the next player (F11 multiplayer) */
+    game_turn_update(game);
+  }
+
+  /* ── Cerrar la ventana UNA SOLA VEZ ── */
   CloseWindow();
-
-
+  game_loop_cleanup(game, gengine, log_file);
   return 0;
 }
 

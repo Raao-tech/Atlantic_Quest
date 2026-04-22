@@ -155,7 +155,7 @@ static void game_actions_move(Game *game)
     return;
   }
 
-  origin = player_get_location(player);
+  origin = player_get_zone(player);
   if (origin == NO_ID)
   {
     game_set_last_cmd_status(game, ERROR_dir);
@@ -189,7 +189,7 @@ static void game_actions_move(Game *game)
     return;
   }
 
-  player_set_location(player, dest);
+  player_set_zone(player, dest);
 
   dest_sp = game_get_space(game, dest);
   if (dest_sp)
@@ -360,7 +360,7 @@ static void game_actions_attack(Game *game)
 {
   Player *player = NULL;
   Space *space = NULL;
-  Character *ch = NULL;
+  Numen *ch = NULL;
   char *name = NULL;
   Id space_id;
   int roll;
@@ -375,7 +375,7 @@ static void game_actions_attack(Game *game)
     return;
   }
 
-  space_id = player_get_location(player);
+  space_id = player_get_zone(player);
   if (space_id == NO_ID)
   {
     game_set_last_cmd_status(game, ERROR_Attack);
@@ -392,11 +392,11 @@ static void game_actions_attack(Game *game)
   space = game_get_space(game, space_id);
 
   /* ========== PHASE 1: Try as NPC (Character) ========== */
-  ch = game_get_character_by_name(game, name);
+  ch = game_get_numen_by_name(game, name);
 
   if (ch)
   {
-    Id char_id = character_get_id(ch);
+    Id char_id = numen_get_id(ch);
 
     /* Must be in the same space */
     if (space_contains_character(space, char_id) == FALSE)
@@ -406,14 +406,14 @@ static void game_actions_attack(Game *game)
     }
 
     /* Must NOT be friendly */
-    if (character_get_friendly(ch) == TRUE)
+    if (numen_get_following(ch) == TRUE)
     {
       game_set_last_cmd_status(game, ERROR_Attack);
       return;
     }
 
     /* Must be alive */
-    if (character_get_health(ch) <= 0)
+    if (numen_get_health(ch) <= 0)
     {
       game_set_last_cmd_status(game, ERROR_Attack);
       return;
@@ -434,8 +434,8 @@ static void game_actions_attack(Game *game)
     else
     {
       /* Player wins: enemy loses 1 HP */
-      character_set_health(ch, character_get_health(ch) - 1);
-      if (character_get_health(ch) <= 0)
+      numen_set_health(ch, numen_get_health(ch) - 1);
+      if (numen_get_health(ch) <= 0)
       {
         space_remove_character(space, char_id);
       }
@@ -472,7 +472,7 @@ static void game_actions_attack(Game *game)
     }
 
     /* Target must be in the same space */
-    if (player_get_location(target) != space_id)
+    if (player_get_zone(target) != space_id)
     {
       game_set_last_cmd_status(game, ERROR_Attack);
       return;
@@ -511,7 +511,7 @@ static void game_actions_chat(Game *game)
 {
   Player *player = NULL;
   Space *space = NULL;
-  Character *ch = NULL;
+  Numen *ch = NULL;
   char *char_name = NULL;
   Id char_id, space_id;
 
@@ -525,7 +525,7 @@ static void game_actions_chat(Game *game)
     return;
   }
 
-  space_id = player_get_location(player);
+  space_id = player_get_zone(player);
   if (space_id == NO_ID)
   {
     game_set_last_cmd_status(game, ERROR_Chat);
@@ -539,14 +539,14 @@ static void game_actions_chat(Game *game)
     return;
   }
 
-  ch = game_get_character_by_name(game, char_name);
+  ch = game_get_numen_by_name(game, char_name);
   if (!ch)
   {
     game_set_last_cmd_status(game, ERROR_Chat);
     return;
   }
 
-  char_id = character_get_id(ch);
+  char_id = numen_get_id(ch);
   space = game_get_space(game, space_id);
 
   if (space_contains_character(space, char_id) == FALSE)
@@ -555,7 +555,7 @@ static void game_actions_chat(Game *game)
     return;
   }
 
-  if (character_get_friendly(ch) == FALSE)
+  if (numen_get_following(ch) == FALSE)
   {
     game_set_last_cmd_status(game, ERROR_Chat);
     return;
@@ -603,7 +603,7 @@ static void game_actions_inspect(Game *game)
   }
 
   obj_id = obj_get_id(obj);
-  space_id = player_get_location(player);
+  space_id = player_get_zone(player);
   space = game_get_space(game, space_id);
 
   /* Object must be accessible: in current space OR in inventory */
@@ -744,7 +744,7 @@ static void game_actions_open(Game *game)
     return;
   }
 
-  space_id = player_get_location(player);
+  space_id = player_get_zone(player);
 
   link_id = obj_get_open(key);
   link = game_get_link_by_id(game, link_id);
@@ -754,7 +754,7 @@ static void game_actions_open(Game *game)
     return;
   }
 
-  if (game_connection_is_open(game, space_id, link_get_direction(link_id)) == TRUE)
+  if (game_connection_is_open(game, space_id, link_get_direction(link)) == TRUE)
   {
     game_set_last_cmd_status(game, ERROR_use);
     return;
@@ -790,7 +790,7 @@ static void game_actions_save(Game *game)
     return;
   }
 
-  if(game_save_file(game)==OK)
+  if(game_save_file(&game)==OK)
   game_set_last_cmd_status(game, OK);
   else{
     game_set_last_cmd_status(game, ERROR_save);

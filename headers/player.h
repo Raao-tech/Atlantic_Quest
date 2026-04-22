@@ -88,9 +88,10 @@ char *player_get_name(Player *player);
  */
 Bool player_has_name(Player *player, char *name);
 
-/* ========== Health ========== */
+/* ========== Stats (No se deben de usasr) ========== */
 
-
+Status player_set_health(Player *player, int health);
+int    player_get_health(Player *player);
 
 /* ========== Attack ========== */
 

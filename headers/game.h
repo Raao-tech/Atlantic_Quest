@@ -74,7 +74,7 @@ Status game_destroy(Game *game);
 
 
 /* ========================================================================= */
-/*                     ACCESS: ENFOQUE B (expose pointers)                   */
+/*                    ACCES: EXPOSITE POINTERs                */
 /* ========================================================================= */
 
 /**
@@ -297,7 +297,7 @@ Numen *game_get_numen_by_id(Game *game, Id numen_id);
  * @param name the name of the numen to find
  * @return pointer to the character, or NULL if not found
  */
-Character *game_get_numen_by_name(Game *game, char *numen_name);
+Numen *game_get_numen_by_name(Game *game, char *numen_name);
 
 /**
  * @brief It get location numen

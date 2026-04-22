@@ -21,7 +21,7 @@
  */
 struct _Game {
   Player    *players[MAX_PLAYERS];       /*!< Array of player pointers */
-  Numen		*numens[MAX_NUMENS];     /*!< Array of  numens pointers */
+  Numen		  *numens[MAX_NUMENS];     /*!< Array of  numens pointers */
   Object    *objects[MAX_OBJECTS];       /*!< Array of object pointers */
   Space     *spaces[MAX_SPACES];         /*!< Array of space pointers */
   Links     *links[MAX_LINKS];           /*!< Array of link pointers */
@@ -327,7 +327,7 @@ Id game_get_player_location(Game *game, Id player_id) {
   if (!game || player_id == NO_ID) return NO_ID;
   for (i = 0; i < game->n_players; i++) {
     if (player_get_id(game->players[i]) == player_id)
-      return player_get_location(game->players[i]);
+      return player_get_zone(game->players[i]);
   }
   return NO_ID;
 }
@@ -364,7 +364,7 @@ Object *game_get_object_at(Game *game, int position) {
   return game->objects[position];
 }
 
-Character *game_get_numen_at(Game *game, int position) {
+Numen *game_get_numen_at(Game *game, int position) {
   if (!game || position < 0 || position >= game->n_numens) return NULL;
   return game->numens[position];
 }
@@ -483,7 +483,7 @@ void game_print(Game *game) {
   /* Players */
   printf("\n=> Players (%d), active turn = %d:\n", game->n_players, game->turn);
   for (i = 0; i < game->n_players; i++) {
-    loc = player_get_location(game->players[i]);
+    loc = player_get_zone(game->players[i]);
     player_print(game->players[i]);
     printf("   Located in space: %ld%s\n", loc,
            (i == game->turn) ? "  <-- ACTIVE" : "");
@@ -509,9 +509,8 @@ void game_print(Game *game) {
   /* Characters */
   printf("\n=> Characters (%d):\n", game->n_numens);
   for (i = 0; i < game->n_numens; i++) {
-    loc = numen_get_location(game,
-            numen_get_id(game->numens[i]));
-    character_print(game->numens[i]);
+    loc = game_get_numen_location(game, numen_get_id(game->numens[i]));
+    numen_print(game->numens[i]);
     if (loc != NO_ID)
       printf("   Located in space: %ld\n", loc);
   }
@@ -525,4 +524,20 @@ void game_print(Game *game) {
   printf("\n=> Finished: %s\n",
          game->finished == TRUE ? "YES" : "NO");
   printf("====================================\n");
+}
+
+Id game_get_numen_location(Game *game, Id numen_id) {
+  int i;
+  if (!game) return NO_ID;
+  for (i = 0; i < game->n_spaces; i++) {
+    if (game->spaces[i] && space_contains_character(game->spaces[i], numen_id))
+      return space_get_id(game->spaces[i]);
+  }
+  return NO_ID;
+}
+
+Status game_add_character(Game *game, Character *character) {
+  (void)character;
+  if (!game) return ERROR;
+  return OK;
 }

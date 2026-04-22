@@ -11,8 +11,8 @@
 #ifndef NUMEN_H
 #define NUMEN_H
 
-#include "headers/character.h"
-#include "headers/types.h"
+#include "character.h"
+#include "types.h"
 
 typedef struct _Numen Numen;
 
@@ -23,10 +23,10 @@ Status numen_destroy(Numen* numen);
 /*======== (set/get) name (char*) ================*/
 Status numen_set_name(Numen* numen, char* name);
 char*  numen_get_name(Numen* numen);
+Bool numen_has_name(Numen *numen, char* name);
 
 /*======== (set/get) is_errante (Bool) ================*/
-Status numen_set_is_errant(Numen* numen, Bool errant);
-Bool   numen_get_is_errant(Numen* numen);
+Bool numen_set_is_errant(Numen* numen);
 
 /*======== (set/get) position ================*/
 Status numen_set_pos_x(Numen* numen, int pos_x); // tiene que estar entre los límites x 
@@ -60,7 +60,16 @@ Status numen_set_skill(Numen* numen, Id skill_id);
 Id    numen_get_skill(Numen* numen, Id skill_id);
 
 /*======== (set/get) following ================*/
-Status numen_set_following(Numen* numen, Bool following);
-Bool   numen_get_following(Numen* numen);
+Status numen_set_following(Numen* numen, Id following);
+Id   numen_get_following(Numen* numen);
 
+/*======= (set/get) Id ========================*/
+Status numen_set_id(Numen *numen, Id new_id);
+Id     numen_get_id(Numen *numen);
+
+/*====== (set/get) corrupt ===================*/
+Status numen_set_corrupt(Numen *numen, Bool corrupt);
+Bool numen_get_corrupt(Numen *numen);
+
+Status numen_print(Numen *numen);
 #endif /* NUMEN_H */

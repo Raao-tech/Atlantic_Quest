@@ -101,34 +101,22 @@ char *obj_get_description(Object *obj) {
 Status obj_set_position (Object *obj, int x, int y)
 {
   if (!obj) return ERROR;
-  return entity_set_Position(obj, x, y);
+  return entity_set_position(obj->e_obj, x, y);
 }
 
 int obj_get_pos_x (Object *obj)
 {
   if (!obj) return ERROR_POSITION;
-  return enetity_get_x_position(obj->e_obj);
+  return entity_get_pos_x(obj->e_obj);
 }
 
 int obj_get_pos_y (Object *obj)
 {
   if (!obj) return ERROR_POSITION;
-  return enetity_get_y_position (obj->e_obj);
+  return entity_get_pos_y (obj->e_obj);
 }
 
 /* ========== Health ========== */
-
-Status obj_set_health (Object *obj, int health)
-{
-  if (!obj) return ERROR;
-  return entity_set_health;
-}
-
-int obj_get_health(Object *obj)
-{
-  if (!obj) return ERROR_LIFE;
-  return entity_get_health (obj);
-}
 
 /* ========== Movable ========== */
 
@@ -177,9 +165,9 @@ Status obj_set_stats(Object *obj, int speed, int health, int energy, int attack)
   if(!obj) return ERROR;
   entity_set_speed(obj->e_obj,speed);
 
-  if(entity_set_attack(obj->e_obj,attack) == ERROR_ATTACK) return ERROR;
-  if(entity_set_health(obj->e_obj,health) == ERROR_LIFE) return ERROR;
-  if(entity_set_attack(obj->e_obj,energy) == ERROR_ENGY) return ERROR;
+  if(entity_set_attack(obj->e_obj,attack) == ERROR) return ERROR;
+  if(entity_set_health(obj->e_obj,health) == ERROR) return ERROR;
+  if(entity_set_attack(obj->e_obj,energy) == ERROR) return ERROR;
   return OK;
 }
 /*Health add*/
@@ -249,11 +237,11 @@ Status obj_print(Object *obj) {
   int energy = entity_get_energy(obj->e_obj);
   int attack = entity_get_attack(obj->e_obj);
 
-  fprintf(stdout, "--> Object (Id: %ld; Name: %s; Desc: %s; Health: %d; Movable: %s; Open: %ld; Dependency: %ld)\n",
+  fprintf(stdout, "--> Object (Id: %ld; Name: %s; Desc: %s; Movable: %s; Open: %ld; Dependency: %ld)\n",
           id,
           name, 
           desc, 
-          obj->movable ? "Yes" : "No", 
+          ((obj->movable) == TRUE) ? "Yes" : "No", 
           obj->open , 
           obj->dependency);
   fprintf(stdout, "This Object has effects in:  Health += %d, Speed += %d, Attack += %d, Energy += %d\n",

@@ -8,10 +8,9 @@
  * @copyright GNU Public License
  */
 
-#include "headers/numen.h"
-struct _Numen
+#include "skills.h"
+struct _Skils
 {
-    Character* c_numen;
-    Bool    is_corrupt;
-    
+    Id id;
+ 
 };

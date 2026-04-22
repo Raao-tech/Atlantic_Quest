@@ -192,6 +192,24 @@ Status character_set_friendly(Character *character, Bool value);
  * @return TRUE if friendly, defaults to TRUE if character is NULL
  */
 Bool character_get_friendly(Character *character);
+/**
+ * @brief It sets the id of the character that this character is following
+ * @author Salvador
+ * 
+ * @param character a pointer to the character
+ * @param id_following the id of the character to follow
+ * @return OK, if everything goes well, or ERROR if there was some mistake
+ */
+Status character_set_following(Character *character, Id id_following);
+
+/**
+ * @brief It gets the id of the character that this character is following
+ * @author Salvador
+ * 
+ * @param character a pointer to the character
+ * @return the id of the character being followed, or NO_ID if character is NULL
+ */
+Id character_get_following(Character *character);
 
 /**
  * @brief It prints all the character information for debugging
@@ -412,4 +430,4 @@ Id character_get_following(Character *character);
  */
 Status character_print(Character *character);
 
-#endif */
+#endif /* CHARACTER_H */

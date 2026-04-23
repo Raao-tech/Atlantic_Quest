@@ -60,8 +60,8 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-/*============= FLAGS -l -d =================================*/
-/*Aca se ahra la pregunta de las flags -l y ld*/
+/*============= FLAGS -l -d -t =================================*/
+/*Aca se ahra la pregunta de las flags -l , -d  o -t*/
   if (argc >= 4 && strcmp(argv[2], "-l") == 0) {
     log_file = fopen(argv[3], "w");
     if (!log_file) {
@@ -97,7 +97,7 @@ int main(int argc, char *argv[]) {
  * 
  * Modo Visual:
  *            IF    (no existe -t  )  THEN
- *                input
+ *                input_user_init
   *
 */
   last_cmd = game_get_last_command(game);

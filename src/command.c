@@ -76,6 +76,7 @@ Status command_set_code(Command *command, CommandCode code){
   return OK;
 }
 
+/*======= Obtener el tipo de accion (attack, take, move, drop, use, capture .....) ============*/
 CommandCode command_get_code(Command *command){
   if (!command) return NO_CMD;
   return command->code;

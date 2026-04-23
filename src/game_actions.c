@@ -68,8 +68,8 @@ Status game_actions_update(Game *game, Command *command)
 {
   CommandCode cmd;
 
-  if (!game || !command) return ERROR;
-  if (game_set_last_command(game, command) == ERROR) return ERROR;
+  if (!game || !command) 								return ERROR;
+  if (game_set_last_command(game, command) == ERROR)	return ERROR;
 
   cmd = command_get_code(command);
 
@@ -80,7 +80,7 @@ Status game_actions_update(Game *game, Command *command)
 	case MOVE:		game_actions_move(game);	break;
 	case TAKE:		game_actions_take(game);	break;
 	case DROP:		game_actions_drop(game);	break;
-	case ATTACK:	game_actions_attack(game);	break;
+	case ATTACK:	game_actions_attack(game);	break; /*Comando ingresado:   attack  my_numen other_numen skill_active  (sin player pues jugaremos con uno)*/
 	case CHAT:    	game_actions_chat(game);	break;
 	case INSPECT:	game_actions_inspect(game);	break;
 	case USE:		game_actions_use(game);		break;

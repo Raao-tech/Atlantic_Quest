@@ -7,7 +7,23 @@ typedef enum{
     TAKLE,
     QUICK_ATTACK,
     STEAM_ERUPTION
-}Skills;
+}Skills_id;
 
+
+typedef struct skills
+{
+    Skills_id     id;
+    char* name;
+    int     radio;
+    int     distancia;
+    int    damage;
+    int     coste;
+
+};
+
+
+
+//command
+//attack name_numen 2 1
 
 

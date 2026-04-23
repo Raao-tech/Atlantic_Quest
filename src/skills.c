@@ -26,3 +26,10 @@ void skill_active(Numen * sender, Numen* receiver, Skills id_skill)
     }
 
 }
+
+
+
+skill_active_takle(Numen * sender, Numen* receiver, Skills id_skill)
+{
+
+}

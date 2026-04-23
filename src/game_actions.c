@@ -68,10 +68,8 @@ Status game_actions_update(Game *game, Command *command)
 {
   CommandCode cmd;
 
-  if (!game || !command)
-    return ERROR;
-  if (game_set_last_command(game, command) == ERROR)
-    return ERROR;
+  if (!game || !command) return ERROR;
+  if (game_set_last_command(game, command) == ERROR) return ERROR;
 
   cmd = command_get_code(command);
 
@@ -99,8 +97,7 @@ Status game_actions_update(Game *game, Command *command)
 /* ---- UNKNOWN ---- */
 static void game_actions_unknown(Game *game)
 {
-  if (!game)
-    return;
+  if (!game) return;
   game_set_last_cmd_status(game, ERROR);
 }
 
@@ -123,8 +120,7 @@ static void game_actions_move(Game *game)
   Direction dir;
   Id origin, dest;
 
-  if (!game)
-    return;
+  if (!game) return;
   player = game_get_player_by_turn(game);
   if (!player)
   {
@@ -187,8 +183,7 @@ static void game_actions_take(Game *game)
   Id space_id, obj_id, dependency_id;
   Bool movable;
 
-  if (!game)
-    return;
+  if (!game) return;
 
   /*
    * Este tipo de comprobaciones hay que ponerlas en mira, para la solución del multijugador
@@ -325,7 +320,7 @@ static void game_actions_drop(Game *game)
  *
  *  1. NPC combat (original):
  *     "attack Skeleton" → find Character by name → must be in
- *     same space, hostile, alive → random roll.
+ *     same spacee, hostile, alive → random roll.
  *
  *  2. PvP combat (NEW):
  *     "attack witch" -> if no Character found with that name,
@@ -345,6 +340,8 @@ static void game_actions_attack(Game *game)
 
   if (!game) return;
 /*
+
+        Player necesita una variable active_numen              y su funcion correspondiente 
 	*Pseudocódigo:
 	*	Player = player actual
 	*   Numen del ply = Numen que está siguiendo a Player y no está en el inventory de Player (el que está en escena)
@@ -354,8 +351,14 @@ static void game_actions_attack(Game *game)
 	*		    SI		skill_active(numen_del_ply, numen_target, skill) == ERROR THEN
 	*					game_last_cmd_(ERROR);
 	*			ENDIF
-	*		ENDIF
-	*		
+	*		ENDI
+    spaces.grid
+    numen.positon
+
+               skills distancia 50
+()) *                         xy          xy
+  *            p         Numen_own ---   Numne_enemigo
+	*		 
 	*
 	* 
 	* 

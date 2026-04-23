@@ -54,11 +54,14 @@ int main(int argc, char *argv[]) {
   int             result;
   Bool            log_enabled = FALSE;
 
+  /*=============== COMPROBACION DE recursos Minimos (programa y .dat) =========================*/
   if (argc < 2) {
     fprintf(stderr, "Use: %s <game_data_file> [-l <log_file>]\n", argv[0]);
     return 1;
   }
 
+/*============= FLAGS -l -d =================================*/
+/*Aca se ahra la pregunta de las flags -l y ld*/
   if (argc >= 4 && strcmp(argv[2], "-l") == 0) {
     log_file = fopen(argv[3], "w");
     if (!log_file) {
@@ -68,20 +71,42 @@ int main(int argc, char *argv[]) {
     log_enabled = TRUE;
   }
 
-  srand(time(NULL));
+  srand(time(NULL)); 
+  /*
+      Esto es loq ue ahra determinista o aleatroio nuestro juego.
+      Propongo que sea una variable dada a GameRule.c
+  */
+
+/*==========================================================*/
+
+/*============== Inicialización del JUEGO (LLAMADA A GAME_MANAGMENT  y Graphic_engine ) =======================*/
 
   result = game_loop_init(&game, &gengine, argv[1]);
   if (result != 0) {
     fprintf(stderr, "Error inizialiting game (%d)\n", result);
-    if (log_file) fclose(log_file);
+    if (log_file) fclose(log_file); /*Si hemos abierto el archvio log, (flag -l), cierralo*/
     return 1;
   }
+/*==========================================================*/
 
+/*============== OBTENCIÓN DEL INPUT DEL USUARIO =======================*/
+
+/** 
+ * Mi propuesta consiste en bifurcar el tipo de input, gracia a una tercera flag[ -t ]
+ *  que active el modo test (por terminal .cmd) o en su defecto el modo deploy (por Keyboard)
+ * 
+ * Modo Visual:
+ *            IF    (no existe -t  )  THEN
+ *                input
+  *
+*/
   last_cmd = game_get_last_command(game);
   if (!last_cmd) {
     game_loop_cleanup(game, gengine, log_file);
     return 1;
   }
+/*==========================================================*/
+
 
   /* ── Abrir la ventana UNA SOLA VEZ ── */
   InitWindow(WIDHT_SCREEN, HIGHT_SCREEN, "Atlantic Quest");
@@ -165,8 +190,7 @@ int main(int argc, char *argv[]) {
 /* ========================================================================= */
 
 int game_loop_init(Game **game, Graphic_engine **gengine, char *file_name) {
-  if (game_create_from_file(game, file_name) == ERROR)
-    return 1;
+  if (game_create_from_file(game, file_name) == ERROR) return 1;
 
   *gengine = graphic_engine_create();
   if (*gengine == NULL) {

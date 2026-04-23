@@ -12,7 +12,7 @@
 struct _Numen
 {
   Character* c_numen; 
-  Skills*	skills[MAX_HELD_SKILLS];
+  Skill*	skills[MAX_HELD_SKILLS];
 };
 
 /*========= (Create/Destroy) Numen ================*/

@@ -101,7 +101,7 @@ Status command_get_user_input(Command *command){
     free(command->target);
     command->target = NULL;
   }
-
+/*Guardamos el comando escrito por el user en la terminal en un string llamado input (con 20 caracteres = CMD_LEGHT)*/
   if (fgets(input, CMD_LENGHT, stdin)){
     /* First token: the command itself */
     token = strtok(input, " \n");

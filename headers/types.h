@@ -61,7 +61,10 @@ typedef enum
     ERROR_inspect,
     ERROR_use,
     ERROR_open,
-    ERROR_save
+    ERROR_save,
+    ERROR_load,
+    ERROR_recruit,
+    ERROR_kick
 } Status;
 
 typedef enum

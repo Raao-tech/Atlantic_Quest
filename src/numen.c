@@ -72,7 +72,7 @@ Id   numen_get_following(Numen* numen)
   if(!numen) return NO_ID;
   return character_get_following(numen->c_numen);
 }
-Bool numen_set_is_errant(Numen* numen)
+Bool numen_is_errant(Numen* numen)
 {
 	if(!numen) return FALSE;
 	return ((character_get_following(numen->c_numen) == NO_ID) ? TRUE : FALSE);
@@ -84,7 +84,7 @@ Status numen_set_corrupt(Numen *numen, Bool corrupt){
 }
 Bool numen_get_corrupt(Numen *numen){
   if(!numen) return FALSE;
-  return character_get_friendly(numen->c_numen);
+  return (character_get_friendly(numen->c_numen) == TRUE ? FALSE : TRUE);
 }
 
 

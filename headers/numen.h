@@ -27,7 +27,7 @@ char*  numen_get_name(Numen* numen);
 Bool numen_has_name(Numen *numen, char* name);
 
 /*======== (set/get) is_errante (Bool) ================*/
-Bool numen_set_is_errant(Numen* numen);
+Bool numen_is_errant(Numen* numen);
 
 /*======== (set/get) position ================*/
 Status numen_set_pos_x(Numen* numen, int pos_x); // tiene que estar entre los límites x 

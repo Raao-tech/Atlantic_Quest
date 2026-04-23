@@ -77,40 +77,18 @@ Status game_actions_update(Game *game, Command *command)
 
   switch (cmd)
   {
-  case UNKNOWN:
-    game_actions_unknown(game);
-    break;
-  case EXIT:
-    game_actions_exit(game);
-    break;
-  case MOVE:
-    game_actions_move(game);
-    break;
-  case TAKE:
-    game_actions_take(game);
-    break;
-  case DROP:
-    game_actions_drop(game);
-    break;
-  case ATTACK:
-    game_actions_attack(game);
-    break;
-  case CHAT:
-    game_actions_chat(game);
-    break;
-  case INSPECT:
-    game_actions_inspect(game);
-    break;
-  case USE:
-    game_actions_use(game);
-    break;
-  case OPEN:
-    game_actions_open(game);
-    break;
-  default:
-    break;
+	case UNKNOWN: 	game_actions_unknown(game);	break;
+	case EXIT:		game_actions_exit(game);	break;
+	case MOVE:		game_actions_move(game);	break;
+	case TAKE:		game_actions_take(game);	break;
+	case DROP:		game_actions_drop(game);	break;
+	case ATTACK:	game_actions_attack(game);	break;
+	case CHAT:    	game_actions_chat(game);	break;
+	case INSPECT:	game_actions_inspect(game);	break;
+	case USE:		game_actions_use(game);		break;
+	case OPEN:		game_actions_open(game);	break;
+	default:									break;
   }
-
   return OK;
 }
 
@@ -129,8 +107,7 @@ static void game_actions_unknown(Game *game)
 /* ---- EXIT ---- */
 static void game_actions_exit(Game *game)
 {
-  if (!game)
-    return;
+  if (!game) return;
   game_set_last_cmd_status(game, OK);
 }
 
@@ -360,148 +337,29 @@ static void game_actions_attack(Game *game)
 {
   Player *player = NULL;
   Space *space = NULL;
-  Numen *ch = NULL;
-  char *name = NULL;
+  Numen *num = NULL;
+  char *name_target = NULL;
+  Skills	skill = TAKLE;
   Id space_id;
   int roll;
 
-  if (!game)
-    return;
-
-  player = game_get_player_by_turn(game);
-  if (!player)
-  {
-    game_set_last_cmd_status(game, ERROR_Attack);
-    return;
-  }
-
-  space_id = player_get_zone(player);
-  if (space_id == NO_ID)
-  {
-    game_set_last_cmd_status(game, ERROR_Attack);
-    return;
-  }
-
-  name = command_get_target(game_get_last_command(game));
-  if (!name)
-  {
-    game_set_last_cmd_status(game, ERROR_Attack);
-    return;
-  }
-
-  space = game_get_space(game, space_id);
-
-  /* ========== PHASE 1: Try as NPC (Character) ========== */
-  ch = game_get_numen_by_name(game, name);
-
-  if (ch)
-  {
-    Id char_id = numen_get_id(ch);
-
-    /* Must be in the same space */
-    if (space_contains_character(space, char_id) == FALSE)
-    {
-      game_set_last_cmd_status(game, ERROR_Attack);
-      return;
-    }
-
-    /* Must NOT be friendly */
-    if (numen_get_following(ch) == TRUE)
-    {
-      game_set_last_cmd_status(game, ERROR_Attack);
-      return;
-    }
-
-    /* Must be alive */
-    if (numen_get_health(ch) <= 0)
-    {
-      game_set_last_cmd_status(game, ERROR_Attack);
-      return;
-    }
-
-    /* NPC Combat roll */
-    roll = rand() % 10;
-
-    if (roll < 5)
-    {
-      /* Enemy wins: player loses 1 HP */
-      player_set_health(player, player_get_health(player) - 1);
-      if (player_get_health(player) <= 0)
-      {
-        game_set_finished(game, TRUE);
-      }
-    }
-    else
-    {
-      /* Player wins: enemy loses 1 HP */
-      numen_set_health(ch, numen_get_health(ch) - 1);
-      if (numen_get_health(ch) <= 0)
-      {
-        space_remove_character(space, char_id);
-      }
-    }
-
-    game_set_last_cmd_status(game, OK);
-    return;
-  }
-
-  /*Inciiamos nuestro ambioto local. Toda variable declarada dentri de los {}  sólo existe ahí*/
-  /*
-    Se suele usar para evitar tener que declarar target arriba de todo.
-    -Wependatic es muyyyy pedante y obliga a declarar todas las variables
-    según el estandar c99.   Lamentando lo mucho, no lo tenemos así, y me da pereza
-    cambiar todo desde cero, (incluyendo lógica), pero también es muy útil para evitar errores de
-    scope, por lo que iré a reescribir partes del código para usar este estilo.
-    Se les quiere!!! besitosss ;D
-  */
-  /* ========== PHASE 2: Try as Player (PvP) ========== */
-  {
-    Player *target = game_get_player_by_name(game, name);
-
-    if (!target)
-    {
-      game_set_last_cmd_status(game, ERROR_Attack);
-      return;
-    }
-
-    /* Cannot attack yourself */
-    if (player_get_id(target) == player_get_id(player))
-    {
-      game_set_last_cmd_status(game, ERROR_Attack);
-      return;
-    }
-
-    /* Target must be in the same space */
-    if (player_get_zone(target) != space_id)
-    {
-      game_set_last_cmd_status(game, ERROR_Attack);
-      return;
-    }
-
-    /* Target must be alive */
-    if (player_get_health(target) <= 0)
-    {
-      game_set_last_cmd_status(game, ERROR_Attack);
-      return;
-    }
-
-    /* PvP Combat roll */
-    roll = rand() % 20;
-
-    if (roll < 5)
-    {
-      player_set_health(player, player_get_health(player) - 1);
-      /*game_turn_update saltará al muerto */
-    }
-    else
-    {
-      player_set_health(target, player_get_health(target) - 1);
-      /*game_turn_update saltará al muerto */
-    }
-
-    game_set_last_cmd_status(game, OK);
-    return;
-  }
+  if (!game) return;
+/*
+	*Pseudocódigo:
+	*	Player = player actual
+	*   Numen del ply = Numen que está siguiendo a Player y no está en el inventory de Player (el que está en escena)
+	*	Numen objetivo = numen obtenido del nombre pasado por command (accion name_numen  who_player)
+	*	
+	*    -->SI  (space contiene a numen del ply y al numen objetivo)  THEN
+	*		    SI		skill_active(numen_del_ply, numen_target, skill) == ERROR THEN
+	*					game_last_cmd_(ERROR);
+	*			ENDIF
+	*		ENDIF
+	*		
+	*
+	* 
+	* 
+*/
 }
 
 /* ========================================================================= */

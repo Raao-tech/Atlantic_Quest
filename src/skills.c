@@ -11,13 +11,13 @@
 #include "skills.h"
 
 /*============== PUBLIC FUNCTION ======================*/
-Status skill_active(Numen * sender, Numen* receiver, Id id_skill)
+void skill_active(Numen * sender, Numen* receiver, Skills id_skill)
 {
     if(!sender || !receiver || id_skill == NO_ID) return ERROR;
 
     switch (id_skill)
     {
-    case constant expression:
+    case TAKLE : skill_active_takle(sender, receiver, id_skill);
         /* code */
         break;
     

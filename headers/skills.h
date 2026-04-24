@@ -9,8 +9,7 @@ typedef enum{
     STEAM_ERUPTION
 }Skills_id;
 
-
-typedef struct skills
+struct _Skills
 {
     Skills_id     id;
     char* name;
@@ -21,6 +20,7 @@ typedef struct skills
 
 };
 
+typedef struct _Skills Skills;
 
 
 //command

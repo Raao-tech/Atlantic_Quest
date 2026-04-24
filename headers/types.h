@@ -37,7 +37,7 @@
 
 /*<! Max_heald of skills*/
 #define MAX_HELD_SKILLS 4
-
+#define PLAYER 0
 
 typedef long Id;
 
@@ -61,7 +61,10 @@ typedef enum
     ERROR_inspect,
     ERROR_use,
     ERROR_open,
-    ERROR_save
+    ERROR_save,
+    ERROR_load,
+    ERROR_recruit,
+    ERROR_kick
 } Status;
 
 typedef enum

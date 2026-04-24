@@ -838,7 +838,8 @@ Status game_save_file(Game **game)
   Numen *numen = NULL;
   Links *link = NULL;
   Direction dir = U;
-  Id id = NO_ID, zone = NO_ID, origin = NO_ID, dest = NO_ID, skills[MAX_HELD_SKILLS], dependency, following;
+  Id id = NO_ID, zone = NO_ID, origin = NO_ID, dest = NO_ID, dependency, following;
+  Set *skills[MAX_HELD_SKILLS];
   int check = 0, bucle, bucle2, pos_x = 0, pos_y = 0, n_play, health, attack, energy, speed, max_bag, max_numens;
   Bool friendly, open_otd, open_dto, consumable, movable;
   char *name = NULL, *gdesc = NULL, *OST = NULL, *message = NULL;
@@ -953,7 +954,10 @@ Status game_save_file(Game **game)
     attack = numen_get_attack(numen);
     energy = numen_get_energy(numen);
     speed = numen_get_speed(numen);
-    skills = numen_get_skill(numen);
+    for (int j = 0; j < MAX_HELD_SKILLS; j++)
+    {
+      skills[j] = numen_get_skill_by_index(numen, j);
+    }
     following = numen_get_following(numen);
 
     fprintf(new_sfile, "#n:%ld|%s|%ld|%d|%d|%s|%d|%d|%d|%d|%ld|%ld|%ld|%ld|%ld|\n", 

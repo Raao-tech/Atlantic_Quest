@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "set.h"
+#include "skills.h"
 
 typedef struct _Stats    Stats;
 typedef struct _Position Position;

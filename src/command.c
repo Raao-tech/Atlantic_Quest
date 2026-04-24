@@ -102,8 +102,14 @@ Status command_get_user_input(Command *command){
     free(command->target);
     command->target = NULL;
   }
+/*======================== (Issaty() == 1) Modo Visual con Raylib ==========================*/
+
+
+
+/*=============== (ISATY() == 0 ) Modo terminal ===================*/
 /*Guardamos el comando escrito por el user en la terminal en un string llamado input (con 20 caracteres = CMD_LEGHT)*/
-  if (fgets(input, CMD_LENGHT, stdin)){
+  if (fgets(input, CMD_LENGHT, stdin))
+  {
     /* First token: the command itself */
     token = strtok(input, " \n");
     if (!token) return command_set_code(command, UNKNOWN);
@@ -119,6 +125,5 @@ Status command_get_user_input(Command *command){
     if (token)  command->target = strdup(token);
     return command_set_code(command, cmd);
   }
-  else
-    return command_set_code(command, EXIT);
+  else {return command_set_code(command, EXIT);}
 }

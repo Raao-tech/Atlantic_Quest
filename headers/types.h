@@ -37,7 +37,7 @@
 
 /*<! Max_heald of skills*/
 #define MAX_HELD_SKILLS 4
-
+#define PLAYER 0
 
 typedef long Id;
 

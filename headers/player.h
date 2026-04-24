@@ -152,16 +152,74 @@ int player_get_n_objects(Player *player);
 Status player_set_max_objects(Player *player, int max);
 /* ========== Numens ==========*/
 
-Status player_add_numen(Player *player, Id new_numen); /*!< Agrega a este Numen*/
+/**
+ * @brief It adds a numen id to the player's numen inventory
+ * @author Rafael
+ *
+ * @param player a pointer to the player
+ * @param new_numen the id of the numen to add
+ * @return OK if successful, ERROR if player is NULL or max < 0
+ */
+Status player_add_numen(Player *player, Id new_numen); 
 
+/**
+ * @brief It deletes a numen id from the player's numen inventory
+ * @author Rafael
+ *
+ * @param player a pointer to the player
+ * @param trash_numen the id of the numen to delete
+ * @return OK if successful, ERROR if player is NULL or numen not found
+ */
 Status player_delete_numen(Player *player, Id trash_numen); /*!< ELimina a este Numen*/
 
+/**
+ * @brief It checks whether a numen id is in the player's numen inventory
+ * @author Rafael
+ *
+ * @param player a pointer to the player
+ * @param ref_numen the id of the numen to search for
+ * @return TRUE if found, FALSE otherwise
+ */
 Bool player_contains_numen(Player *player, Id ref_numen); /*!< Lo contiene?*/
 
+/**
+ * @brief It gets the number of numens the player has
+ * @author Rafael
+ *
+ * @param player a pointer to the player
+ * @return the number of numens, or ERROR_MAIN if player is NULL
+ */
 int player_get_n_numens(Player *player); /*!< Cuántos tiene?*/
 
+/**
+ * @brief It sets the maximum number of numens the player can carry
+ * @author Rafael
+ *
+ * @param player a pointer to the player
+ * @param max_numens the maximum capacity of the numen inventory
+ * @return OK if successful, ERROR if player is NULL or max_numens < 0
+ */
 Status player_set_max_numens(Player *player, int max_numens); /*!< El máximo es...*/
 
+/**
+ * @brief It gets the id of the active numen
+ * @author Salvador
+ *
+ * @param player a pointer to the player
+ * @return the id of the active numen, or NO_ID if player is NULL
+ */
+Id player_get_active_numen(Player *player);
+
+/**
+ * @brief It sets the active numen
+ * @author Salvador
+ *
+ * @param player a pointer to the player
+ * @param numen_id the id of the numen to set as active
+ * @return OK if successful, ERROR if player is NULL or numen not found
+ */
+Status player_set_active_numen(Player *player, Id numen_id);
+ 
 /* ========== Zone   ========== */
 
 /**

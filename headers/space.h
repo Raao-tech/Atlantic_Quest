@@ -171,8 +171,59 @@ Status space_remove_character(Space *space, Id id_chara);
  */
 int space_get_n_characters(Space *space);
 /* ========== Grid ====================== */
+
 Status space_set_grid_by_line(Space* space, int line, char* content);
 int* space_get_grid_by_line(Space* space, int line);
+
+/* ========== Numens (Set of Ids) ========== */
+
+/**
+ * @brief It returns the set of numens contained in the space
+ * @author Salvador
+ *
+ * @param space a pointer to the space
+ * @return pointer to the set of numens_id contained in space, or NULL if space is NULL
+ */
+Set *space_get_numens(Space *space);
+
+/**
+ * @brief It returns the number of numens contained in the space
+ * @author Salvador
+ *
+ * @param space a pointer to the space
+ * @return number of numens, or ERROR_MAIN if space is NULL
+ */
+int space_get_n_numens(Space *space);
+
+/**
+ * @brief It adds a numen id to the space
+ * @author Salvador
+ *
+ * @param space a pointer to the space
+ * @param new_id the id of the numen to add
+ * @return OK if added, ERROR if space is NULL or id is invalid
+ */
+Status space_set_numen(Space *space, Id new_id);
+
+/**
+ * @brief It deletes a numen id from the space
+ * @author Salvador
+ *
+ * @param space a pointer to the space
+ * @param id_numen the id of the numen to delete
+ * @return OK if deleted, ERROR if space is NULL or id is invalid
+ */
+Status space_remove_numen(Space *space, Id id_numen);
+
+/**
+ * @brief It checks whether a numen id is in the space
+ * @author Salvador
+ *
+ * @param space a pointer to the space
+ * @param id_numen the id of the numen to search for
+ * @return TRUE if found, FALSE otherwise
+ */
+Bool space_contains_numen(Space *space, Id id_numen);
 
 /* ========== Discovered (F12) ========== */
 

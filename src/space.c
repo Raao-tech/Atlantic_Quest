@@ -2,7 +2,7 @@
  * @brief It implements the space module
  *
  * @file space.c
- * @author Profesores PPROG, Violeta y Rafa
+ * @author Profesores PPROG, Violeta, Salvador y Rafa
  * @version 3
  * @date 08-04-2026
  * @copyright GNU Public License
@@ -28,6 +28,7 @@ struct _Space {
   int   grid[WIDHT_SCREEN][HIGHT_SCREEN];/*!< Grid of graphi engine*/
   Set  *objs_id;                        /*!< Set of object IDs in this space */
   Set  *characters_id;                  /*!< Set of character IDs in this space */
+  Set  *numens_id;                      /*!< Set of numen IDs in this space */
   Bool  discovered;                     /*!< Has this space been visited by a player? */
 };
 
@@ -58,6 +59,14 @@ Space *space_create() {
 
   newSpace->characters_id = set_creat();
   if (!newSpace->characters_id) {
+    set_destroy(newSpace->objs_id);
+    free(newSpace);
+    return NULL;
+  }
+
+  newSpace->numens_id = set_creat();
+  if (!newSpace->numens_id) {
+    set_destroy(newSpace->characters_id);
     set_destroy(newSpace->objs_id);
     free(newSpace);
     return NULL;
@@ -190,8 +199,34 @@ int* space_get_grid_by_line(Space* space, int line){
   return space->grid[line];
 }
 
+/* ========== Numens ========== */
+Set *space_get_numens(Space *space) {
+  if (!space) return NULL;
+  return space->numens_id;
+}
 
+int space_get_n_numens(Space *space) {
+  if (!space) return ERROR_MAIN;
+  return set_get_n_ids(space->numens_id);
+}
 
+Status space_set_numen(Space *space, Id new_id)
+{
+  if (!space) return ERROR;
+  return set_add(space->numens_id, new_id);
+}
+
+Status space_remove_numen(Space *space, Id id_numen)
+{
+  if (!space) return ERROR;
+  return set_delete_id(space->numens_id, id_numen);
+}
+
+Bool space_contains_numen(Space *space, Id id_numen)
+{
+  if (!space) return FALSE;
+  return set_contains_id(space->numens_id, id_numen);
+}
 /* ========== Discovered ========== */
 
 Status space_set_discovered(Space *space, Bool value) {

@@ -376,20 +376,21 @@ static void game_actions_attack(Game *game)
   Space *space = NULL;
   Numen *num = NULL, *enemy_num = NULL;
   char *skill_indx_ch = NULL;
-  Skills skill = TAKLE;
-  Id space_id, num_id, *space_numens = NULL;
+  Skills_id skill = TAKLE;
+  Id space_id, num_id;
+  Set *space_numens = NULL;
   int roll, distance, skill_indx, radio, active_pos_x, active_pos_y, enemy_pos_x, enemy_pos_y, num_enemies, i;
 
   if (!game)
     return;
 
-  player = game_get_player(game); /*Por implementar, ahora solo hay un player*/
+  player = game_get_player_at(game, PLAYER);
   if (!player)
   {
     game_set_last_cmd_status(game, ERROR_Attack);
     return;
   }
-  num_id = player_get_active_numen(player); /*Por implementar: el numen activo del player, el que está en escena, no el que está en el inventario*/
+  num_id = player_get_active_numen(player);
   if (num_id == NO_ID)
   {
     game_set_last_cmd_status(game, ERROR_Attack);
@@ -432,7 +433,7 @@ static void game_actions_attack(Game *game)
     return;
   }
 
-  skill = numen_find_skill_by_index(num, skill_indx); /*por implementar*/
+  skill = numen_get_skill_by_index(num, skill_indx); 
   if (skill == NO_SKILL)
   {
     game_set_last_cmd_status(game, ERROR_Attack);
@@ -441,19 +442,19 @@ static void game_actions_attack(Game *game)
 
   radio = skill_get_radio(skill); /*por implementar*/
 
-  space_numens = space_get_numens(space); /*por implementar*/
+  space_numens = space_get_numens(space); 
   if (!space_numens)
   {
     game_set_last_cmd_status(game, ERROR_Attack);
     return;
   }
 
-  num_enemies = space_get_n_numens(space); /*por implementar*/
+  num_enemies = space_get_n_numens(space); 
 
  /* For simplicity, we apply the skill effect to all valid targets in range. */
   for (i = 0; i < num_enemies; i++)
   {
-    enemy_num = game_get_numen_by_id(game, space_numens[i]); /*Por implementar*/
+    enemy_num = game_get_numen_by_id(game, set_get_id_at(space_numens, i)); 
     if (enemy_num && enemy_num && numen_get_id(enemy_num) != num_id && numen_get_corrupt(enemy_num) == FALSE)
     {
       enemy_pos_x = numen_get_pos_x(enemy_num);

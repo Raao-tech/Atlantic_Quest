@@ -21,6 +21,7 @@ struct _Player {
   Inventory *backpack_items;   /*!< Inventory of object IDs the player carries */
   Inventory *backpack_numens;   /*!< Inventory of nuemns IDs the player carries */
   Id         zone;   /*!< Id of the space where the player is */
+  Id         active_numen;   /*!< Id of the active numen */
 };
 
 /* ========== Create / Destroy ========== */
@@ -30,6 +31,7 @@ Player *player_create() {
   if (!newPlayer) return NULL;
 
   newPlayer->zone = NO_ID;
+  newPlayer->active_numen = NO_ID;
 
   newPlayer->e_player = entity_create();
   if (!newPlayer->e_player) {
@@ -160,6 +162,17 @@ int player_get_n_numens(Player *player) {
 Status player_set_max_numens(Player *player, int max_numens) {
   if (!player) return ERROR;
   return inventory_set_max_objs(player->backpack_numens, max_numens);
+}
+
+Id player_get_active_numen(Player *player) {
+  if (!player) return NO_ID;
+  return player->active_numen;
+}
+
+Status player_set_active_numen(Player *player, Id numen_id) {
+  if (!player||player_contains_numen(player, numen_id)==FALSE) return ERROR;
+  player->active_numen = numen_id;
+  return OK;
 }
 
 /* ========== Zone ========== */

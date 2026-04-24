@@ -12,7 +12,7 @@
 struct _Numen
 {
   Character* c_numen; 
-  Skill*	skills[MAX_HELD_SKILLS];
+  Skills_id	skills[MAX_HELD_SKILLS];
 };
 
 /*========= (Create/Destroy) Numen ================*/
@@ -61,6 +61,34 @@ Bool numen_has_name(Numen *numen, char* name) {
   if (!numen || !name) return FALSE;
   return character_has_name(numen->c_numen, name);
 }
+
+/*======== (set/get) skills ================*/
+Status numen_add_skill(Numen* numen, Id skill_id)
+{
+  if (!numen || skill_id < 0) return ERROR;
+  for (int i = 0; i < MAX_HELD_SKILLS; i++) {
+    if (numen->skills[i] == NO_SKILL) {
+      numen->skills[i] = skill_id;
+      return OK;
+    }
+  }
+  return ERROR;
+} 
+Id    numen_get_skill_by_id(Numen* numen, Id skill_id)
+{
+  if (!numen || skill_id < 0) return NO_ID;
+  for (int i = 0; i < MAX_HELD_SKILLS; i++) {
+    if (numen->skills[i] == skill_id) {
+      return skill_id;
+    }
+  }
+  return NO_ID;
+}
+Skills_id numen_get_skill_by_index(Numen* numen, int skill_indx)
+{
+  if (!numen || skill_indx < 0 || skill_indx >= MAX_HELD_SKILLS) return NO_SKILL;
+  return numen->skills[skill_indx];
+} 
 
 /*======== (Set/Get/ is errant?) following ===========================*/
 Status numen_set_following(Numen* numen, Id following){

@@ -20,6 +20,10 @@
 #include "game_actions.h"
 #include "graphic_engine.h"
 
+#define	FLAG_DET 	"-d"
+#define	FLAG_LOG 	"-l"
+#define	FLAG_TEST	"-t"
+
 /**
  * @brief Initializes the game and the graphic engine from a data file
  * @author Profesores PPROG
@@ -47,141 +51,173 @@ void game_loop_cleanup(Game *game, Graphic_engine *gengine, FILE *log_file);
 /* ========================================================================= */
 
 int main(int argc, char *argv[]) {
-  FILE           *log_file    = NULL;
-  Game           *game        = NULL;
-  Graphic_engine *gengine     = NULL;
-  Command        *last_cmd    = NULL;
-  int             result;
-  Bool            log_enabled = FALSE;
+	Graphic_engine *gengine     = 	 NULL;		/*<! puntero al Graphic_engine_raylib, desactivado en test mode*/
+	FILE           *log_file    = 	 NULL;		/*<! puntero al file, desactivado en test mode*/
+	Game           *game        = 	 NULL;
+	Command        *last_cmd    = 	 NULL;
+	Bool            log_enabled = 	 FALSE;
+	Bool			test_enabled = 	 FALSE;
+	Bool			is_determinist = FALSE;
+	int             result;
+	int             i_flag;
+	unsigned int	seed = 			 0;
 
-  /*=============== COMPROBACION DE recursos Minimos (programa y .dat) =========================*/
-  if (argc < 2) {
-    fprintf(stderr, "Use: %s <game_data_file> [-l <log_file>]\n", argv[0]);
-    return 1;
-  }
+	/*=============== COMPROBACION DE recursos Minimos (programa y .dat) =========================*/
+	if (argc < 2) {
+		fprintf(stderr, "Use: %s <game_data_file> [-l <log_file>]\n", argv[0]);
+		return 1;
+	}
 
-/*============= FLAGS -l -d -t =================================*/
-/*Aca se ahra la pregunta de las flags -l , -d  o -t*/
-  if (argc >= 4 && strcmp(argv[2], "-l") == 0) {
-    log_file = fopen(argv[3], "w");
-    if (!log_file) {
-      fprintf(stderr, "Error: Don't open the file '%s'\n", argv[3]);
-      return 1;
-    }
-    log_enabled = TRUE;
-  }
-
-  srand(time(NULL)); 
-  /*
-      Esto es loq ue ahra determinista o aleatroio nuestro juego.
-      Propongo que sea una variable dada a GameRule.c
-  */
-
-/*==========================================================*/
-
-/*============== Inicialización del JUEGO (LLAMADA A GAME_MANAGMENT  y Graphic_engine ) =======================*/
-
-  result = game_loop_init(&game, &gengine, argv[1]);
-  if (result != 0) {
-    fprintf(stderr, "Error inizialiting game (%d)\n", result);
-    if (log_file) fclose(log_file); /*Si hemos abierto el archvio log, (flag -l), cierralo*/
-    return 1;
-  }
-/*==========================================================*/
-
-/*============== OBTENCIÓN DEL INPUT DEL USUARIO =======================*/
-
-/** 
- * Mi propuesta consiste en bifurcar el tipo de input, gracia a una tercera flag[ -t ]
- *  que active el modo test (por terminal .cmd) o en su defecto el modo deploy (por Keyboard)
- * 
- * Modo Visual:
- *            IF    (no existe -t  )  THEN
- *                input_user_init
-  *
-*/
-  last_cmd = game_get_last_command(game);
-  if (!last_cmd) {
-    game_loop_cleanup(game, gengine, log_file);
-    return 1;
-  }
-/*==========================================================*/
+	/*============= FLAGS -l -d -t =================================*/
+	/*Aca se hará la pregunta de las flags -l , -d  o -t*/
+	if(argc >= 3)
+	{
+		for (i_flag = 1; i_flag < argc; i_flag++)
+		{
+			/*Si existe -l debe de existir el namefile_log*/
+			if((i_flag+1) < argc && argv[i_flag] && strcmp(FLAG_LOG, argv[i_flag]) == 0)
+			{
+				if((argv+i_flag+1) != NULL)
+				{
+					log_file = fopen(argv[++i_flag], "w");
+					if(!log_file)
+					{
+						fprintf(stderr, "ERROR: Cann't open the log file\n");
+						return 1;
+					}
+					log_enabled = TRUE;
+				}
+			}
+			/*Si existe -d se hará determinista el juego*/
+			if(((i_flag+1) < argc) && argv[i_flag] && strcmp(FLAG_DET, argv[i_flag]) == 0)
+			{
+				is_determinist = TRUE;
+				seed = atoi(argv[++i_flag]);
+			}
+			/*Si existe -t se ejecutará el modo test*/
+			if(argv[i_flag] && strcmp(FLAG_TEST, argv[i_flag]) == 0)
+			{
+				test_enabled = TRUE;
+			}
+		}
+	}	
+	
+	/*Existe -d ---->  Activa el Modo Determinista*/
+	if(is_determinist == TRUE)  {srand(seed);}
+	else {srand(time(NULL));}
 
 
-  /* ── Abrir la ventana UNA SOLA VEZ ── */
-  InitWindow(WIDHT_SCREEN, HIGHT_SCREEN, "Atlantic Quest");
-  SetTargetFPS(60);
+	/*
+		Esto es loq ue ahra determinista o aleatroio nuestro juego.
+		Propongo que sea una variable dada a GameRule.c
+	*/
 
-  /* ── Menú (dibuja dentro de la ventana ya abierta) ── */
-  graphic_engine_menu_init(gengine, game);
+	/*==========================================================*/
 
-  /* ── Bucle principal: UN SOLO while ── */
-  while (!WindowShouldClose() &&
-         command_get_code(last_cmd) != EXIT &&
-         game_get_finished(game)    == FALSE) {
+	/*============== Inicialización del JUEGO (LLAMADA A GAME_MANAGMENT  y Graphic_engine ) =======================*/
 
-    graphic_engine_paint_game(gengine, game);  /* 1. Render  */
-    command_get_user_input(last_cmd);           /* 2. Input   */
-    game_actions_update(game, last_cmd);     
-    /* 4. LOG — if enabled, write the command and its result */
-    if (log_enabled && log_file) {
-    Status      status   = game_get_last_cmd_status(game);
-    CommandCode cmd_code = command_get_code(last_cmd);
-    char       *obj_name = command_get_target(last_cmd);
-    const char *result_str = (status == OK) ? "OK" : "ERROR";
+	result = game_loop_init(&game, &gengine, argv[1], test_enabled);
+	if (result != 0) 
+	{
+		fprintf(stderr, "Error inizialiting game (%d)\n", result);
+		if (log_file) fclose(log_file); /*Si hemos abierto el archvio log, (flag -l), cierralo*/
+		return 1;
+	}
+	/*==========================================================*/
+
+	/*============== OBTENCIÓN DEL INPUT DEL USUARIO =======================*/
+
+	/** 
+	 * Mi propuesta consiste en bifurcar el tipo de input, gracia a una tercera flag[ -t ]
+	 *  que active el modo test (por terminal .cmd) o en su defecto el modo deploy (por Keyboard)
+	 * 
+	 * Modo Visual:
+	 *            IF    (no existe -t  )  THEN
+	 *                command_raylib_user_input();
+	 *
+	*/
+	last_cmd = game_get_last_command(game);
+	if (!last_cmd)
+	{
+		game_loop_cleanup(game, gengine, log_file);
+		return 1;
+	}
+	/*==========================================================*/
 
 
-    switch (cmd_code) {
-      case EXIT:
-        fprintf(log_file, "exit: %s\n", result_str);
-        break;
-      case MOVE:
-        fprintf(log_file, "move %s: %s\n",
-                obj_name ? obj_name : "", result_str);
-        break;
-      case TAKE:
-        fprintf(log_file, "take %s: %s\n",
-                obj_name ? obj_name : "", result_str);
-        break;
-      case DROP:
-        fprintf(log_file, "drop %s: %s\n",
-                obj_name ? obj_name : "", result_str);
-        break;
-      case ATTACK:
-        fprintf(log_file, "attack %s: %s\n",
-                obj_name ? obj_name : "", result_str);
-        break;
-      case CHAT:
-        fprintf(log_file, "chat %s: %s\n",
-                obj_name ? obj_name : "", result_str);
-        break;
-      case INSPECT:
-        fprintf(log_file, "inspect %s: %s\n",
-                obj_name ? obj_name : "", result_str);
-        break;
-      case USE:
-        fprintf(log_file, "use %s: %s\n",
-                obj_name ? obj_name : "", result_str);
-        break;
-      case OPEN:
-        fprintf(log_file, "open %s: %s\n",
-                obj_name ? obj_name : "", result_str);
-        break;
-      case SAVE:
-        fprintf(log_file, "save: %s\n", result_str);
-        break;
-      default:
-        break;
-    }
-  }
-    /* 5. TURN — advance to the next player (F11 multiplayer) */
-    game_turn_update(game);
-  }
+	/* ── Abrir la ventana UNA SOLA VEZ ── */
+	InitWindow(WIDHT_SCREEN, HIGHT_SCREEN, "Atlantic Quest");
+	SetTargetFPS(60);
 
-  /* ── Cerrar la ventana UNA SOLA VEZ ── */
-  CloseWindow();
-  game_loop_cleanup(game, gengine, log_file);
-  return 0;
+	/* ── Menú (dibuja dentro de la ventana ya abierta) ── */
+	graphic_engine_menu_init(gengine, game);
+
+	/* ── Bucle principal: UN SOLO while ── */
+	while (!WindowShouldClose() && 
+			command_get_code(last_cmd) != EXIT && 
+			game_get_finished(game)    == FALSE) 
+	{
+		graphic_engine_paint_game(gengine, game);  /* 1. Render  */
+		command_get_user_input(last_cmd);           /* 2. Input   */
+		game_actions_update(game, last_cmd);     
+		/* 4. LOG — if enabled, write the command and its result */
+		if (log_enabled && log_file) {
+			Status      status   = game_get_last_cmd_status(game);
+			CommandCode cmd_code = command_get_code(last_cmd);
+			char       *obj_name = command_get_target(last_cmd);
+			const char *result_str = (status == OK) ? "OK" : "ERROR";
+
+
+			switch (cmd_code) {
+				case EXIT:
+				fprintf(log_file, "exit: %s\n", result_str);
+				break;
+				case MOVE:
+				fprintf(log_file, "move %s: %s\n",
+						obj_name ? obj_name : "", result_str);
+				break;
+				case TAKE:
+				fprintf(log_file, "take %s: %s\n",
+						obj_name ? obj_name : "", result_str);
+				break;
+				case DROP:
+				fprintf(log_file, "drop %s: %s\n",
+						obj_name ? obj_name : "", result_str);
+				break;
+				case ATTACK:
+				fprintf(log_file, "attack %s: %s\n",
+						obj_name ? obj_name : "", result_str);
+				break;
+				case CHAT:
+				fprintf(log_file, "chat %s: %s\n",
+						obj_name ? obj_name : "", result_str);
+				break;
+				case INSPECT:
+				fprintf(log_file, "inspect %s: %s\n",
+						obj_name ? obj_name : "", result_str);
+				break;
+				case USE:
+				fprintf(log_file, "use %s: %s\n",
+						obj_name ? obj_name : "", result_str);
+				break;
+				case OPEN:
+						fprintf(log_file, "open %s: %s\n",
+							obj_name ? obj_name : "", result_str);		
+				break;
+				case SAVE: 
+					fprintf(log_file, "save: %s\n", result_str); 
+				break;
+				default:	break;
+			}
+		}
+			/* 5. TURN — advance to the next player (F11 multiplayer) */
+			game_turn_update(game);
+	}
+
+	/* ── Cerrar la ventana UNA SOLA VEZ ── */
+	CloseWindow();
+	game_loop_cleanup(game, gengine, log_file);
+	return 0;
 }
 
 
@@ -189,21 +225,21 @@ int main(int argc, char *argv[]) {
 /*                            INIT / CLEANUP                                 */
 /* ========================================================================= */
 
-int game_loop_init(Game **game, Graphic_engine **gengine, char *file_name) {
-  if (game_create_from_file(game, file_name) == ERROR) return 1;
+int game_loop_init(Game **game, Graphic_engine **gengine, char *file_name, Bool test_enabled) {
+	if (game_create_from_file(game, file_name) == ERROR) return 1;
 
-  *gengine = graphic_engine_create();
-  if (*gengine == NULL) {
-    game_destroy(*game);
-    return 2;
-  }
+	*gengine = graphic_engine_create();
+	if (*gengine == NULL) {
+		game_destroy(*game);
+		return 2;
+	}
 
-  return 0;
+	return 0;
 }
 
 void game_loop_cleanup(Game *game, Graphic_engine *gengine, FILE *log_file) {
-  game_destroy(game);
-  graphic_engine_destroy(gengine);
+	game_destroy(game);
+	graphic_engine_destroy(gengine);
 
-  if (log_file) fclose(log_file);
+	if (log_file) fclose(log_file);
 }

@@ -121,6 +121,7 @@ int main(int argc, char *argv[]) {
 	unsigned int	seed = 			 0;
 
 	/*=============== COMPROBACION DE recursos Minimos (programa y .dat) =========================*/
+	/*Posible meora, podemos dejar como opcional el que s eingrese un .dat, al fin y al cabo, el jeugo se creara cuando se haya dado un menu que diga si leer el newgameo no*/
 	if (argc < 2) {
 		fprintf(stderr, "Use: %s <game_data_file> [-l <log_file>]\n", argv[0]);
 		return 1;
@@ -174,15 +175,15 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	if(test_enabled == TRUE) result = game_loop_init_test(game_loop, log_file);	/*Si el modo test esta activo*/
-	else result = game_loop_init_user(game_loop, log_file);						/*Si el modo test desactivado*/
+	if(test_enabled == TRUE) result = game_loop_init_test(game_loop, argv[1]);	/*Si el modo test esta activo*/
+	else result = game_loop_init_user(game_loop, argv[1]);						/*Si el modo test desactivado*/
 
 	switch (result)
 	{
-		case ERR_game: 	print_error("ERROR: Cann't init game", 				test_enabled); 									break;
-		case ERR_file: 	print_error("ERROR: Anysomething wrong whit file", 	test_enabled); 									break;
-		case ERR_graph: print_error("ERROR: Cann't init graph", 			test_enabled); 									break;
-		default:  		print_error("ERROR: Unknow this error, please, contact to we for we can help you", test_enabled); 	break;
+		case ERR_game: 	print_error("ERROR: Cann't init game", 				test_enabled); 	game_loop_cleanup(game_loop,log_file);	break;
+		case ERR_file: 	print_error("ERROR: Anysomething wrong whit file", 	test_enabled); 	game_loop_cleanup(game_loop,log_file);  break;
+		case ERR_graph: print_error("ERROR: Cann't init graph", 			test_enabled); 	game_loop_cleanup(game_loop,log_file);	break;
+		default:  		print_error("ERROR: Unknow this error, please, contact to we for we can help you", test_enabled); game_loop_cleanup(game_loop,log_file); break;
 	}
 	/*==========================================================*/
 
@@ -263,7 +264,7 @@ Status_init game_loop_init_test(GameLoop* game_loop, char *file_name)
 Status_init game_loop_init_user(GameLoop *game_loop, char *file_name)
 {
 	if(!game_loop) return ERR_gloop;
-	if (game_management_create_from_file(game, file_name) == ERROR) return 1;
+	if (game_management_create_from_file(game_loop->game, file_name) == ERROR) return 1;
 
 	if()
 	*gengine = graphic_engine_create();

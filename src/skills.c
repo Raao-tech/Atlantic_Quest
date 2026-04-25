@@ -9,6 +9,15 @@
  */
 
 #include "skills.h"
+#define NUM_SKILLS 4
+static const Skills skill_table[NUM_SKILLS] = {
+    /* [NO_SKILL]       */ { NO_SKILL,      "Ninguna",        0, 0,  0,  0 },
+    /* [TAKLE]          */ { TAKLE,          "Tackle",         3, 1,  5,  2 },
+    /* [QUICK_ATTACK]   */ { QUICK_ATTACK,   "Quick Attack",   2, 1,  3,  1 },
+    /* [STEAM_ERUPTION] */ { STEAM_ERUPTION, "Steam Eruption", 5, 2, 10,  4 },
+};
+
+
 
 /*============== PUBLIC FUNCTION ======================*/
 void skill_active(Numen * sender, Numen* receiver, Skills id_skill)

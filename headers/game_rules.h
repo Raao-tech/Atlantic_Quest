@@ -14,12 +14,14 @@
 #define GAME_RULES_H
 
 #include "game.h"
-#include "game_actions.h"
+#include "skills.h"
 #include <time.h>
 
 Status game_rule_attack_enemigo(Game *game, Id id_enemy);
 
 Status game_rule_walk_enemigo(Game *game, Id id_enemy);
+
+Status game_rule_move(Game *game);
 
 
 #endif

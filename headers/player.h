@@ -93,8 +93,6 @@ Bool player_has_name(Player *player, char *name);
 Status player_set_health(Player *player, int health);
 int    player_get_health(Player *player);
 
-/* ========== Attack ========== */
-
 
 /* ========== Objects (Inventory) ========== */
 
@@ -282,6 +280,36 @@ Status player_set_gdesc(Player *player, char *desc);
  * @return a copy of the gdesc, or NULL if player is NULL
  */
 char *player_get_gdesc(Player *player);
+
+/*========== Position =====================*/
+/**
+ * @brief It sets the position x and y of the player
+ * @author Salvador
+ *
+ * @param player a pointer to the player
+ * @param x x position to be set
+ * @param y y position to be set
+ * @return OK if position set properly, ERROR otherwise 
+ */
+Status player_set_position(Player *player, int x, int y);
+
+/**
+ * @brief It gets the position x of the player
+ * @author Salvador
+ *
+ * @param player a pointer to the player
+ * @return position x of the player, -1 otherwise
+ */
+int player_get_pos_x(Player *player);
+
+/**
+ * @brief It gets the position y of the player
+ * @author Salvador
+ *
+ * @param player a pointer to the player
+ * @return position y of the player, -1 otherwise
+ */
+int player_get_pos_y(Player *player);
 
 /* ========== Print ========== */
 

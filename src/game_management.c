@@ -282,6 +282,9 @@ game_load_objects (Game* game, char* filename)
                         {
                             obj_set_id (obj, id);
                             obj_set_name (obj, name);
+                            obj_set_gdesc (obj, gdesc);
+                            obj_set_position (obj, pos_x, pos_y);
+
                             if (description[0] != '\0')
                                 {
                                     obj_set_description (obj, description);
@@ -299,13 +302,14 @@ game_load_objects (Game* game, char* filename)
           check = game_get_n_players(game);
           for (bucle = 0; bucle < check; bucle++)
           {
-            players_game[bucle] = game_get_object_at(game, bucle);
+            players_game[bucle] = game_get_player_at(game, bucle);
           }
           for (bucle = 0; bucle < check; bucle++)
           {
-            if (player_contains_object(players_game[bucle], id) == TRUE)
+            if (player_get_id(players_game[bucle]) == space_id)
             {
               player_add_object(players_game[bucle], obj);
+              break;
             }
           }
         }
@@ -500,11 +504,7 @@ game_load_players (Game* game, char* filename)
                             player_set_name (player, name);
                             player_set_gdesc (player, gdesc);
                             player_set_zone (player, zone);
-                            player_set_pos_x (player, pos_x); /*Por implementar en player.c y player.h junto al
-                                                                 set y su inicialización (están en entity)*/
-                            player_set_pos_y (player, pos_y); /*Por implementar en player.c y player.h junto al
-                                                                 set y su inicialización (están en entity)*/
-
+                            player_set_position (player, pos_x, pos_y);
                             player_set_max_numens (player, max_numens);
                             player_set_max_objects (player, max_bag);
 
@@ -624,6 +624,8 @@ game_load_numens (Game* game, char* filename)
       if (numen != NULL)
       {
         numen_set_id(numen, id);
+        numen_set_pos_x(numen, pos_x);
+        numen_set_pos_y(numen, pos_y);
         numen_set_name(numen, name);
         numen_set_gdesc(numen, gdesc);
         numen_set_health(numen, health);
@@ -868,7 +870,7 @@ game_management_save_file (Game** game)
     space = game_get_space(*game, id);
     name = space_get_name(space);
     gdesc = space_get_gdesc(space);
-    OST = space_get_ost(space); /*Por implementar en space.c y space.h, además de definir en la estructura space la variable char *ost y su inicialización y destrucción */
+    OST = space_get_ost(space);
  
     fprintf(new_sfile, "#s:%ld|%s|%s|%s|", id,
             name,
@@ -897,9 +899,8 @@ game_management_save_file (Game** game)
     pos_x = player_get_pos_x(player);
     pos_y = player_get_pos_y(player);
     gdesc = player_get_gdesc(player);
-    max_bag = player_get_max_objects(player);   /*Por implementar en player.c y player.h*/
-    max_numens = player_get_max_numens(player); /*Por implementar en player.c y player.h junto al set y su inicialización (están en entity)*/
-
+    max_bag = player_get_max_objects(player);   
+    max_numens = player_get_max_numens(player); 
     fprintf(new_sfile, "#p:%ld|%s|%ld|%d|%d|%s|%d|%d|\n",
             id,
             name,
@@ -926,7 +927,7 @@ game_management_save_file (Game** game)
     object = game_get_object_at(game, bucle);
     id = obj_get_id(object);
     name = obj_get_name(object);
-    zone = game_get_object_zone(game, id);
+    zone = game_get_object_location(game, id);
     if (zone == NO_ID)
     {
       for (bucle2 = 0; bucle2 < n_play; bucle2++)
@@ -937,11 +938,10 @@ game_management_save_file (Game** game)
         }
       }
     }
-    pos_x = obj_get_pos_x(object); /*Por implementar en object.c y object.h junto al set y su inicialización(están en entity)*/
-    pos_y = obj_get_pos_y(object); /*Por implementar en object.c y object.h junto al set y su inicialización (están en entity)*/
+    pos_x = obj_get_pos_x(object); 
+    pos_y = obj_get_pos_y(object); 
     message = obj_get_description(object);
-    gdesc = obj_get_gdesc(object); /*Por implementar en object.c y object.h junto al set y su inicialización (están en entity)*/
-    health = obj_get_health(object);
+    gdesc = obj_get_gdesc(object); 
     attack = obj_get_attack(object); 
     energy = obj_get_energy(object); 
     speed = obj_get_speed(object);   
@@ -973,10 +973,10 @@ game_management_save_file (Game** game)
   check = game_get_n_numens(*game);
   for (bucle = 0; bucle < check; bucle++)
   {
-    numen = game_get_numen_at(game, bucle); /*Por implementar en game.c y game.h */
+    numen = game_get_numen_at(game, bucle); 
     id = numen_get_id(numen);
     name = numen_get_name(numen);
-    zone = game_get_numen_zone(game, id); /*Por implementar en game.c y game.h */
+    zone = game_get_numen_location(game, id); 
     pos_x = numen_get_pos_x(numen);
     pos_y = numen_get_pos_y(numen);
     gdesc = numen_get_gdesc(numen);

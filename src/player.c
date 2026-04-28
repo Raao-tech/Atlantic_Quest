@@ -177,6 +177,12 @@ player_set_max_objects (Player* player, int max)
     return inventory_set_max_objs (player->backpack_items, max);
 }
 
+int player_get_max_objects (Player* player)
+{
+    if (!player) return ERROR;
+    return inventory_get_max_objs (player->backpack_items);
+}
+
 /* =========== Backpack_Numens (Inventory) ==========*/
 Status
 player_add_numen (Player* player, Id new_numen)
@@ -211,6 +217,12 @@ player_set_max_numens (Player* player, int max_numens)
 {
     if (!player) return ERROR;
     return inventory_set_max_objs (player->backpack_numens, max_numens);
+}
+
+int player_get_max_numens (Player* player)
+{
+    if (!player) return ERROR;
+    return inventory_get_max_objs (player->backpack_numens);
 }
 
 Id

@@ -15,16 +15,17 @@
 #include <string.h>
 
 /**
- * @brief Space  (hay que pasar esto por translate)
+ * @brief Space structure
  *
- *  Esto declara la estrucutra de space, va a contener
+ * It defines the structure of a space, which is a location in the game world.
  *
  *
  */
 struct _Space {
   Id    id;                             /*!< Id number of the space, must be unique */
   char  name[WORD_SIZE + 1];            /*!< Name of the space */
-  char  gdesc[WORD_SIZE +1];            /*!< Graphic description, solo un filename */
+  char  gdesc[WORD_SIZE +1];            /*!< Graphic description, only a filename */
+   char OST[WORD_SIZE +1];              /*!< Background music, only a filename */
   int   *grid[HIGHT];                   /*!< Grid of graphi engine*/
   Set  *objs_id;                        /*!< Set of object IDs in this space */
   Set  *characters_id;                  /*!< Set of character IDs in this space */
@@ -46,6 +47,7 @@ space_create ()
   newSpace->id = NO_ID;
   newSpace->name[0] = '\0';
   newSpace->gdesc[0] ='\0';
+   newSpace->OST[0] ='\0';
   newSpace->discovered = FALSE;
   newSpace->objs_id = set_creat();
   if (!newSpace->objs_id) {
@@ -78,6 +80,7 @@ space_create ()
 Status
 space_destroy (Space* space)
 {
+    int i;
     if (!space) return ERROR;
 
     /*
@@ -86,6 +89,11 @@ space_destroy (Space* space)
      */
     set_destroy (space->characters_id);
     set_destroy (space->objs_id);
+    set_destroy (space->numens_id);
+    for(i=0; i<HIGHT; i++)
+      if(space->grid[i])
+    free (space->grid);
+
 
     free (space);
     return OK;
@@ -217,6 +225,25 @@ Status space_set_grid_by_line(Space *space, int line, int *content){
 int* space_get_grid_by_line(Space* space, int line){
   if(!space || line < 0 || line >= HIGHT) return NULL;
   return space->grid[line];
+}
+
+/* ========== OST ====================== */
+
+
+Status space_set_ost (Space* space, char* ost)
+{
+    if (!space || !ost) return ERROR;
+
+    strncpy (space->OST, ost, WORD_SIZE);
+    space->OST[WORD_SIZE] = '\0';
+
+    return OK;
+}
+
+char* space_get_ost (Space* space)
+{
+    if (!space) return NULL;
+    return space->OST;
 }
 
 /* ========== Numens ========== */

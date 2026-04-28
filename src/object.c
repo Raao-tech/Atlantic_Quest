@@ -26,6 +26,7 @@ struct _Object
     Id open;         /*!< Id of the link that this object can open (for use command) */
     Id dependency;   /*!< Id of the object that this object depends on (for use
                         command) */
+    char gdesc[WORD_SIZE+1]; /*!< Graphic description of the object */
     Bool consumable; /*!< If the object could be consumable or not */
 };
 
@@ -49,6 +50,7 @@ obj_create ()
     newObj->open       = NO_ID;
     newObj->dependency = NO_ID;
     newObj->consumable = FALSE;
+    newObj->gdesc[0] = '\0';
     return newObj;
 }
 
@@ -114,6 +116,19 @@ obj_get_description (Object* obj)
     if (!obj) return NULL;
     return entity_get_message (obj->e_obj);
 }
+/* ========== Gdesc ========== */
+
+Status obj_set_gdesc (Object* obj, char* gdesc)
+{
+    if (!obj || !gdesc) return ERROR;
+    return entity_set_gdesc (obj->e_obj, gdesc);
+}
+
+char* obj_get_gdesc (Object* obj)
+{
+    if (!obj) return NULL;
+    return entity_get_gdesc (obj->e_obj);
+}
 
 /* ========== Position ========== */
 
@@ -122,16 +137,6 @@ Status  obj_set_position (Object* obj, int x, int y)
     if (!obj) return ERROR;
     return entity_set_position (obj->e_obj, x, y);
 }
-Position  obj_set_position (Object* obj)
-{
-    Position obj_pos;
-    obj_pos.pos_x = NO_POS;
-    obj_pos.pos_y = NO_POS;
-
-    if (!obj) return obj_pos;
-    return entity_get_position (obj->e_obj);
-}
-
 
 int obj_get_pos_x (Object* obj)
 {
@@ -144,8 +149,6 @@ int obj_get_pos_y (Object* obj)
     if (!obj) return NO_POS;
     return entity_get_pos_y (obj->e_obj);
 }
-
-/* ========== Health ========== */
 
 /* ========== Movable ========== */
 

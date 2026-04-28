@@ -15,6 +15,15 @@
 #include <string.h>
 #include <strings.h>
 
+
+struct _Command
+{
+    CommandCode accion;
+    char*       target;
+    Direction   dir;
+    Bool        is_command;
+};
+
 /* ----------------------------------------------------------------------
  * command_raylib_get_user_input  (modo visual: traduce teclas a Command)
  *
@@ -31,12 +40,12 @@
  *                             NO para reconocer una tecla concreta.
  * ---------------------------------------------------------------------- */
 Status
-command_raylib_get_user_input ()
+command_raylib_get_user_input (Command* command)
 {
     if (!command) return ERROR;
 
-    if (IsKeyPressed (KEY_ESCAPE))  return command_set_code (, EXIT);
-    if (IsKeyPressed (KEY_UP))      return command_set_code (command, );
+    if (IsKeyPressed (KEY_ESCAPE))  return command_set_code (command, EXIT);
+    if (IsKeyPressed (KEY_UP))      return command_set_code (command, UP);
     if (IsKeyPressed (KEY_ESCAPE))  return command_set_code (command, EXIT);
     if (IsKeyPressed (KEY_ESCAPE))  return command_set_code (command, EXIT);
     if (IsKeyPressed (KEY_ESCAPE))  return command_set_code (command, EXIT);
@@ -53,3 +62,5 @@ command_raylib_get_user_input ()
 
     return OK;
 }
+
+Status _command_raylib_

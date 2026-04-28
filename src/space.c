@@ -21,16 +21,15 @@
  *
  *
  */
-struct _Space
-{
-    Id id;                                /*!< Id number of the space, must be unique */
-    char name[WORD_SIZE + 1];             /*!< Name of the space */
-    char gdesc[WORD_SIZE + 1];            /*!< Graphic description, solo un filename */
-    int grid[WIDHT_SCREEN][HIGHT_SCREEN]; /*!< Grid of graphi engine*/
-    Set* objs_id;                         /*!< Set of object IDs in this space */
-    Set* characters_id;                   /*!< Set of character IDs in this space */
-    Set* numens_id;                       /*!< Set of numen IDs in this space */
-    Bool discovered;                      /*!< Has this space been visited by a player? */
+struct _Space {
+  Id    id;                             /*!< Id number of the space, must be unique */
+  char  name[WORD_SIZE + 1];            /*!< Name of the space */
+  char  gdesc[WORD_SIZE +1];            /*!< Graphic description, solo un filename */
+  int   *grid[HIGHT];                   /*!< Grid of graphi engine*/
+  Set  *objs_id;                        /*!< Set of object IDs in this space */
+  Set  *characters_id;                  /*!< Set of character IDs in this space */
+  Set  *numens_id;                      /*!< Set of numen IDs in this space */
+  Bool  discovered;                     /*!< Has this space been visited by a player? */
 };
 
 /* ========== Create / Destroy ========== */
@@ -44,31 +43,25 @@ space_create ()
     newSpace = (Space*)calloc (1, sizeof (Space));
     if (!newSpace) return NULL;
 
-    newSpace->id         = NO_ID;
-    newSpace->name[0]    = '\0';
-    newSpace->gdesc[0]   = '\0';
-    newSpace->discovered = FALSE;
-    newSpace->objs_id    = set_creat ();
-    if (!newSpace->objs_id)
-        {
-            free (newSpace);
-            return NULL;
-        }
+  newSpace->id = NO_ID;
+  newSpace->name[0] = '\0';
+  newSpace->gdesc[0] ='\0';
+  newSpace->discovered = FALSE;
+  newSpace->objs_id = set_creat();
+  if (!newSpace->objs_id) {
+    free(newSpace);
+    return NULL;
+  }
+  
+  /*Creamos la cuadrilla "grid" para la movilidad intra-space (Walk)*/
+  for (i = 0; i < HIGHT; i++) newSpace->grid[i]= NULL;
 
-    /*Creamos la cuadrilla "grid" para la movilidad intra-space (Walk)*/
-    for (i = 0; i < WIDHT_SCREEN; i++)
-        {
-            for (j = 0; j < HIGHT_SCREEN; j++)
-                newSpace->grid[i][j] = 0;
-        }
-
-    newSpace->characters_id = set_creat ();
-    if (!newSpace->characters_id)
-        {
-            set_destroy (newSpace->objs_id);
-            free (newSpace);
-            return NULL;
-        }
+  newSpace->characters_id = set_creat();
+  if (!newSpace->characters_id) {
+    set_destroy(newSpace->objs_id);
+    free(newSpace);
+    return NULL;
+  }
 
     newSpace->numens_id = set_creat ();
     if (!newSpace->numens_id)
@@ -208,35 +201,22 @@ space_get_n_characters (Space* space)
 
 /* ========== Grid ================ */
 
-Status
-space_set_grid_by_line (Space* space, int line, char* content)
-{
-    int i;
-    char* token       = NULL;
-    char* cpy_content = NULL;
-    if (!space || !content || line < 0 || line >= HIGHT_SCREEN) return ERROR;
+Status space_set_grid_by_line(Space *space, int line, int *content){
+ int i=0;
+  if(!space || !content || line < 0 || line >= HIGHT) return ERROR;
 
-    cpy_content = calloc (WORD_SIZE + 1, sizeof (char));
-    if (!cpy_content) return ERROR;
-    i = 0;
-    strncpy (cpy_content, content, WORD_SIZE);
-    cpy_content[WORD_SIZE] = '\0';
-    token                  = strtok (cpy_content, ",");
-    while (token && i < WIDHT_SCREEN)
-        {
-            space->grid[line][i] = atoi (token);
-            token                = strtok (NULL, ",");
-        }
-    free (cpy_content);
-
-    return OK;
+  if(space->grid[line])
+ {
+   free(space->grid[line]);
+}
+  space->grid[line]=content;
+  
+ return OK;
 }
 
-int*
-space_get_grid_by_line (Space* space, int line)
-{
-    if (!space || line < 0 || line >= HIGHT_SCREEN) return NULL;
-    return space->grid[line];
+int* space_get_grid_by_line(Space* space, int line){
+  if(!space || line < 0 || line >= HIGHT) return NULL;
+  return space->grid[line];
 }
 
 /* ========== Numens ========== */

@@ -34,6 +34,7 @@ struct _Command
     CommandCode code;
     char*       target;
     Direction   dir;
+    Bool        is_command;
 };
 
 /* ----------------------------------------------------------------------

@@ -18,7 +18,9 @@
 /*Dimensiones de la pantalla del graphic Engine*/
 #define WIDHT_SCREEN 950
 #define HIGHT_SCREEN 650
-#define SCALE 20
+#define SCALE        20
+#define WIDHT   WIDHT_SCREEN/SCALE
+#define HIGHT   HIGHT_SCREEN/SCALE
 
 /* Consts to numbers */
 #define WORD_SIZE 1000
@@ -26,6 +28,7 @@
 #define ERROR_MAIN -1
 #define ERROR_GAME -1
 #define ERROR_POSITION -9999
+#define GRID_MODULE 10
 
 /*file of data for default*/
 #define F_DATA_N "new_game.dat"
@@ -53,7 +56,8 @@
 
 /*<! Max_heald of skills*/
 #define PLAYER 0
-#define NUM_SKILLS 6
+#define NUM_SKILLS 4
+
 
 typedef long Id;
 

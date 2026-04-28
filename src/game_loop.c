@@ -254,8 +254,9 @@ Status_init game_loop_init_user(GameLoop *game_loop) {
     game_loop->last_cmd = game_get_last_command(game_loop->game);
     if (!game_loop->last_cmd) return INIT_ERR_CMD;
 
-    /* 5. TODO Bloque 1: aplicar result_ge.init_numen al jugador
-       cuando Player tenga la API player_add_numen / player_set_active_numen */
+    /* 5. Establecer Numen inicial como active si entro por NEW_GAME*/
+    if(result_ge.menu_out == NEW_GAME && result_ge.init_numen != NO_ID)
+        player_set_active_numen(game_get_player(game_loop->game),result_ge.init_numen);
 
     return INIT_OK;
 }

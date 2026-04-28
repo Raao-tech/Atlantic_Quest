@@ -7,7 +7,7 @@
  * @date 23-04-2026
  * @copyright GNU Public License
  */
-
+#include "game_rules.h"
 #include "game_management.h"
 #include "game_actions.h"
 #include "raylib.h" /*esto es una prueba*/
@@ -123,60 +123,13 @@ static void game_actions_exit(Game *game)
 
 static void game_actions_move(Game *game)
 {
-  Player *player = NULL;
-  Space *dest_sp = NULL;
-  char *dir_str = NULL;
-  Direction dir;
-  Id origin, dest;
-
-  if (!game) return;
-  player = game_get_player_by_turn(game);
-  if (!player)
+  if(!game||game_rule_move(game)==ERROR)
   {
-    game_set_last_cmd_status(game, ERROR_dir);
+    game_set_last_cmd_status(game, ERROR);
     return;
   }
-
-  origin = player_get_zone(player);
-  if (origin == NO_ID)
-  {
-    game_set_last_cmd_status(game, ERROR_dir);
-    return;
-  }
-
-  dir_str = command_get_target(game_get_last_command(game));
-  if (!dir_str)
-  {
-    game_set_last_cmd_status(game, ERROR_dir);
-    return;
-  }
-
-  dir = ge_parse_direction(dir_str);
-  if (dir == U)
-  {
-    game_set_last_cmd_status(game, ERROR_dir);
-    return;
-  }
-
-  dest = game_get_connection(game, origin, dir);
-  if (dest == NO_ID)
-  {
-    game_set_last_cmd_status(game, ERROR_dir);
-    return;
-  }
-
-  if (game_connection_is_open(game, origin, dir) == FALSE)
-  {
-    game_set_last_cmd_status(game, ERROR_dir);
-    return;
-  }
-
-  player_set_zone(player, dest);
-
-  dest_sp = game_get_space(game, dest);
-  if (dest_sp) space_set_discovered(dest_sp, TRUE);
-
   game_set_last_cmd_status(game, OK);
+  return;
 }
 
 /* ========================================================================= */
@@ -378,7 +331,7 @@ static void game_actions_attack(Game *game)
   }
 
   skill_indx = atoi(skill_indx_ch);
-  if (skill_indx < 0 || skill_indx >= MAX_HELD_SKILLS)
+  if (skill_indx < 0 || skill_indx >= NUM_SKILLS)
   {
     game_set_last_cmd_status(game, ERROR_Attack);
     return;
@@ -744,7 +697,8 @@ static void game_actions_save(Game *game)
 
 static Direction ge_parse_direction(const char *str)
 {
-  if (!str) return U;
+  if (!str)
+    return U;
 
   if (strcasecmp(str, "north") == 0 || strcasecmp(str, "n") == 0)
     return N;

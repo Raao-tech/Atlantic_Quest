@@ -19,6 +19,7 @@
 /*Dimensiones de la pantalla del graphic Engine*/
 #define WIDHT_SCREEN 950
 #define HIGHT_SCREEN 650
+#define SCALE        20
 
 /* Consts to numbers */
 #define WORD_SIZE 1000
@@ -56,8 +57,9 @@
 #define RESET       "\033[0m"
 
 /*<! Max_heald of skills*/
-#define MAX_HELD_SKILLS 4
 #define PLAYER 0
+#define NUM_SKILLS 6
+
 
 typedef long Id;
 

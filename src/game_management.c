@@ -41,9 +41,9 @@ static Status game_load_numens(Game *game, char *filename);
 static Status game_load_links(Game *game, char *filename);
 
 /*
-* Falta EL leido y guardado del space->grid
-* 
-*/
+ * Falta EL leido y guardado del space->grid
+ *
+ */
 static Status game_load_spaces(Game *game, char *filename)
 {
   FILE *file = NULL;
@@ -55,13 +55,15 @@ static Status game_load_spaces(Game *game, char *filename)
   Id id = NO_ID;
   Space *space = NULL;
   Status status = OK;
-  int tam_format;
-  int i;
+  int tam_format, *l;
+  int i, loop, loop2;
 
-  if (!game || !filename) return ERROR;
+  if (!game || !filename)
+    return ERROR;
 
   file = fopen(filename, "r");
-  if (file == NULL) return ERROR;
+  if (file == NULL)
+    return ERROR;
 
   tam_format = strlen(F_SPAC);
 
@@ -72,26 +74,38 @@ static Status game_load_spaces(Game *game, char *filename)
 
       /* --- id --- */
       toks = strtok(line + tam_format, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       id = atol(toks);
 
       /* --- name --- */
       toks = strtok(NULL, "|");
-      if (!toks) continue;
+      if (!toks)
+        continue;
       strcpy(name, toks);
       /* --- gdesc (optional) --- */
       toks = strtok(NULL, "|");
 
-      if (!toks) 	{strcpy(gdesc, "./img_src/background/default.jpg");} /*default gdesc */
-      else 			{strcpy(gdesc, toks);}
-  
+      if (!toks)
+      {
+        strcpy(gdesc, "./img_src/background/default.jpg");
+      } /*default gdesc */
+      else
+      {
+        strcpy(gdesc, toks);
+      }
 
       /* --- OST (optional) --- */
-      toks = strtok(NULL, "|\n");
+      toks = strtok(NULL, "|");
 
-      if (toks) {strcpy(OST, toks);}
-      else 		{OST[0] = '\0';}
-    
+      if (toks)
+      {
+        strcpy(OST, toks);
+      }
+      else
+      {
+        OST[0] = '\0';
+      }
 
 #ifdef DEBUG
       printf("Leido space: s:%ld|%s\n", id, name);
@@ -103,37 +117,67 @@ static Status game_load_spaces(Game *game, char *filename)
         space_set_id(space, id);
         space_set_name(space, name);
         space_set_gdesc(space, gdesc);
-        if (OST[0] != '\0') space_set_ost(space, OST);
+        if (OST[0] != '\0')
+          space_set_ost(space, OST);
 
-        game_add_space(game, space);
+        /* --------------------------------------------- GRID --------------------------------------------- */
+        for (i = 0; i < (HIGHT); i++)
+        {
+          l = (int*)malloc(WIDHT*sizeof(int));
+
+          toks = strtok(NULL, "|");
+          if (!toks || strlen(toks) != WIDHT)
+          {
+            space_destroy(space);
+            space = NULL;
+            break;
+          }
+
+          for (loop = 0; loop < (WIDHT); loop++)
+          {
+            l[loop] = (int)toks[loop] % GRID_MODULE;
+        space_set_grid_by_line(space, i, l);
+          }
+        /* ----------------------------------------------------------------------------------------------- */
+          if (space)
+          {
+            game_add_space(game, space);
+          }
+          else
+          {
+            status = ERROR;
+            break;
+          }
+        }
       }
     }
+
+    if (ferror(file))
+      status = ERROR;
+
+    fclose(file);
+    return status;
   }
-
-  if (ferror(file))
-    status = ERROR;
-
-  fclose(file);
-  return status;
 }
 
 static Status game_load_objects(Game *game, char *filename)
 {
-	FILE *file = NULL;
-	char line[WORD_SIZE] = "";
-	char name[WORD_SIZE] = "";
-	char description[WORD_SIZE] = "";
-	char gdesc[WORD_SIZE] = "";
-	char *toks = NULL;
-	Id id = NO_ID, space_id = NO_ID, dependency = NO_ID;
-	Object *obj = NULL;
-	Space *space = NULL;
-	Player *player = NULL, *players_game[MAX_OBJECTS];
-	Status status = OK;
-	Bool consumable, movable;
-	int tam_format, health, attack, energy, speed, pos_x, pos_y, check, bucle, n_play;
+  FILE *file = NULL;
+  char line[WORD_SIZE] = "";
+  char name[WORD_SIZE] = "";
+  char description[WORD_SIZE] = "";
+  char gdesc[WORD_SIZE] = "";
+  char *toks = NULL;
+  Id id = NO_ID, space_id = NO_ID, dependency = NO_ID;
+  Object *obj = NULL;
+  Space *space = NULL;
+  Player *player = NULL, *players_game[MAX_OBJECTS];
+  Status status = OK;
+  Bool consumable, movable;
+  int tam_format, health, attack, energy, speed, pos_x, pos_y, check, bucle, n_play;
 
-  if (!game || !filename) return ERROR;
+  if (!game || !filename)
+    return ERROR;
 
   tam_format = strlen(F_OBJE);
   file = fopen(filename, "r");
@@ -276,7 +320,7 @@ static Status game_load_objects(Game *game, char *filename)
             }
           }
         }
-        
+
         obj_set_health(obj, health);
         obj_set_attack(obj, attack);
         obj_set_energy(obj, energy);
@@ -629,7 +673,8 @@ static Status game_load_numens(Game *game, char *filename)
         numen_set_energy(numen, energy);
         numen_set_attack(numen, attack);
         numen_set_speed(numen, speed);
-        for (int i = 0; i < 4; i++) numen_set_skill(numen, skills[i]);
+        for (int i = 0; i < 4; i++)
+          numen_set_skill(numen, skills[i]);
 
         numen_set_following(numen, following);
         if (following != NO_ID)
@@ -758,17 +803,20 @@ static Status game_load_links(Game *game, char *filename)
     }
   }
 
-  if (ferror(file)) status = ERROR;
+  if (ferror(file))
+    status = ERROR;
   fclose(file);
   return status;
 }
 
 Status game_management_create_from_file(Game **game, char *filename)
 {
-  if (!game || !filename) return ERROR;
+  if (!game || !filename)
+    return ERROR;
 
   *game = game_create();
-  if (*game == NULL) return ERROR;
+  if (*game == NULL)
+    return ERROR;
 
   if (game_load_spaces(*game, filename) == ERROR)
   {
@@ -817,71 +865,78 @@ Status game_management_create_from_file(Game **game, char *filename)
 
 Status game_management_save_file(Game **game)
 {
-  Space  *space =   NULL;
-  Object *object =  NULL;
+  Space *space = NULL;
+  Object *object = NULL;
   Object *players_game[MAX_OBJECTS];
-  Player *player =	NULL;
-  Numen  *numen =	NULL;
-  Links  *link = 	NULL;
-  Direction dir = 	U;
-  Id id = 			NO_ID;
-  Id zone = 		NO_ID; 
-  Id origin = 		NO_ID; 
-  Id dest = 		NO_ID; 
-  Id dependency = 	NO_ID; 
-  Id following = 	NO_ID;
-  Set *skills[MAX_HELD_SKILLS];
+  Player *player = NULL;
+  Numen *numen = NULL;
+  Links *link = NULL;
+  Direction dir = U;
+  Id id = NO_ID;
+  Id zone = NO_ID;
+  Id origin = NO_ID;
+  Id dest = NO_ID;
+  Id dependency = NO_ID;
+  Id following = NO_ID;
+  Set *skills[NUM_SKILLS];
   int check = 0;
   int bucle2;
   int bucle;
-  int pos_x = 0; 
-  int pos_y = 0; 
-  int n_play; 
-  int health = MIN_LIFE; 
-  int attack = MIN_ATTACK; 
-  int energy = MIN_ENGY; 
-  int speed = 0; 
-  int max_bag; 
+  int pos_x = 0;
+  int pos_y = 0;
+  int n_play;
+  int health = MIN_LIFE;
+  int attack = MIN_ATTACK;
+  int energy = MIN_ENGY;
+  int speed = 0;
+  int max_bag;
   int max_numens;
+  int *grid_line;
   Bool friendly;
-  Bool open_otd; 
+  Bool open_otd;
   Bool open_dto;
   Bool consumable;
   Bool movable;
-  char *name = 		NULL; 
-  char *gdesc = 	NULL;
-  char *OST = 		NULL;
-  char *message = 	NULL;
+  char *name = NULL;
+  char *gdesc = NULL;
+  char *OST = NULL;
+  char *message = NULL;
   FILE *new_sfile = NULL;
 
-  if (!game) return ERROR;
+  if (!game)
+    return ERROR;
   new_sfile = fopen("../savefile/savefile.dat", "w");
 
-  if (!new_sfile) return ERROR;
-  
-  check = game_get_n_players(game);
-  for (bucle = 0; bucle < check; bucle++) players_game[bucle] = game_get_object_at(game, bucle);
+  if (!new_sfile)
+    return ERROR;
 
+  /* ============================== SPACES ============================== */
   check = game_get_n_spaces(*game);
   for (bucle = 0; bucle < check; bucle++)
   {
-    id =    game_get_space_id_at(game, bucle);
+    id = game_get_space_id_at(game, bucle);
     space = game_get_space(*game, id);
-    name =  space_get_name(space);
+    name = space_get_name(space);
     gdesc = space_get_gdesc(space);
-    OST =   space_get_ost(space); /*Por implementar en space.c y space.h, además de definir en la estructura space la variable char *ost y su inicialización y destrucción */
-
-    fprintf(new_sfile, "#s:%ld|%s|%s|%s|\n", id, 
+    OST = space_get_ost(space); /*Por implementar en space.c y space.h, además de definir en la estructura space la variable char *ost y su inicialización y destrucción */
+ 
+    fprintf(new_sfile, "#s:%ld|%s|%s|%s|", id,
             name,
-            gdesc == NULL ? "" : gdesc, 
+            gdesc == NULL ? "" : gdesc,
             OST == NULL ? "" : OST);
 
+    for (bucle = 0; bucle < HIGHT; bucle++)
+    {
+      grid_line = space_get_grid_by_line(space, bucle);
+      fprintf(new_sfile, "|%d|", grid_line);
+    }
+     fprintf(new_sfile, "\n");
     free(name);
     free(gdesc);
     free(OST);
   }
 
-  n_play = game_get_n_players(*game);
+  /* ============================== PLAYERS ============================== */
   check = game_get_n_players(*game);
   for (bucle = 0; bucle < check; bucle++)
   {
@@ -889,132 +944,141 @@ Status game_management_save_file(Game **game)
     id = player_get_id(player);
     name = player_get_name(player);
     zone = player_get_zone(player);
-    pos_x = player_get_pos_x(player);           /*Por implementar en player.c y player.h junto al set y su inicialización (están en entity)*/
-    pos_y = player_get_pos_y(player);           /*Por implementar en player.c y player.h junto al set y su inicialización (están en entity)*/
-    gdesc = player_get_gdesc(player);           /*Hay que cambialo por una ruta string*/
+    pos_x = player_get_pos_x(player);
+    pos_y = player_get_pos_y(player);
+    gdesc = player_get_gdesc(player);
     max_bag = player_get_max_objects(player);   /*Por implementar en player.c y player.h*/
     max_numens = player_get_max_numens(player); /*Por implementar en player.c y player.h junto al set y su inicialización (están en entity)*/
 
-    fprintf(new_sfile, "#p:%ld|%s|%ld|%d|%d|%s|%d|%d|\n", 
-			id, 
-			name, 
-			zone, 
-			pos_x, 
-			pos_y, 
-			gdesc == NULL ? "" : gdesc, 
-			max_bag, 
-			max_numens);
+    fprintf(new_sfile, "#p:%ld|%s|%ld|%d|%d|%s|%d|%d|\n",
+            id,
+            name,
+            zone,
+            pos_x,
+            pos_y,
+            gdesc == NULL ? "" : gdesc,
+            max_bag,
+            max_numens);
 
     free(name);
     free(gdesc);
   }
 
+  /* ============================== OBJECTS ============================== */
+
+  n_play = game_get_n_players(*game);
+  for (bucle = 0; bucle < n_play; bucle++)
+    players_game[bucle] = game_get_object_at(game, bucle);
+
   check = game_get_n_objects(*game);
   for (bucle = 0; bucle < check; bucle++)
   {
-    object = 	game_get_object_at(game, bucle);
-    id = 		obj_get_id(object);
-    name = 		obj_get_name(object);
-    zone = 		game_get_object_zone(game, id);
+    object = game_get_object_at(game, bucle);
+    id = obj_get_id(object);
+    name = obj_get_name(object);
+    zone = game_get_object_zone(game, id);
     if (zone == NO_ID)
     {
       for (bucle2 = 0; bucle2 < n_play; bucle2++)
       {
-        if (player_contains_object(players_game[bucle2], id) == TRUE){
+        if (player_contains_object(players_game[bucle2], id) == TRUE)
+        {
           zone = player_get_id(players_game[bucle2]);
         }
       }
     }
-    pos_x = 		obj_get_pos_x(object); /*Por implementar en object.c y object.h junto al set y su inicialización(están en entity)*/
-    pos_y = 		obj_get_pos_y(object); /*Por implementar en object.c y object.h junto al set y su inicialización (están en entity)*/
-    message = 		obj_get_description(object);
-    gdesc = 		obj_get_gdesc(object); /*Por implementar en object.c y object.h junto al set y su inicialización (están en entity)*/
-    health = 		obj_get_health(object);
-    attack = 		obj_get_attack(object);         /*Por implementar en object.c y object.h junto al set y su inicialización (están en entity)*/
-    energy = 		obj_get_energy(object);         /*Por implementar en object.c y object.h junto al set y su inicialización (están en entity)*/
-    speed = 		obj_get_speed(object);           /*Por implementar en object.c y object.h junto al set y su inicialización (están en entity)*/
-    movable = 		obj_get_movable(object);
-    dependency = 	obj_get_dependency(object); /*Por implementar en object.c y object.h junto al set y su inicialización (están en entity)*/
-    consumable = 	obj_get_consumable(object); /*Por implementar en object.c y object.h y añadir boolean consumable a la estructura object e inicializarlo en el create*/
+    pos_x = obj_get_pos_x(object); /*Por implementar en object.c y object.h junto al set y su inicialización(están en entity)*/
+    pos_y = obj_get_pos_y(object); /*Por implementar en object.c y object.h junto al set y su inicialización (están en entity)*/
+    message = obj_get_description(object);
+    gdesc = obj_get_gdesc(object); /*Por implementar en object.c y object.h junto al set y su inicialización (están en entity)*/
+    health = obj_get_health(object);
+    attack = obj_get_attack(object); 
+    energy = obj_get_energy(object); 
+    speed = obj_get_speed(object);   
+    movable = obj_get_movable(object);
+    dependency = obj_get_dependency(object); 
+    consumable = obj_get_consumable(object); 
 
-    fprintf(new_sfile, "#o:%ld|%s|%ld|%d|%d|%s|%s|%d|%d|%d|%d|%d|%d|%d|%d|\n", 
-      id, 
-      name, 
-      zone, 
-      pos_x, 
-      pos_y, 
-      message, 
-      gdesc == NULL ? "" : gdesc, 
-      consumable == TRUE ? 1 : 0, 
-      health, 
-      energy, 
-      attack, 
-      speed, 
-      dependency == NO_ID ? "" : dependency, 
-      movable == TRUE ? 1 : 0);
+    fprintf(new_sfile, "#o:%ld|%s|%ld|%d|%d|%s|%s|%d|%d|%d|%d|%d|%d|%d|%d|\n",
+            id,
+            name,
+            zone,
+            pos_x,
+            pos_y,
+            message,
+            gdesc == NULL ? "" : gdesc,
+            consumable == TRUE ? 1 : 0,
+            health,
+            energy,
+            attack,
+            speed,
+            dependency == NO_ID ? "" : dependency,
+            movable == TRUE ? 1 : 0);
     free(name);
     free(gdesc);
     free(message);
   }
 
-  /**Hay que implementar todas las funciones de numen aquí junto a las create y set (tomar de referencia character) */
+  /* ============================== NUMENS ============================== */
   check = game_get_n_numens(*game);
   for (bucle = 0; bucle < check; bucle++)
   {
-    numen = 	game_get_numen_at(game, bucle);
-    id = 		numen_get_id(numen);
-    name = 		numen_get_name(numen);
-    zone = 		game_get_numen_zone(game, id); /*Por implementar en game.c y game.h, junto al array de numens en space */
-    pos_x = 	numen_get_pos_x(numen);
-    pos_y = 	numen_get_pos_y(numen);
-    gdesc = 	numen_get_gdesc(numen);
-    health = 	numen_get_health(numen);
-    attack = 	numen_get_attack(numen);
-    energy = 	numen_get_energy(numen);
-    speed = 	numen_get_speed(numen);
+    numen = game_get_numen_at(game, bucle); /*Por implementar en game.c y game.h */
+    id = numen_get_id(numen);
+    name = numen_get_name(numen);
+    zone = game_get_numen_zone(game, id); /*Por implementar en game.c y game.h */
+    pos_x = numen_get_pos_x(numen);
+    pos_y = numen_get_pos_y(numen);
+    gdesc = numen_get_gdesc(numen);
+    health = numen_get_health(numen);
+    attack = numen_get_attack(numen);
+    energy = numen_get_energy(numen);
+    speed = numen_get_speed(numen);
 
-    for (int j = 0; j < MAX_HELD_SKILLS; j++) skills[j] = numen_get_skill_by_index(numen, j);
+    for (int j = 0; j < NUM_SKILLS; j++)
+      skills[j] = numen_get_skill_by_index(numen, j);
     following = numen_get_following(numen);
 
-    fprintf(new_sfile, "#n:%ld|%s|%ld|%d|%d|%s|%d|%d|%d|%d|%ld|%ld|%ld|%ld|%ld|\n", 
-      id,
-      name,
-      zone,
-      pos_x,
-      pos_y,
-      gdesc == NULL ? "" : gdesc, 
-      health, 
-      energy, 
-      attack,
-      speed, 
-      skills[0], 
-      skills[1], 
-      skills[2], 
-      skills[3], 
-      following);
+    fprintf(new_sfile, "#n:%ld|%s|%ld|%d|%d|%s|%d|%d|%d|%d|%ld|%ld|%ld|%ld|%ld|\n",
+            id,
+            name,
+            zone,
+            pos_x,
+            pos_y,
+            gdesc == NULL ? "" : gdesc,
+            health,
+            energy,
+            attack,
+            speed,
+            skills[0],
+            skills[1],
+            skills[2],
+            skills[3],
+            following);
     free(name);
     free(gdesc);
   }
 
+  /* ============================== LINKS ============================== */
   check = game_get_n_links(*game);
   for (bucle = 0; bucle < check; bucle++)
   {
-    link = 		game_get_link_at(game, bucle);
-    id = 		link_get_id(link);
-    name = 		link_get_name(link);
-    origin = 	link_get_origin_id(link);
-    dest = 		link_get_destination_id(link);
-    dir = 		link_get_direction(link);
-    open_otd = 	link_get_open_origin_to_dest(link);
-    open_dto = 	link_get_open_dest_to_origin(link);
+    link = game_get_link_at(game, bucle);
+    id = link_get_id(link);
+    name = link_get_name(link);
+    origin = link_get_origin_id(link);
+    dest = link_get_destination_id(link);
+    dir = link_get_direction(link);
+    open_otd = link_get_open_origin_to_dest(link);
+    open_dto = link_get_open_dest_to_origin(link);
 
-    fprintf(new_sfile, "#l:%ld|%s|%ld|%ld|%d|%d|%d|\n", 
-            id, 
-            name, 
-            origin, 
-            dest, 
+    fprintf(new_sfile, "#l:%ld|%s|%ld|%ld|%d|%d|%d|\n",
+            id,
+            name,
+            origin,
+            dest,
             dir,
-            open_otd == TRUE ? 1 : 0, 
+            open_otd == TRUE ? 1 : 0,
             open_dto == TRUE ? 1 : 0);
     free(name);
   }

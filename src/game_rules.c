@@ -72,21 +72,18 @@ game_rule_attack_enemigo (Game* game, Id id_enemy)
 }
 
 Status
-game_rule_walk_enemigo (Game* game, Id id_enemy)
+game_rule_walk_enemigo (Game* game)
 {
     Player* player      = NULL;
     Numen* enemy_num    = NULL;
     Direction direction = NULL;
+    Space* space        = NULL;
     Position pos_current, pos_player;
-    int *grid[HIGHT] = NULL, i;
+    Id id_enemy        = NO_ID;
+    Set* space_num_ids = NULL;
+    int *grid[HIGHT] = NULL, i, num_enemies = 0, loop;
 
-    if (!game || id_enemy == NO_ID)
-        {
-            return ERROR;
-        }
-    enemy_num = game_get_numen_by_id (game, id_enemy);
-
-    if (!enemy_num || numen_get_health (enemy_num) <= 0)
+    if (!game)
         {
             return ERROR;
         }
@@ -95,86 +92,108 @@ game_rule_walk_enemigo (Game* game, Id id_enemy)
         {
             return ERROR;
         }
-
-    if (game_get_numen_location (game, id_enemy) != player_get_zone (player))
+    space = game_get_space (game, player_get_zone (player));
+    if (!space)
         {
             return ERROR;
         }
-    pos_current.pos_x = numen_get_pos_x (enemy_num);
-    pos_current.pos_y = numen_get_pos_y (enemy_num);
+    num_enemies = space_get_n_numens (space);
+    if (num_enemies == 0)
+        {
+            return OK;
+        }
+    space_num_ids = space_get_numens (space);
 
-    pos_player        = player_get_position (player);
+    for (loop = 0; loop < num_enemies; loop++)
+        {
+            id_enemy = set_get_id_at (space_num_ids, loop);
+            if(id_enemy == NO_ID|| id_enemy == player_get_active_numen (player))
+                {
+                    continue; /* Skip if the ID is NO_ID or if it's the player's active numen */
+                }
+            enemy_num = game_get_numen_by_id (game, id_enemy);
 
-    if (pos_current.pos_x < pos_player.pos_x)
-        {
-            direction = E;
-        }
-    else if (pos_current.pos_x > pos_player.pos_x)
-        {
-            direction = W;
-        }
-    else if (pos_current.pos_y < pos_player.pos_y)
-        {
-            direction = S;
-        }
-    else if (pos_current.pos_y > pos_player.pos_y)
-        {
-            direction = N;
-        }
-    else
-        {
-            return ERROR; /* Enemy is already on the player's position */
-        }
+            if (!enemy_num || numen_get_health (enemy_num) <= 0)
+                {
+                   continue;
+                }
 
-    if (numen_get_health (enemy_num) == 1)
-        {
-            switch (direction)
+            pos_current.pos_x = numen_get_pos_x (enemy_num);
+            pos_current.pos_y = numen_get_pos_y (enemy_num);
+
+            pos_player        = player_get_position (player);
+
+            if (pos_current.pos_x < pos_player.pos_x)
+                {
+                    direction = E;
+                }
+            else if (pos_current.pos_x > pos_player.pos_x)
+                {
+                    direction = W;
+                }
+            else if (pos_current.pos_y < pos_player.pos_y)
+                {
+                    direction = S;
+                }
+            else if (pos_current.pos_y > pos_player.pos_y)
+                {
+                    direction = N;
+                }
+            else
+                {
+                   continue; /* Enemy is already on the player's position */
+                }
+
+            if (numen_get_health (enemy_num) == 1)
+                {
+                    switch (direction)
+                        {
+                        case N:
+                            return S;
+                        case S:
+                            return N;
+                        case E:
+                            return W;
+                        case W:
+                            return E;
+                        default:
+                            return U;
+                        }
+                }
+
+            switch (direction) /*Falta definir cuánto se mueve*/
                 {
                 case N:
-                    return S;
+                    pos_current.pos_y -= HIGHT;
+                    break;
                 case S:
-                    return N;
-                case E:
-                    return W;
+                    pos_current.pos_y += HIGHT;
+                    break;
                 case W:
-                    return E;
+                    pos_current.pos_x -= WIDHT;
+                    break;
+                case E:
+                    pos_current.pos_x += WIDHT;
+                    break;
                 default:
-                    return U;
+                    break;
                 }
-        }
 
-    switch (direction) /*Falta definir cuánto se mueve*/
-        {
-        case N:
-            pos_current.pos_y -= HIGHT;
-            break;
-        case S:
-            pos_current.pos_y += HIGHT;
-            break;
-        case W:
-            pos_current.pos_x -= WIDHT;
-            break;
-        case E:
-            pos_current.pos_x += WIDHT;
-            break;
-        default:
-            break;
-        }
-
-    for (i = 0; i < HIGHT; i++)
-        {
-            grid[i] = space_get_grid_by_line (game_get_space (game, game_get_numen_location (game, id_enemy)), i);
-        }
-    if (grid[pos_current.pos_x][pos_current.pos_y] != 0)
-        {
-            if (numen_set_pos_x (enemy_num, pos_current.pos_x) == ERROR || numen_set_pos_y (enemy_num, pos_current.pos_y) == ERROR)
+            for (i = 0; i < HIGHT; i++)
                 {
-                    return ERROR;
+                    grid[i] = space_get_grid_by_line (game_get_space (game, game_get_numen_location (game, id_enemy)), i);
                 }
-        }
-    else
-        {
-            return ERROR;
+            if (grid[pos_current.pos_x][pos_current.pos_y] != 0)
+                {
+                    if (numen_set_pos_x (enemy_num, pos_current.pos_x) == ERROR || numen_set_pos_y (enemy_num, pos_current.pos_y) == ERROR)
+                        {
+                            continue;
+                        }
+                }
+            else
+                {
+                    continue;
+                }
         }
     game_set_last_cmd_status (game, OK);
     return;

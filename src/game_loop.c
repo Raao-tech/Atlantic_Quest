@@ -153,10 +153,7 @@ main (int argc, char* argv[])
                 }
         }
 
-    if (is_determinist == TRUE)
-        {
-            srand (seed);
-        }
+    if (is_determinist == TRUE) { srand (seed); }
     else
         {
             srand ((unsigned int)time (NULL));
@@ -172,10 +169,7 @@ main (int argc, char* argv[])
             return 1;
         }
 
-    if (test_enabled == TRUE)
-        {
-            result = game_loop_init_test (game_loop, name_file_data);
-        }
+    if (test_enabled == TRUE) { result = game_loop_init_test (game_loop, name_file_data); }
     else
         {
             result = game_loop_init_user (game_loop);
@@ -183,35 +177,34 @@ main (int argc, char* argv[])
 
     switch (result)
         {
-        case INIT_OK:
-            break;
-        case INIT_EXIT:
-            game_loop_cleanup (game_loop, log_file); /* El usuario cerro el menu pulsando Exit. Salida limpia. */
-            return 0;
-        case INIT_ERR_GLOOP:
-            print_error ("ERROR: game_loop is NULL", test_enabled);
-            game_loop_cleanup (game_loop, log_file);
-            return 1;
-        case INIT_ERR_GAME:
-            print_error ("ERROR: Cann't init game", test_enabled);
-            game_loop_cleanup (game_loop, log_file);
-            return 1;
-        case INIT_ERR_FILE:
-            print_error ("ERROR: Anysomething wrong whit file", test_enabled);
-            game_loop_cleanup (game_loop, log_file);
-            return 1;
-        case INIT_ERR_CMD:
-            print_error ("ERROR: Cann't recover last_cmd", test_enabled);
-            game_loop_cleanup (game_loop, log_file);
-            return 1;
-        case INIT_ERR_GRAPH:
-            print_error ("ERROR: Cann't init graph", test_enabled);
-            game_loop_cleanup (game_loop, log_file);
-            return 1;
-        default:
-            print_error ("ERROR: Unknow this error, please contact us", test_enabled);
-            game_loop_cleanup (game_loop, log_file);
-            return 1;
+            case INIT_OK: break;
+            case INIT_EXIT:
+                game_loop_cleanup (game_loop, log_file); /* El usuario cerro el menu pulsando Exit. Salida limpia. */
+                return 0;
+            case INIT_ERR_GLOOP:
+                print_error ("ERROR: game_loop is NULL", test_enabled);
+                game_loop_cleanup (game_loop, log_file);
+                return 1;
+            case INIT_ERR_GAME:
+                print_error ("ERROR: Cann't init game", test_enabled);
+                game_loop_cleanup (game_loop, log_file);
+                return 1;
+            case INIT_ERR_FILE:
+                print_error ("ERROR: Anysomething wrong whit file", test_enabled);
+                game_loop_cleanup (game_loop, log_file);
+                return 1;
+            case INIT_ERR_CMD:
+                print_error ("ERROR: Cann't recover last_cmd", test_enabled);
+                game_loop_cleanup (game_loop, log_file);
+                return 1;
+            case INIT_ERR_GRAPH:
+                print_error ("ERROR: Cann't init graph", test_enabled);
+                game_loop_cleanup (game_loop, log_file);
+                return 1;
+            default:
+                print_error ("ERROR: Unknow this error, please contact us", test_enabled);
+                game_loop_cleanup (game_loop, log_file);
+                return 1;
         }
 
     /*=============== BUCLE PRINCIPAL ======================================*/
@@ -284,16 +277,10 @@ game_loop_init_user (GameLoop* game_loop)
     result_ge = graphic_engine_init (game_loop->gp_raylib);
 
     /* Si el usuario salio del menu (cerro ventana o pulso Exit) */
-    if (result_ge.menu_out == OUT_ERR || result_ge.menu_out == EXIT_Q)
-        {
-            return INIT_EXIT;
-        }
+    if (result_ge.menu_out == OUT_ERR || result_ge.menu_out == EXIT_Q) { return INIT_EXIT; }
 
     /* 3. Cargar la partida desde el .dat elegido en el menu */
-    if (game_management_create_from_file (&game_loop->game, result_ge.data_name) == ERROR)
-        {
-            return INIT_ERR_GAME;
-        }
+    if (game_management_create_from_file (&game_loop->game, result_ge.data_name) == ERROR) { return INIT_ERR_GAME; }
 
     /* 4. Recuperar el last_cmd que vive dentro del Game */
     game_loop->last_cmd = game_get_last_command (game_loop->game);
@@ -338,42 +325,18 @@ game_loop_print_log (Game* game, Command* last_cmd, FILE* log_file)
 
             switch (cmd_code)
                 {
-                case EXIT:
-                    print (log_file, "Exit", "Generic", NO_ID, result_str);
-                    break;
-                case MOVE:
-                    print (log_file, "Move", target_name, skill_id, result_str);
-                    break;
-                case WALK:
-                    print (log_file, "Walk", target_name, skill_id, result_str);
-                    break;
-                case TAKE:
-                    print (log_file, "Take", target_name, skill_id, result_str);
-                    break;
-                case DROP:
-                    print (log_file, "Drop", target_name, skill_id, result_str);
-                    break;
-                case ATTACK:
-                    print (log_file, "Attack", target_name, skill_id, result_str);
-                    break;
-                case CHAT:
-                    print (log_file, "Chat", target_name, skill_id, result_str);
-                    break;
-                case INSPECT:
-                    print (log_file, "Inspect", target_name, skill_id, result_str);
-                    break;
-                case USE:
-                    print (log_file, "Use", target_name, skill_id, result_str);
-                    break;
-                case OPEN:
-                    print (log_file, "Open", target_name, skill_id, result_str);
-                    break;
-                case SAVE:
-                    print (log_file, "Save", target_name, skill_id, result_str);
-                    break;
-                default:
-                    print (log_file, "UNKNOW", "???", NO_ID, "ERROR");
-                    break;
+                    case EXIT: print (log_file, "Exit", "Generic", NO_ID, result_str); break;
+                    case MOVE: print (log_file, "Move", target_name, skill_id, result_str); break;
+                    case WALK: print (log_file, "Walk", target_name, skill_id, result_str); break;
+                    case TAKE: print (log_file, "Take", target_name, skill_id, result_str); break;
+                    case DROP: print (log_file, "Drop", target_name, skill_id, result_str); break;
+                    case ATTACK: print (log_file, "Attack", target_name, skill_id, result_str); break;
+                    case CHAT: print (log_file, "Chat", target_name, skill_id, result_str); break;
+                    case INSPECT: print (log_file, "Inspect", target_name, skill_id, result_str); break;
+                    case USE: print (log_file, "Use", target_name, skill_id, result_str); break;
+                    case OPEN: print (log_file, "Open", target_name, skill_id, result_str); break;
+                    case SAVE: print (log_file, "Save", target_name, skill_id, result_str); break;
+                    default: print (log_file, "UNKNOW", "???", NO_ID, "ERROR"); break;
                 }
         }
 }

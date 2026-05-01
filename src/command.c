@@ -24,6 +24,9 @@
  *   indice de tabla = valor de enum + 1
  *   (porque NO_CMD = -1 ocupa la fila 0)
  *
+ * Pequeño comentario para futuros despistados:
+ *      Recruit o r == capturar Numen
+ *      Kick o k    == liberar  Numen
  * ---------------------------------------------------------------------- */
 char* cmd_to_str[N_CMD][N_CMDT] = { { "", "No command" }, { "", "Unknown" }, { "e", "Exit" },    { "m", "Move" },    { "w", "Walk" }, { "t", "Take" },
                                     { "d", "Drop" },      { "a", "Attack" }, { "c", "Chat" },    { "i", "Inspect" }, { "u", "Use" },  { "o", "Open" },
@@ -32,7 +35,7 @@ char* cmd_to_str[N_CMD][N_CMDT] = { { "", "No command" }, { "", "Unknown" }, { "
 struct _Command
 {
     CommandCode code;
-    char*       target;
+    char* target;
 };
 
 /* ----------------------------------------------------------------------
@@ -121,10 +124,7 @@ command_get_user_input (Command* command)
             cmd = UNKNOWN;
             while (cmd == UNKNOWN && i < N_CMD)
                 {
-                    if (!strcasecmp (token, cmd_to_str[i][CMDS]) || !strcasecmp (token, cmd_to_str[i][CMDL]))
-                        {
-                            cmd = i + NO_CMD;
-                        }
+                    if (!strcasecmp (token, cmd_to_str[i][CMDS]) || !strcasecmp (token, cmd_to_str[i][CMDL])) { cmd = i + NO_CMD; }
                     else
                         {
                             i++;

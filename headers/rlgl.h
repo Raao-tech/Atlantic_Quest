@@ -1235,67 +1235,42 @@ rlMatrixMode (int mode)
 {
     switch (mode)
         {
-        case RL_PROJECTION:
-            glMatrixMode (GL_PROJECTION);
-            break;
-        case RL_MODELVIEW:
-            glMatrixMode (GL_MODELVIEW);
-            break;
-        case RL_TEXTURE:
-            glMatrixMode (GL_TEXTURE);
-            break;
-        default:
-            break;
+            case RL_PROJECTION: glMatrixMode (GL_PROJECTION); break;
+            case RL_MODELVIEW: glMatrixMode (GL_MODELVIEW); break;
+            case RL_TEXTURE: glMatrixMode (GL_TEXTURE); break;
+            default: break;
         }
 }
 
 void
 rlFrustum (double left, double right, double bottom, double top, double znear, double zfar)
-{
-    glFrustum (left, right, bottom, top, znear, zfar);
-}
+{ glFrustum (left, right, bottom, top, znear, zfar); }
 
 void
 rlOrtho (double left, double right, double bottom, double top, double znear, double zfar)
-{
-    glOrtho (left, right, bottom, top, znear, zfar);
-}
+{ glOrtho (left, right, bottom, top, znear, zfar); }
 
 void
 rlPushMatrix (void)
-{
-    glPushMatrix ();
-}
+{ glPushMatrix (); }
 void
 rlPopMatrix (void)
-{
-    glPopMatrix ();
-}
+{ glPopMatrix (); }
 void
 rlLoadIdentity (void)
-{
-    glLoadIdentity ();
-}
+{ glLoadIdentity (); }
 void
 rlTranslatef (float x, float y, float z)
-{
-    glTranslatef (x, y, z);
-}
+{ glTranslatef (x, y, z); }
 void
 rlRotatef (float angle, float x, float y, float z)
-{
-    glRotatef (angle, x, y, z);
-}
+{ glRotatef (angle, x, y, z); }
 void
 rlScalef (float x, float y, float z)
-{
-    glScalef (x, y, z);
-}
+{ glScalef (x, y, z); }
 void
 rlMultMatrixf (const float* matf)
-{
-    glMultMatrixf (matf);
-}
+{ glMultMatrixf (matf); }
 #endif
 #if defined(GRAPHICS_API_OPENGL_33) || defined(GRAPHICS_API_OPENGL_ES2)
 // Choose the current matrix to be transformed
@@ -1346,9 +1321,7 @@ rlPopMatrix (void)
 // Reset current matrix to identity matrix
 void
 rlLoadIdentity (void)
-{
-    *RLGL.State.currentMatrix = rlMatrixIdentity ();
-}
+{ *RLGL.State.currentMatrix = rlMatrixIdentity (); }
 
 // Multiply the current matrix by a translation matrix
 void
@@ -1507,9 +1480,7 @@ rlOrtho (double left, double right, double bottom, double top, double znear, dou
 // Set the viewport area (transformation from normalized device coordinates to window coordinates)
 void
 rlViewport (int x, int y, int width, int height)
-{
-    glViewport (x, y, width, height);
-}
+{ glViewport (x, y, width, height); }
 
 // Set clip planes distances
 void
@@ -1522,16 +1493,12 @@ rlSetClipPlanes (double nearPlane, double farPlane)
 // Get cull plane distance near
 double
 rlGetCullDistanceNear (void)
-{
-    return rlCullDistanceNear;
-}
+{ return rlCullDistanceNear; }
 
 // Get cull plane distance far
 double
 rlGetCullDistanceFar (void)
-{
-    return rlCullDistanceFar;
-}
+{ return rlCullDistanceFar; }
 
 //----------------------------------------------------------------------------------
 // Module Functions Definition - Vertex level operations
@@ -1544,65 +1511,40 @@ rlBegin (int mode)
 {
     switch (mode)
         {
-        case RL_LINES:
-            glBegin (GL_LINES);
-            break;
-        case RL_TRIANGLES:
-            glBegin (GL_TRIANGLES);
-            break;
-        case RL_QUADS:
-            glBegin (GL_QUADS);
-            break;
-        default:
-            break;
+            case RL_LINES: glBegin (GL_LINES); break;
+            case RL_TRIANGLES: glBegin (GL_TRIANGLES); break;
+            case RL_QUADS: glBegin (GL_QUADS); break;
+            default: break;
         }
 }
 
 void
 rlEnd (void)
-{
-    glEnd ();
-}
+{ glEnd (); }
 void
 rlVertex2i (int x, int y)
-{
-    glVertex2i (x, y);
-}
+{ glVertex2i (x, y); }
 void
 rlVertex2f (float x, float y)
-{
-    glVertex2f (x, y);
-}
+{ glVertex2f (x, y); }
 void
 rlVertex3f (float x, float y, float z)
-{
-    glVertex3f (x, y, z);
-}
+{ glVertex3f (x, y, z); }
 void
 rlTexCoord2f (float x, float y)
-{
-    glTexCoord2f (x, y);
-}
+{ glTexCoord2f (x, y); }
 void
 rlNormal3f (float x, float y, float z)
-{
-    glNormal3f (x, y, z);
-}
+{ glNormal3f (x, y, z); }
 void
 rlColor4ub (unsigned char r, unsigned char g, unsigned char b, unsigned char a)
-{
-    glColor4ub (r, g, b, a);
-}
+{ glColor4ub (r, g, b, a); }
 void
 rlColor3f (float x, float y, float z)
-{
-    glColor3f (x, y, z);
-}
+{ glColor3f (x, y, z); }
 void
 rlColor4f (float x, float y, float z, float w)
-{
-    glColor4f (x, y, z, w);
-}
+{ glColor4f (x, y, z, w); }
 #endif
 #if defined(GRAPHICS_API_OPENGL_33) || defined(GRAPHICS_API_OPENGL_ES2)
 // Initialize drawing mode (how to organize vertex)
@@ -1726,16 +1668,12 @@ rlVertex3f (float x, float y, float z)
 // Define one vertex (position)
 void
 rlVertex2f (float x, float y)
-{
-    rlVertex3f (x, y, RLGL.currentBatch->currentDepth);
-}
+{ rlVertex3f (x, y, RLGL.currentBatch->currentDepth); }
 
 // Define one vertex (position)
 void
 rlVertex2i (int x, int y)
-{
-    rlVertex3f ((float)x, (float)y, RLGL.currentBatch->currentDepth);
-}
+{ rlVertex3f ((float)x, (float)y, RLGL.currentBatch->currentDepth); }
 
 // Define one vertex (texture coordinate)
 // NOTE: Texture coordinates are limited to QUADS only
@@ -1792,16 +1730,12 @@ rlColor4ub (unsigned char x, unsigned char y, unsigned char z, unsigned char w)
 // Define one vertex (color)
 void
 rlColor4f (float r, float g, float b, float a)
-{
-    rlColor4ub ((unsigned char)(r * 255), (unsigned char)(g * 255), (unsigned char)(b * 255), (unsigned char)(a * 255));
-}
+{ rlColor4ub ((unsigned char)(r * 255), (unsigned char)(g * 255), (unsigned char)(b * 255), (unsigned char)(a * 255)); }
 
 // Define one vertex (color)
 void
 rlColor3f (float x, float y, float z)
-{
-    rlColor4ub ((unsigned char)(x * 255), (unsigned char)(y * 255), (unsigned char)(z * 255), 255);
-}
+{ rlColor4ub ((unsigned char)(x * 255), (unsigned char)(y * 255), (unsigned char)(z * 255), 255); }
 
 #endif
 
@@ -1928,46 +1862,42 @@ rlTextureParameters (unsigned int id, int param, int value)
 
     switch (param)
         {
-        case RL_TEXTURE_WRAP_S:
-        case RL_TEXTURE_WRAP_T:
-            {
-                if (value == RL_TEXTURE_WRAP_MIRROR_CLAMP)
-                    {
+            case RL_TEXTURE_WRAP_S:
+            case RL_TEXTURE_WRAP_T:
+                {
+                    if (value == RL_TEXTURE_WRAP_MIRROR_CLAMP)
+                        {
 #if !defined(GRAPHICS_API_OPENGL_11)
-                        if (RLGL.ExtSupported.texMirrorClamp) glTexParameteri (GL_TEXTURE_2D, param, value);
-                        else TRACELOG (RL_LOG_WARNING, "GL: Clamp mirror wrap mode not supported (GL_MIRROR_CLAMP_EXT)");
+                            if (RLGL.ExtSupported.texMirrorClamp) glTexParameteri (GL_TEXTURE_2D, param, value);
+                            else TRACELOG (RL_LOG_WARNING, "GL: Clamp mirror wrap mode not supported (GL_MIRROR_CLAMP_EXT)");
 #endif
-                    }
-                else glTexParameteri (GL_TEXTURE_2D, param, value);
-            }
-            break;
-        case RL_TEXTURE_MAG_FILTER:
-        case RL_TEXTURE_MIN_FILTER:
-            glTexParameteri (GL_TEXTURE_2D, param, value);
-            break;
-        case RL_TEXTURE_FILTER_ANISOTROPIC:
-            {
+                        }
+                    else glTexParameteri (GL_TEXTURE_2D, param, value);
+                }
+                break;
+            case RL_TEXTURE_MAG_FILTER:
+            case RL_TEXTURE_MIN_FILTER: glTexParameteri (GL_TEXTURE_2D, param, value); break;
+            case RL_TEXTURE_FILTER_ANISOTROPIC:
+                {
 #if !defined(GRAPHICS_API_OPENGL_11)
-                // Reset anisotropy filter, in case it was set
-                glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 1.0f);
+                    // Reset anisotropy filter, in case it was set
+                    glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 1.0f);
 
-                if (value <= RLGL.ExtSupported.maxAnisotropyLevel) glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, (float)value);
-                else if (RLGL.ExtSupported.maxAnisotropyLevel > 0.0f)
-                    {
-                        TRACELOG (RL_LOG_WARNING, "GL: Maximum anisotropic filter level supported is %iX", id,
-                                  (int)RLGL.ExtSupported.maxAnisotropyLevel);
-                        glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, (float)value);
-                    }
-                else TRACELOG (RL_LOG_WARNING, "GL: Anisotropic filtering not supported");
+                    if (value <= RLGL.ExtSupported.maxAnisotropyLevel) glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, (float)value);
+                    else if (RLGL.ExtSupported.maxAnisotropyLevel > 0.0f)
+                        {
+                            TRACELOG (RL_LOG_WARNING, "GL: Maximum anisotropic filter level supported is %iX", id,
+                                      (int)RLGL.ExtSupported.maxAnisotropyLevel);
+                            glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, (float)value);
+                        }
+                    else TRACELOG (RL_LOG_WARNING, "GL: Anisotropic filtering not supported");
 #endif
-            }
-            break;
+                }
+                break;
 #if defined(GRAPHICS_API_OPENGL_33)
-        case RL_TEXTURE_MIPMAP_BIAS_RATIO:
-            glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, value / 100.0f);
+            case RL_TEXTURE_MIPMAP_BIAS_RATIO: glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, value / 100.0f);
 #endif
-        default:
-            break;
+            default: break;
         }
 
     glBindTexture (GL_TEXTURE_2D, 0);
@@ -1985,39 +1915,36 @@ rlCubemapParameters (unsigned int id, int param, int value)
 
     switch (param)
         {
-        case RL_TEXTURE_WRAP_S:
-        case RL_TEXTURE_WRAP_T:
-            {
-                if (value == RL_TEXTURE_WRAP_MIRROR_CLAMP)
-                    {
-                        if (RLGL.ExtSupported.texMirrorClamp) glTexParameteri (GL_TEXTURE_CUBE_MAP, param, value);
-                        else TRACELOG (RL_LOG_WARNING, "GL: Clamp mirror wrap mode not supported (GL_MIRROR_CLAMP_EXT)");
-                    }
-                else glTexParameteri (GL_TEXTURE_CUBE_MAP, param, value);
-            }
-            break;
-        case RL_TEXTURE_MAG_FILTER:
-        case RL_TEXTURE_MIN_FILTER:
-            glTexParameteri (GL_TEXTURE_CUBE_MAP, param, value);
-            break;
-        case RL_TEXTURE_FILTER_ANISOTROPIC:
-            {
-                if (value <= RLGL.ExtSupported.maxAnisotropyLevel) glTexParameterf (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, (float)value);
-                else if (RLGL.ExtSupported.maxAnisotropyLevel > 0.0f)
-                    {
-                        TRACELOG (RL_LOG_WARNING, "GL: Maximum anisotropic filter level supported is %iX", id,
-                                  (int)RLGL.ExtSupported.maxAnisotropyLevel);
+            case RL_TEXTURE_WRAP_S:
+            case RL_TEXTURE_WRAP_T:
+                {
+                    if (value == RL_TEXTURE_WRAP_MIRROR_CLAMP)
+                        {
+                            if (RLGL.ExtSupported.texMirrorClamp) glTexParameteri (GL_TEXTURE_CUBE_MAP, param, value);
+                            else TRACELOG (RL_LOG_WARNING, "GL: Clamp mirror wrap mode not supported (GL_MIRROR_CLAMP_EXT)");
+                        }
+                    else glTexParameteri (GL_TEXTURE_CUBE_MAP, param, value);
+                }
+                break;
+            case RL_TEXTURE_MAG_FILTER:
+            case RL_TEXTURE_MIN_FILTER: glTexParameteri (GL_TEXTURE_CUBE_MAP, param, value); break;
+            case RL_TEXTURE_FILTER_ANISOTROPIC:
+                {
+                    if (value <= RLGL.ExtSupported.maxAnisotropyLevel)
                         glTexParameterf (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, (float)value);
-                    }
-                else TRACELOG (RL_LOG_WARNING, "GL: Anisotropic filtering not supported");
-            }
-            break;
+                    else if (RLGL.ExtSupported.maxAnisotropyLevel > 0.0f)
+                        {
+                            TRACELOG (RL_LOG_WARNING, "GL: Maximum anisotropic filter level supported is %iX", id,
+                                      (int)RLGL.ExtSupported.maxAnisotropyLevel);
+                            glTexParameterf (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, (float)value);
+                        }
+                    else TRACELOG (RL_LOG_WARNING, "GL: Anisotropic filtering not supported");
+                }
+                break;
 #if defined(GRAPHICS_API_OPENGL_33)
-        case RL_TEXTURE_MIPMAP_BIAS_RATIO:
-            glTexParameterf (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_LOD_BIAS, value / 100.0f);
+            case RL_TEXTURE_MIPMAP_BIAS_RATIO: glTexParameterf (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_LOD_BIAS, value / 100.0f);
 #endif
-        default:
-            break;
+            default: break;
         }
 
     glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
@@ -2124,65 +2051,47 @@ rlActiveDrawBuffers (int count)
 // Enable color blending
 void
 rlEnableColorBlend (void)
-{
-    glEnable (GL_BLEND);
-}
+{ glEnable (GL_BLEND); }
 
 // Disable color blending
 void
 rlDisableColorBlend (void)
-{
-    glDisable (GL_BLEND);
-}
+{ glDisable (GL_BLEND); }
 
 // Enable depth test
 void
 rlEnableDepthTest (void)
-{
-    glEnable (GL_DEPTH_TEST);
-}
+{ glEnable (GL_DEPTH_TEST); }
 
 // Disable depth test
 void
 rlDisableDepthTest (void)
-{
-    glDisable (GL_DEPTH_TEST);
-}
+{ glDisable (GL_DEPTH_TEST); }
 
 // Enable depth write
 void
 rlEnableDepthMask (void)
-{
-    glDepthMask (GL_TRUE);
-}
+{ glDepthMask (GL_TRUE); }
 
 // Disable depth write
 void
 rlDisableDepthMask (void)
-{
-    glDepthMask (GL_FALSE);
-}
+{ glDepthMask (GL_FALSE); }
 
 // Enable backface culling
 void
 rlEnableBackfaceCulling (void)
-{
-    glEnable (GL_CULL_FACE);
-}
+{ glEnable (GL_CULL_FACE); }
 
 // Disable backface culling
 void
 rlDisableBackfaceCulling (void)
-{
-    glDisable (GL_CULL_FACE);
-}
+{ glDisable (GL_CULL_FACE); }
 
 // Set color mask active for screen read/draw
 void
 rlColorMask (bool r, bool g, bool b, bool a)
-{
-    glColorMask (r, g, b, a);
-}
+{ glColorMask (r, g, b, a); }
 
 // Set face culling mode
 void
@@ -2190,37 +2099,26 @@ rlSetCullFace (int mode)
 {
     switch (mode)
         {
-        case RL_CULL_FACE_BACK:
-            glCullFace (GL_BACK);
-            break;
-        case RL_CULL_FACE_FRONT:
-            glCullFace (GL_FRONT);
-            break;
-        default:
-            break;
+            case RL_CULL_FACE_BACK: glCullFace (GL_BACK); break;
+            case RL_CULL_FACE_FRONT: glCullFace (GL_FRONT); break;
+            default: break;
         }
 }
 
 // Enable scissor test
 void
 rlEnableScissorTest (void)
-{
-    glEnable (GL_SCISSOR_TEST);
-}
+{ glEnable (GL_SCISSOR_TEST); }
 
 // Disable scissor test
 void
 rlDisableScissorTest (void)
-{
-    glDisable (GL_SCISSOR_TEST);
-}
+{ glDisable (GL_SCISSOR_TEST); }
 
 // Scissor test
 void
 rlScissor (int x, int y, int width, int height)
-{
-    glScissor (x, y, width, height);
-}
+{ glScissor (x, y, width, height); }
 
 // Enable wire mode
 void
@@ -2266,9 +2164,7 @@ rlDisablePointMode (void)
 // Set the line drawing width
 void
 rlSetLineWidth (float width)
-{
-    glLineWidth (width);
-}
+{ glLineWidth (width); }
 
 // Get the line drawing width
 float
@@ -2378,33 +2274,15 @@ rlCheckErrors (void)
             const GLenum err = glGetError ();
             switch (err)
                 {
-                case GL_NO_ERROR:
-                    check = 0;
-                    break;
-                case 0x0500:
-                    TRACELOG (RL_LOG_WARNING, "GL: Error detected: GL_INVALID_ENUM");
-                    break;
-                case 0x0501:
-                    TRACELOG (RL_LOG_WARNING, "GL: Error detected: GL_INVALID_VALUE");
-                    break;
-                case 0x0502:
-                    TRACELOG (RL_LOG_WARNING, "GL: Error detected: GL_INVALID_OPERATION");
-                    break;
-                case 0x0503:
-                    TRACELOG (RL_LOG_WARNING, "GL: Error detected: GL_STACK_OVERFLOW");
-                    break;
-                case 0x0504:
-                    TRACELOG (RL_LOG_WARNING, "GL: Error detected: GL_STACK_UNDERFLOW");
-                    break;
-                case 0x0505:
-                    TRACELOG (RL_LOG_WARNING, "GL: Error detected: GL_OUT_OF_MEMORY");
-                    break;
-                case 0x0506:
-                    TRACELOG (RL_LOG_WARNING, "GL: Error detected: GL_INVALID_FRAMEBUFFER_OPERATION");
-                    break;
-                default:
-                    TRACELOG (RL_LOG_WARNING, "GL: Error detected: Unknown error code: %x", err);
-                    break;
+                    case GL_NO_ERROR: check = 0; break;
+                    case 0x0500: TRACELOG (RL_LOG_WARNING, "GL: Error detected: GL_INVALID_ENUM"); break;
+                    case 0x0501: TRACELOG (RL_LOG_WARNING, "GL: Error detected: GL_INVALID_VALUE"); break;
+                    case 0x0502: TRACELOG (RL_LOG_WARNING, "GL: Error detected: GL_INVALID_OPERATION"); break;
+                    case 0x0503: TRACELOG (RL_LOG_WARNING, "GL: Error detected: GL_STACK_OVERFLOW"); break;
+                    case 0x0504: TRACELOG (RL_LOG_WARNING, "GL: Error detected: GL_STACK_UNDERFLOW"); break;
+                    case 0x0505: TRACELOG (RL_LOG_WARNING, "GL: Error detected: GL_OUT_OF_MEMORY"); break;
+                    case 0x0506: TRACELOG (RL_LOG_WARNING, "GL: Error detected: GL_INVALID_FRAMEBUFFER_OPERATION"); break;
+                    default: TRACELOG (RL_LOG_WARNING, "GL: Error detected: Unknown error code: %x", err); break;
                 }
         }
 #endif
@@ -2422,47 +2300,46 @@ rlSetBlendMode (int mode)
 
             switch (mode)
                 {
-                case RL_BLEND_ALPHA:
-                    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                    glBlendEquation (GL_FUNC_ADD);
-                    break;
-                case RL_BLEND_ADDITIVE:
-                    glBlendFunc (GL_SRC_ALPHA, GL_ONE);
-                    glBlendEquation (GL_FUNC_ADD);
-                    break;
-                case RL_BLEND_MULTIPLIED:
-                    glBlendFunc (GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA);
-                    glBlendEquation (GL_FUNC_ADD);
-                    break;
-                case RL_BLEND_ADD_COLORS:
-                    glBlendFunc (GL_ONE, GL_ONE);
-                    glBlendEquation (GL_FUNC_ADD);
-                    break;
-                case RL_BLEND_SUBTRACT_COLORS:
-                    glBlendFunc (GL_ONE, GL_ONE);
-                    glBlendEquation (GL_FUNC_SUBTRACT);
-                    break;
-                case RL_BLEND_ALPHA_PREMULTIPLY:
-                    glBlendFunc (GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-                    glBlendEquation (GL_FUNC_ADD);
-                    break;
-                case RL_BLEND_CUSTOM:
-                    {
-                        // NOTE: Using GL blend src/dst factors and GL equation configured with rlSetBlendFactors()
-                        glBlendFunc (RLGL.State.glBlendSrcFactor, RLGL.State.glBlendDstFactor);
-                        glBlendEquation (RLGL.State.glBlendEquation);
-                    }
-                    break;
-                case RL_BLEND_CUSTOM_SEPARATE:
-                    {
-                        // NOTE: Using GL blend src/dst factors and GL equation configured with rlSetBlendFactorsSeparate()
-                        glBlendFuncSeparate (RLGL.State.glBlendSrcFactorRGB, RLGL.State.glBlendDestFactorRGB, RLGL.State.glBlendSrcFactorAlpha,
-                                             RLGL.State.glBlendDestFactorAlpha);
-                        glBlendEquationSeparate (RLGL.State.glBlendEquationRGB, RLGL.State.glBlendEquationAlpha);
-                    }
-                    break;
-                default:
-                    break;
+                    case RL_BLEND_ALPHA:
+                        glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                        glBlendEquation (GL_FUNC_ADD);
+                        break;
+                    case RL_BLEND_ADDITIVE:
+                        glBlendFunc (GL_SRC_ALPHA, GL_ONE);
+                        glBlendEquation (GL_FUNC_ADD);
+                        break;
+                    case RL_BLEND_MULTIPLIED:
+                        glBlendFunc (GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA);
+                        glBlendEquation (GL_FUNC_ADD);
+                        break;
+                    case RL_BLEND_ADD_COLORS:
+                        glBlendFunc (GL_ONE, GL_ONE);
+                        glBlendEquation (GL_FUNC_ADD);
+                        break;
+                    case RL_BLEND_SUBTRACT_COLORS:
+                        glBlendFunc (GL_ONE, GL_ONE);
+                        glBlendEquation (GL_FUNC_SUBTRACT);
+                        break;
+                    case RL_BLEND_ALPHA_PREMULTIPLY:
+                        glBlendFunc (GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+                        glBlendEquation (GL_FUNC_ADD);
+                        break;
+                    case RL_BLEND_CUSTOM:
+                        {
+                            // NOTE: Using GL blend src/dst factors and GL equation configured with rlSetBlendFactors()
+                            glBlendFunc (RLGL.State.glBlendSrcFactor, RLGL.State.glBlendDstFactor);
+                            glBlendEquation (RLGL.State.glBlendEquation);
+                        }
+                        break;
+                    case RL_BLEND_CUSTOM_SEPARATE:
+                        {
+                            // NOTE: Using GL blend src/dst factors and GL equation configured with rlSetBlendFactorsSeparate()
+                            glBlendFuncSeparate (RLGL.State.glBlendSrcFactorRGB, RLGL.State.glBlendDestFactorRGB, RLGL.State.glBlendSrcFactorAlpha,
+                                                 RLGL.State.glBlendDestFactorAlpha);
+                            glBlendEquationSeparate (RLGL.State.glBlendEquationRGB, RLGL.State.glBlendEquationAlpha);
+                        }
+                        break;
+                    default: break;
                 }
 
             RLGL.State.currentBlendMode          = mode;
@@ -2528,79 +2405,38 @@ rlDebugMessageCallback (GLenum source, GLenum type, GLuint id, GLenum severity, 
     const char* msgSource = NULL;
     switch (source)
         {
-        case GL_DEBUG_SOURCE_API:
-            msgSource = "API";
-            break;
-        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
-            msgSource = "WINDOW_SYSTEM";
-            break;
-        case GL_DEBUG_SOURCE_SHADER_COMPILER:
-            msgSource = "SHADER_COMPILER";
-            break;
-        case GL_DEBUG_SOURCE_THIRD_PARTY:
-            msgSource = "THIRD_PARTY";
-            break;
-        case GL_DEBUG_SOURCE_APPLICATION:
-            msgSource = "APPLICATION";
-            break;
-        case GL_DEBUG_SOURCE_OTHER:
-            msgSource = "OTHER";
-            break;
-        default:
-            break;
+            case GL_DEBUG_SOURCE_API: msgSource = "API"; break;
+            case GL_DEBUG_SOURCE_WINDOW_SYSTEM: msgSource = "WINDOW_SYSTEM"; break;
+            case GL_DEBUG_SOURCE_SHADER_COMPILER: msgSource = "SHADER_COMPILER"; break;
+            case GL_DEBUG_SOURCE_THIRD_PARTY: msgSource = "THIRD_PARTY"; break;
+            case GL_DEBUG_SOURCE_APPLICATION: msgSource = "APPLICATION"; break;
+            case GL_DEBUG_SOURCE_OTHER: msgSource = "OTHER"; break;
+            default: break;
         }
 
     const char* msgType = NULL;
     switch (type)
         {
-        case GL_DEBUG_TYPE_ERROR:
-            msgType = "ERROR";
-            break;
-        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
-            msgType = "DEPRECATED_BEHAVIOR";
-            break;
-        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
-            msgType = "UNDEFINED_BEHAVIOR";
-            break;
-        case GL_DEBUG_TYPE_PORTABILITY:
-            msgType = "PORTABILITY";
-            break;
-        case GL_DEBUG_TYPE_PERFORMANCE:
-            msgType = "PERFORMANCE";
-            break;
-        case GL_DEBUG_TYPE_MARKER:
-            msgType = "MARKER";
-            break;
-        case GL_DEBUG_TYPE_PUSH_GROUP:
-            msgType = "PUSH_GROUP";
-            break;
-        case GL_DEBUG_TYPE_POP_GROUP:
-            msgType = "POP_GROUP";
-            break;
-        case GL_DEBUG_TYPE_OTHER:
-            msgType = "OTHER";
-            break;
-        default:
-            break;
+            case GL_DEBUG_TYPE_ERROR: msgType = "ERROR"; break;
+            case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: msgType = "DEPRECATED_BEHAVIOR"; break;
+            case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR: msgType = "UNDEFINED_BEHAVIOR"; break;
+            case GL_DEBUG_TYPE_PORTABILITY: msgType = "PORTABILITY"; break;
+            case GL_DEBUG_TYPE_PERFORMANCE: msgType = "PERFORMANCE"; break;
+            case GL_DEBUG_TYPE_MARKER: msgType = "MARKER"; break;
+            case GL_DEBUG_TYPE_PUSH_GROUP: msgType = "PUSH_GROUP"; break;
+            case GL_DEBUG_TYPE_POP_GROUP: msgType = "POP_GROUP"; break;
+            case GL_DEBUG_TYPE_OTHER: msgType = "OTHER"; break;
+            default: break;
         }
 
     const char* msgSeverity = "DEFAULT";
     switch (severity)
         {
-        case GL_DEBUG_SEVERITY_LOW:
-            msgSeverity = "LOW";
-            break;
-        case GL_DEBUG_SEVERITY_MEDIUM:
-            msgSeverity = "MEDIUM";
-            break;
-        case GL_DEBUG_SEVERITY_HIGH:
-            msgSeverity = "HIGH";
-            break;
-        case GL_DEBUG_SEVERITY_NOTIFICATION:
-            msgSeverity = "NOTIFICATION";
-            break;
-        default:
-            break;
+            case GL_DEBUG_SEVERITY_LOW: msgSeverity = "LOW"; break;
+            case GL_DEBUG_SEVERITY_MEDIUM: msgSeverity = "MEDIUM"; break;
+            case GL_DEBUG_SEVERITY_HIGH: msgSeverity = "HIGH"; break;
+            case GL_DEBUG_SEVERITY_NOTIFICATION: msgSeverity = "NOTIFICATION"; break;
+            default: break;
         }
 
     TRACELOG (RL_LOG_WARNING, "GL: OpenGL debug message: %s", message);
@@ -2659,8 +2495,7 @@ rlglInit (int width, int height)
     RLGL.currentBatch                                         = &RLGL.defaultBatch;
 
     // Init stack matrices (emulating OpenGL 1.1)
-    for (int i = 0; i < RL_MAX_MATRIX_STACK_SIZE; i++)
-        RLGL.State.stack[i] = rlMatrixIdentity ();
+    for (int i = 0; i < RL_MAX_MATRIX_STACK_SIZE; i++) RLGL.State.stack[i] = rlMatrixIdentity ();
 
     // Init internal matrices
     RLGL.State.transform     = rlMatrixIdentity ();
@@ -2757,8 +2592,7 @@ rlLoadExtensions (void* loader)
     // Get supported extensions list
     // WARNING: glGetStringi() not available on OpenGL 2.1
     TRACELOG (RL_LOG_INFO, "GL: OpenGL extensions:");
-    for (int i = 0; i < numExt; i++)
-        TRACELOG (RL_LOG_INFO, "    %s", glGetStringi (GL_EXTENSIONS, i));
+    for (int i = 0; i < numExt; i++) TRACELOG (RL_LOG_INFO, "    %s", glGetStringi (GL_EXTENSIONS, i));
 #endif
 
 #if defined(GRAPHICS_API_OPENGL_21)
@@ -2854,8 +2688,7 @@ rlLoadExtensions (void* loader)
 
 #if RLGL_SHOW_GL_DETAILS_INFO
     TRACELOG (RL_LOG_INFO, "GL: OpenGL extensions:");
-    for (int i = 0; i < numExt; i++)
-        TRACELOG (RL_LOG_INFO, "    %s", extList[i]);
+    for (int i = 0; i < numExt; i++) TRACELOG (RL_LOG_INFO, "    %s", extList[i]);
 #endif
 
     // Check required extensions
@@ -3011,8 +2844,7 @@ rlLoadExtensions (void* loader)
     TRACELOG (RL_LOG_INFO, "    GL_NUM_COMPRESSED_TEXTURE_FORMATS: %i", capability);
     GLint* compFormats = (GLint*)RL_CALLOC (capability, sizeof (GLint));
     glGetIntegerv (GL_COMPRESSED_TEXTURE_FORMATS, compFormats);
-    for (int i = 0; i < capability; i++)
-        TRACELOG (RL_LOG_INFO, "        %s", rlGetCompressedFormatName (compFormats[i]));
+    for (int i = 0; i < capability; i++) TRACELOG (RL_LOG_INFO, "        %s", rlGetCompressedFormatName (compFormats[i]));
     RL_FREE (compFormats);
 
 #if defined(GRAPHICS_API_OPENGL_43)
@@ -3187,14 +3019,10 @@ rlLoadRenderBatch (int numBuffers, int bufferElements)
             batch.vertexBuffer[i].indices = (unsigned short*)RL_CALLOC (bufferElements * 6, sizeof (unsigned short)); // 6 int by quad (indices)
 #endif
 
-            for (int j = 0; j < (3 * 4 * bufferElements); j++)
-                batch.vertexBuffer[i].vertices[j] = 0.0f;
-            for (int j = 0; j < (2 * 4 * bufferElements); j++)
-                batch.vertexBuffer[i].texcoords[j] = 0.0f;
-            for (int j = 0; j < (3 * 4 * bufferElements); j++)
-                batch.vertexBuffer[i].normals[j] = 0.0f;
-            for (int j = 0; j < (4 * 4 * bufferElements); j++)
-                batch.vertexBuffer[i].colors[j] = 0;
+            for (int j = 0; j < (3 * 4 * bufferElements); j++) batch.vertexBuffer[i].vertices[j] = 0.0f;
+            for (int j = 0; j < (2 * 4 * bufferElements); j++) batch.vertexBuffer[i].texcoords[j] = 0.0f;
+            for (int j = 0; j < (3 * 4 * bufferElements); j++) batch.vertexBuffer[i].normals[j] = 0.0f;
+            for (int j = 0; j < (4 * 4 * bufferElements); j++) batch.vertexBuffer[i].colors[j] = 0;
 
             int k = 0;
 
@@ -3574,8 +3402,7 @@ rlDrawRenderBatch (rlRenderBatch* batch)
         }
 
     // Reset active texture units for next batch
-    for (int i = 0; i < RL_DEFAULT_BATCH_MAX_TEXTURE_UNITS; i++)
-        RLGL.State.activeTextureId[i] = 0;
+    for (int i = 0; i < RL_DEFAULT_BATCH_MAX_TEXTURE_UNITS; i++) RLGL.State.activeTextureId[i] = 0;
 
     // Reset draws counter to one draw for the batch
     batch->drawCounter = 1;
@@ -4026,239 +3853,235 @@ rlGetGlTextureFormats (int format, unsigned int* glInternalFormat, unsigned int*
     switch (format)
         {
 #if defined(GRAPHICS_API_OPENGL_11) || defined(GRAPHICS_API_OPENGL_21) || defined(GRAPHICS_API_OPENGL_ES2)
-        // NOTE: on OpenGL ES 2.0 (WebGL), internalFormat must match format and options allowed are: GL_LUMINANCE, GL_RGB, GL_RGBA
-        case RL_PIXELFORMAT_UNCOMPRESSED_GRAYSCALE:
-            *glInternalFormat = GL_LUMINANCE;
-            *glFormat         = GL_LUMINANCE;
-            *glType           = GL_UNSIGNED_BYTE;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA:
-            *glInternalFormat = GL_LUMINANCE_ALPHA;
-            *glFormat         = GL_LUMINANCE_ALPHA;
-            *glType           = GL_UNSIGNED_BYTE;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R5G6B5:
-            *glInternalFormat = GL_RGB;
-            *glFormat         = GL_RGB;
-            *glType           = GL_UNSIGNED_SHORT_5_6_5;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8:
-            *glInternalFormat = GL_RGB;
-            *glFormat         = GL_RGB;
-            *glType           = GL_UNSIGNED_BYTE;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R5G5B5A1:
-            *glInternalFormat = GL_RGBA;
-            *glFormat         = GL_RGBA;
-            *glType           = GL_UNSIGNED_SHORT_5_5_5_1;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R4G4B4A4:
-            *glInternalFormat = GL_RGBA;
-            *glFormat         = GL_RGBA;
-            *glType           = GL_UNSIGNED_SHORT_4_4_4_4;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8:
-            *glInternalFormat = GL_RGBA;
-            *glFormat         = GL_RGBA;
-            *glType           = GL_UNSIGNED_BYTE;
-            break;
+            // NOTE: on OpenGL ES 2.0 (WebGL), internalFormat must match format and options allowed are: GL_LUMINANCE, GL_RGB, GL_RGBA
+            case RL_PIXELFORMAT_UNCOMPRESSED_GRAYSCALE:
+                *glInternalFormat = GL_LUMINANCE;
+                *glFormat         = GL_LUMINANCE;
+                *glType           = GL_UNSIGNED_BYTE;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA:
+                *glInternalFormat = GL_LUMINANCE_ALPHA;
+                *glFormat         = GL_LUMINANCE_ALPHA;
+                *glType           = GL_UNSIGNED_BYTE;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R5G6B5:
+                *glInternalFormat = GL_RGB;
+                *glFormat         = GL_RGB;
+                *glType           = GL_UNSIGNED_SHORT_5_6_5;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8:
+                *glInternalFormat = GL_RGB;
+                *glFormat         = GL_RGB;
+                *glType           = GL_UNSIGNED_BYTE;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R5G5B5A1:
+                *glInternalFormat = GL_RGBA;
+                *glFormat         = GL_RGBA;
+                *glType           = GL_UNSIGNED_SHORT_5_5_5_1;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R4G4B4A4:
+                *glInternalFormat = GL_RGBA;
+                *glFormat         = GL_RGBA;
+                *glType           = GL_UNSIGNED_SHORT_4_4_4_4;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8:
+                *glInternalFormat = GL_RGBA;
+                *glFormat         = GL_RGBA;
+                *glType           = GL_UNSIGNED_BYTE;
+                break;
 #if !defined(GRAPHICS_API_OPENGL_11)
 #if defined(GRAPHICS_API_OPENGL_ES3)
-        case RL_PIXELFORMAT_UNCOMPRESSED_R32:
-            if (RLGL.ExtSupported.texFloat32) *glInternalFormat = GL_R32F_EXT;
-            *glFormat = GL_RED_EXT;
-            *glType   = GL_FLOAT;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32:
-            if (RLGL.ExtSupported.texFloat32) *glInternalFormat = GL_RGB32F_EXT;
-            *glFormat = GL_RGB;
-            *glType   = GL_FLOAT;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32A32:
-            if (RLGL.ExtSupported.texFloat32) *glInternalFormat = GL_RGBA32F_EXT;
-            *glFormat = GL_RGBA;
-            *glType   = GL_FLOAT;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R16:
-            if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_R16F_EXT;
-            *glFormat = GL_RED_EXT;
-            *glType   = GL_HALF_FLOAT;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16:
-            if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_RGB16F_EXT;
-            *glFormat = GL_RGB;
-            *glType   = GL_HALF_FLOAT;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16A16:
-            if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_RGBA16F_EXT;
-            *glFormat = GL_RGBA;
-            *glType   = GL_HALF_FLOAT;
-            break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R32:
+                if (RLGL.ExtSupported.texFloat32) *glInternalFormat = GL_R32F_EXT;
+                *glFormat = GL_RED_EXT;
+                *glType   = GL_FLOAT;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32:
+                if (RLGL.ExtSupported.texFloat32) *glInternalFormat = GL_RGB32F_EXT;
+                *glFormat = GL_RGB;
+                *glType   = GL_FLOAT;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32A32:
+                if (RLGL.ExtSupported.texFloat32) *glInternalFormat = GL_RGBA32F_EXT;
+                *glFormat = GL_RGBA;
+                *glType   = GL_FLOAT;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R16:
+                if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_R16F_EXT;
+                *glFormat = GL_RED_EXT;
+                *glType   = GL_HALF_FLOAT;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16:
+                if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_RGB16F_EXT;
+                *glFormat = GL_RGB;
+                *glType   = GL_HALF_FLOAT;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16A16:
+                if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_RGBA16F_EXT;
+                *glFormat = GL_RGBA;
+                *glType   = GL_HALF_FLOAT;
+                break;
 #else
-        case RL_PIXELFORMAT_UNCOMPRESSED_R32:
-            if (RLGL.ExtSupported.texFloat32) *glInternalFormat = GL_LUMINANCE;
-            *glFormat = GL_LUMINANCE;
-            *glType   = GL_FLOAT;
-            break; // NOTE: Requires extension OES_texture_float
-        case RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32:
-            if (RLGL.ExtSupported.texFloat32) *glInternalFormat = GL_RGB;
-            *glFormat = GL_RGB;
-            *glType   = GL_FLOAT;
-            break; // NOTE: Requires extension OES_texture_float
-        case RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32A32:
-            if (RLGL.ExtSupported.texFloat32) *glInternalFormat = GL_RGBA;
-            *glFormat = GL_RGBA;
-            *glType   = GL_FLOAT;
-            break; // NOTE: Requires extension OES_texture_float
+            case RL_PIXELFORMAT_UNCOMPRESSED_R32:
+                if (RLGL.ExtSupported.texFloat32) *glInternalFormat = GL_LUMINANCE;
+                *glFormat = GL_LUMINANCE;
+                *glType   = GL_FLOAT;
+                break; // NOTE: Requires extension OES_texture_float
+            case RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32:
+                if (RLGL.ExtSupported.texFloat32) *glInternalFormat = GL_RGB;
+                *glFormat = GL_RGB;
+                *glType   = GL_FLOAT;
+                break; // NOTE: Requires extension OES_texture_float
+            case RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32A32:
+                if (RLGL.ExtSupported.texFloat32) *glInternalFormat = GL_RGBA;
+                *glFormat = GL_RGBA;
+                *glType   = GL_FLOAT;
+                break; // NOTE: Requires extension OES_texture_float
 #if defined(GRAPHICS_API_OPENGL_21)
-        case RL_PIXELFORMAT_UNCOMPRESSED_R16:
-            if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_LUMINANCE;
-            *glFormat = GL_LUMINANCE;
-            *glType   = GL_HALF_FLOAT_ARB;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16:
-            if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_RGB;
-            *glFormat = GL_RGB;
-            *glType   = GL_HALF_FLOAT_ARB;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16A16:
-            if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_RGBA;
-            *glFormat = GL_RGBA;
-            *glType   = GL_HALF_FLOAT_ARB;
-            break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R16:
+                if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_LUMINANCE;
+                *glFormat = GL_LUMINANCE;
+                *glType   = GL_HALF_FLOAT_ARB;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16:
+                if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_RGB;
+                *glFormat = GL_RGB;
+                *glType   = GL_HALF_FLOAT_ARB;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16A16:
+                if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_RGBA;
+                *glFormat = GL_RGBA;
+                *glType   = GL_HALF_FLOAT_ARB;
+                break;
 #else // defined(GRAPHICS_API_OPENGL_ES2)
-        case RL_PIXELFORMAT_UNCOMPRESSED_R16:
-            if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_LUMINANCE;
-            *glFormat = GL_LUMINANCE;
-            *glType   = GL_HALF_FLOAT_OES;
-            break; // NOTE: Requires extension OES_texture_half_float
-        case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16:
-            if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_RGB;
-            *glFormat = GL_RGB;
-            *glType   = GL_HALF_FLOAT_OES;
-            break; // NOTE: Requires extension OES_texture_half_float
-        case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16A16:
-            if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_RGBA;
-            *glFormat = GL_RGBA;
-            *glType   = GL_HALF_FLOAT_OES;
-            break; // NOTE: Requires extension OES_texture_half_float
+            case RL_PIXELFORMAT_UNCOMPRESSED_R16:
+                if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_LUMINANCE;
+                *glFormat = GL_LUMINANCE;
+                *glType   = GL_HALF_FLOAT_OES;
+                break; // NOTE: Requires extension OES_texture_half_float
+            case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16:
+                if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_RGB;
+                *glFormat = GL_RGB;
+                *glType   = GL_HALF_FLOAT_OES;
+                break; // NOTE: Requires extension OES_texture_half_float
+            case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16A16:
+                if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_RGBA;
+                *glFormat = GL_RGBA;
+                *glType   = GL_HALF_FLOAT_OES;
+                break; // NOTE: Requires extension OES_texture_half_float
 #endif
 #endif
 #endif
 #elif defined(GRAPHICS_API_OPENGL_33)
-        case RL_PIXELFORMAT_UNCOMPRESSED_GRAYSCALE:
-            *glInternalFormat = GL_R8;
-            *glFormat         = GL_RED;
-            *glType           = GL_UNSIGNED_BYTE;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA:
-            *glInternalFormat = GL_RG8;
-            *glFormat         = GL_RG;
-            *glType           = GL_UNSIGNED_BYTE;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R5G6B5:
-            *glInternalFormat = GL_RGB565;
-            *glFormat         = GL_RGB;
-            *glType           = GL_UNSIGNED_SHORT_5_6_5;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8:
-            *glInternalFormat = GL_RGB8;
-            *glFormat         = GL_RGB;
-            *glType           = GL_UNSIGNED_BYTE;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R5G5B5A1:
-            *glInternalFormat = GL_RGB5_A1;
-            *glFormat         = GL_RGBA;
-            *glType           = GL_UNSIGNED_SHORT_5_5_5_1;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R4G4B4A4:
-            *glInternalFormat = GL_RGBA4;
-            *glFormat         = GL_RGBA;
-            *glType           = GL_UNSIGNED_SHORT_4_4_4_4;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8:
-            *glInternalFormat = GL_RGBA8;
-            *glFormat         = GL_RGBA;
-            *glType           = GL_UNSIGNED_BYTE;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R32:
-            if (RLGL.ExtSupported.texFloat32) *glInternalFormat = GL_R32F;
-            *glFormat = GL_RED;
-            *glType   = GL_FLOAT;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32:
-            if (RLGL.ExtSupported.texFloat32) *glInternalFormat = GL_RGB32F;
-            *glFormat = GL_RGB;
-            *glType   = GL_FLOAT;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32A32:
-            if (RLGL.ExtSupported.texFloat32) *glInternalFormat = GL_RGBA32F;
-            *glFormat = GL_RGBA;
-            *glType   = GL_FLOAT;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R16:
-            if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_R16F;
-            *glFormat = GL_RED;
-            *glType   = GL_HALF_FLOAT;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16:
-            if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_RGB16F;
-            *glFormat = GL_RGB;
-            *glType   = GL_HALF_FLOAT;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16A16:
-            if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_RGBA16F;
-            *glFormat = GL_RGBA;
-            *glType   = GL_HALF_FLOAT;
-            break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_GRAYSCALE:
+                *glInternalFormat = GL_R8;
+                *glFormat         = GL_RED;
+                *glType           = GL_UNSIGNED_BYTE;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA:
+                *glInternalFormat = GL_RG8;
+                *glFormat         = GL_RG;
+                *glType           = GL_UNSIGNED_BYTE;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R5G6B5:
+                *glInternalFormat = GL_RGB565;
+                *glFormat         = GL_RGB;
+                *glType           = GL_UNSIGNED_SHORT_5_6_5;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8:
+                *glInternalFormat = GL_RGB8;
+                *glFormat         = GL_RGB;
+                *glType           = GL_UNSIGNED_BYTE;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R5G5B5A1:
+                *glInternalFormat = GL_RGB5_A1;
+                *glFormat         = GL_RGBA;
+                *glType           = GL_UNSIGNED_SHORT_5_5_5_1;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R4G4B4A4:
+                *glInternalFormat = GL_RGBA4;
+                *glFormat         = GL_RGBA;
+                *glType           = GL_UNSIGNED_SHORT_4_4_4_4;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8:
+                *glInternalFormat = GL_RGBA8;
+                *glFormat         = GL_RGBA;
+                *glType           = GL_UNSIGNED_BYTE;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R32:
+                if (RLGL.ExtSupported.texFloat32) *glInternalFormat = GL_R32F;
+                *glFormat = GL_RED;
+                *glType   = GL_FLOAT;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32:
+                if (RLGL.ExtSupported.texFloat32) *glInternalFormat = GL_RGB32F;
+                *glFormat = GL_RGB;
+                *glType   = GL_FLOAT;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32A32:
+                if (RLGL.ExtSupported.texFloat32) *glInternalFormat = GL_RGBA32F;
+                *glFormat = GL_RGBA;
+                *glType   = GL_FLOAT;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R16:
+                if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_R16F;
+                *glFormat = GL_RED;
+                *glType   = GL_HALF_FLOAT;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16:
+                if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_RGB16F;
+                *glFormat = GL_RGB;
+                *glType   = GL_HALF_FLOAT;
+                break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16A16:
+                if (RLGL.ExtSupported.texFloat16) *glInternalFormat = GL_RGBA16F;
+                *glFormat = GL_RGBA;
+                *glType   = GL_HALF_FLOAT;
+                break;
 #endif
 #if !defined(GRAPHICS_API_OPENGL_11)
-        case RL_PIXELFORMAT_COMPRESSED_DXT1_RGB:
-            if (RLGL.ExtSupported.texCompDXT) *glInternalFormat = GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
-            break;
-        case RL_PIXELFORMAT_COMPRESSED_DXT1_RGBA:
-            if (RLGL.ExtSupported.texCompDXT) *glInternalFormat = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
-            break;
-        case RL_PIXELFORMAT_COMPRESSED_DXT3_RGBA:
-            if (RLGL.ExtSupported.texCompDXT) *glInternalFormat = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
-            break;
-        case RL_PIXELFORMAT_COMPRESSED_DXT5_RGBA:
-            if (RLGL.ExtSupported.texCompDXT) *glInternalFormat = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
-            break;
-        case RL_PIXELFORMAT_COMPRESSED_ETC1_RGB:
-            if (RLGL.ExtSupported.texCompETC1) *glInternalFormat = GL_ETC1_RGB8_OES;
-            break; // NOTE: Requires OpenGL ES 2.0 or OpenGL 4.3
-        case RL_PIXELFORMAT_COMPRESSED_ETC2_RGB:
-            if (RLGL.ExtSupported.texCompETC2) *glInternalFormat = GL_COMPRESSED_RGB8_ETC2;
-            break; // NOTE: Requires OpenGL ES 3.0 or OpenGL 4.3
-        case RL_PIXELFORMAT_COMPRESSED_ETC2_EAC_RGBA:
-            if (RLGL.ExtSupported.texCompETC2) *glInternalFormat = GL_COMPRESSED_RGBA8_ETC2_EAC;
-            break; // NOTE: Requires OpenGL ES 3.0 or OpenGL 4.3
-        case RL_PIXELFORMAT_COMPRESSED_PVRT_RGB:
-            if (RLGL.ExtSupported.texCompPVRT) *glInternalFormat = GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
-            break; // NOTE: Requires PowerVR GPU
-        case RL_PIXELFORMAT_COMPRESSED_PVRT_RGBA:
-            if (RLGL.ExtSupported.texCompPVRT) *glInternalFormat = GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
-            break; // NOTE: Requires PowerVR GPU
-        case RL_PIXELFORMAT_COMPRESSED_ASTC_4x4_RGBA:
-            if (RLGL.ExtSupported.texCompASTC) *glInternalFormat = GL_COMPRESSED_RGBA_ASTC_4x4_KHR;
-            break; // NOTE: Requires OpenGL ES 3.1 or OpenGL 4.3
-        case RL_PIXELFORMAT_COMPRESSED_ASTC_8x8_RGBA:
-            if (RLGL.ExtSupported.texCompASTC) *glInternalFormat = GL_COMPRESSED_RGBA_ASTC_8x8_KHR;
-            break; // NOTE: Requires OpenGL ES 3.1 or OpenGL 4.3
+            case RL_PIXELFORMAT_COMPRESSED_DXT1_RGB:
+                if (RLGL.ExtSupported.texCompDXT) *glInternalFormat = GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
+                break;
+            case RL_PIXELFORMAT_COMPRESSED_DXT1_RGBA:
+                if (RLGL.ExtSupported.texCompDXT) *glInternalFormat = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+                break;
+            case RL_PIXELFORMAT_COMPRESSED_DXT3_RGBA:
+                if (RLGL.ExtSupported.texCompDXT) *glInternalFormat = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+                break;
+            case RL_PIXELFORMAT_COMPRESSED_DXT5_RGBA:
+                if (RLGL.ExtSupported.texCompDXT) *glInternalFormat = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+                break;
+            case RL_PIXELFORMAT_COMPRESSED_ETC1_RGB:
+                if (RLGL.ExtSupported.texCompETC1) *glInternalFormat = GL_ETC1_RGB8_OES;
+                break; // NOTE: Requires OpenGL ES 2.0 or OpenGL 4.3
+            case RL_PIXELFORMAT_COMPRESSED_ETC2_RGB:
+                if (RLGL.ExtSupported.texCompETC2) *glInternalFormat = GL_COMPRESSED_RGB8_ETC2;
+                break; // NOTE: Requires OpenGL ES 3.0 or OpenGL 4.3
+            case RL_PIXELFORMAT_COMPRESSED_ETC2_EAC_RGBA:
+                if (RLGL.ExtSupported.texCompETC2) *glInternalFormat = GL_COMPRESSED_RGBA8_ETC2_EAC;
+                break; // NOTE: Requires OpenGL ES 3.0 or OpenGL 4.3
+            case RL_PIXELFORMAT_COMPRESSED_PVRT_RGB:
+                if (RLGL.ExtSupported.texCompPVRT) *glInternalFormat = GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
+                break; // NOTE: Requires PowerVR GPU
+            case RL_PIXELFORMAT_COMPRESSED_PVRT_RGBA:
+                if (RLGL.ExtSupported.texCompPVRT) *glInternalFormat = GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
+                break; // NOTE: Requires PowerVR GPU
+            case RL_PIXELFORMAT_COMPRESSED_ASTC_4x4_RGBA:
+                if (RLGL.ExtSupported.texCompASTC) *glInternalFormat = GL_COMPRESSED_RGBA_ASTC_4x4_KHR;
+                break; // NOTE: Requires OpenGL ES 3.1 or OpenGL 4.3
+            case RL_PIXELFORMAT_COMPRESSED_ASTC_8x8_RGBA:
+                if (RLGL.ExtSupported.texCompASTC) *glInternalFormat = GL_COMPRESSED_RGBA_ASTC_8x8_KHR;
+                break; // NOTE: Requires OpenGL ES 3.1 or OpenGL 4.3
 #endif
-        default:
-            TRACELOG (RL_LOG_WARNING, "TEXTURE: Current format not supported (%i)", format);
-            break;
+            default: TRACELOG (RL_LOG_WARNING, "TEXTURE: Current format not supported (%i)", format); break;
         }
 }
 
 // Unload texture from GPU memory
 void
 rlUnloadTexture (unsigned int id)
-{
-    glDeleteTextures (1, &id);
-}
+{ glDeleteTextures (1, &id); }
 
 // Generate mipmap data for selected texture
 // NOTE: Only supports GPU mipmap generation
@@ -4452,41 +4275,41 @@ rlFramebufferAttach (unsigned int id, unsigned int texId, int attachType, int te
 
     switch (attachType)
         {
-        case RL_ATTACHMENT_COLOR_CHANNEL0:
-        case RL_ATTACHMENT_COLOR_CHANNEL1:
-        case RL_ATTACHMENT_COLOR_CHANNEL2:
-        case RL_ATTACHMENT_COLOR_CHANNEL3:
-        case RL_ATTACHMENT_COLOR_CHANNEL4:
-        case RL_ATTACHMENT_COLOR_CHANNEL5:
-        case RL_ATTACHMENT_COLOR_CHANNEL6:
-        case RL_ATTACHMENT_COLOR_CHANNEL7:
-            {
-                if (texType == RL_ATTACHMENT_TEXTURE2D)
-                    glFramebufferTexture2D (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachType, GL_TEXTURE_2D, texId, mipLevel);
-                else if (texType == RL_ATTACHMENT_RENDERBUFFER)
-                    glFramebufferRenderbuffer (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachType, GL_RENDERBUFFER, texId);
-                else if (texType >= RL_ATTACHMENT_CUBEMAP_POSITIVE_X)
-                    glFramebufferTexture2D (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachType, GL_TEXTURE_CUBE_MAP_POSITIVE_X + texType, texId,
-                                            mipLevel);
-            }
-            break;
-        case RL_ATTACHMENT_DEPTH:
-            {
-                if (texType == RL_ATTACHMENT_TEXTURE2D) glFramebufferTexture2D (GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texId, mipLevel);
-                else if (texType == RL_ATTACHMENT_RENDERBUFFER)
-                    glFramebufferRenderbuffer (GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, texId);
-            }
-            break;
-        case RL_ATTACHMENT_STENCIL:
-            {
-                if (texType == RL_ATTACHMENT_TEXTURE2D)
-                    glFramebufferTexture2D (GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, texId, mipLevel);
-                else if (texType == RL_ATTACHMENT_RENDERBUFFER)
-                    glFramebufferRenderbuffer (GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, texId);
-            }
-            break;
-        default:
-            break;
+            case RL_ATTACHMENT_COLOR_CHANNEL0:
+            case RL_ATTACHMENT_COLOR_CHANNEL1:
+            case RL_ATTACHMENT_COLOR_CHANNEL2:
+            case RL_ATTACHMENT_COLOR_CHANNEL3:
+            case RL_ATTACHMENT_COLOR_CHANNEL4:
+            case RL_ATTACHMENT_COLOR_CHANNEL5:
+            case RL_ATTACHMENT_COLOR_CHANNEL6:
+            case RL_ATTACHMENT_COLOR_CHANNEL7:
+                {
+                    if (texType == RL_ATTACHMENT_TEXTURE2D)
+                        glFramebufferTexture2D (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachType, GL_TEXTURE_2D, texId, mipLevel);
+                    else if (texType == RL_ATTACHMENT_RENDERBUFFER)
+                        glFramebufferRenderbuffer (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachType, GL_RENDERBUFFER, texId);
+                    else if (texType >= RL_ATTACHMENT_CUBEMAP_POSITIVE_X)
+                        glFramebufferTexture2D (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachType, GL_TEXTURE_CUBE_MAP_POSITIVE_X + texType, texId,
+                                                mipLevel);
+                }
+                break;
+            case RL_ATTACHMENT_DEPTH:
+                {
+                    if (texType == RL_ATTACHMENT_TEXTURE2D)
+                        glFramebufferTexture2D (GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texId, mipLevel);
+                    else if (texType == RL_ATTACHMENT_RENDERBUFFER)
+                        glFramebufferRenderbuffer (GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, texId);
+                }
+                break;
+            case RL_ATTACHMENT_STENCIL:
+                {
+                    if (texType == RL_ATTACHMENT_TEXTURE2D)
+                        glFramebufferTexture2D (GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, texId, mipLevel);
+                    else if (texType == RL_ATTACHMENT_RENDERBUFFER)
+                        glFramebufferRenderbuffer (GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, texId);
+                }
+                break;
+            default: break;
         }
 
     glBindFramebuffer (GL_FRAMEBUFFER, 0);
@@ -4508,22 +4331,19 @@ rlFramebufferComplete (unsigned int id)
         {
             switch (status)
                 {
-                case GL_FRAMEBUFFER_UNSUPPORTED:
-                    TRACELOG (RL_LOG_WARNING, "FBO: [ID %i] Framebuffer is unsupported", id);
-                    break;
-                case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-                    TRACELOG (RL_LOG_WARNING, "FBO: [ID %i] Framebuffer has incomplete attachment", id);
-                    break;
+                    case GL_FRAMEBUFFER_UNSUPPORTED: TRACELOG (RL_LOG_WARNING, "FBO: [ID %i] Framebuffer is unsupported", id); break;
+                    case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+                        TRACELOG (RL_LOG_WARNING, "FBO: [ID %i] Framebuffer has incomplete attachment", id);
+                        break;
 #if defined(GRAPHICS_API_OPENGL_ES2)
-                case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
-                    TRACELOG (RL_LOG_WARNING, "FBO: [ID %i] Framebuffer has incomplete dimensions", id);
-                    break;
+                    case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
+                        TRACELOG (RL_LOG_WARNING, "FBO: [ID %i] Framebuffer has incomplete dimensions", id);
+                        break;
 #endif
-                case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-                    TRACELOG (RL_LOG_WARNING, "FBO: [ID %i] Framebuffer has a missing attachment", id);
-                    break;
-                default:
-                    break;
+                    case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+                        TRACELOG (RL_LOG_WARNING, "FBO: [ID %i] Framebuffer has a missing attachment", id);
+                        break;
+                    default: break;
                 }
         }
 
@@ -4710,9 +4530,7 @@ rlDisableVertexAttribute (unsigned int index)
 // Draw vertex array
 void
 rlDrawVertexArray (int offset, int count)
-{
-    glDrawArrays (GL_TRIANGLES, offset, count);
-}
+{ glDrawArrays (GL_TRIANGLES, offset, count); }
 
 // Draw vertex array elements
 void
@@ -4755,21 +4573,16 @@ rlEnableStatePointer (int vertexAttribType, void* buffer)
     if (buffer != NULL) glEnableClientState (vertexAttribType);
     switch (vertexAttribType)
         {
-        case GL_VERTEX_ARRAY:
-            glVertexPointer (3, GL_FLOAT, 0, buffer);
-            break;
-        case GL_TEXTURE_COORD_ARRAY:
-            glTexCoordPointer (2, GL_FLOAT, 0, buffer);
-            break;
-        case GL_NORMAL_ARRAY:
-            if (buffer != NULL) glNormalPointer (GL_FLOAT, 0, buffer);
-            break;
-        case GL_COLOR_ARRAY:
-            if (buffer != NULL) glColorPointer (4, GL_UNSIGNED_BYTE, 0, buffer);
-            break;
-        // case GL_INDEX_ARRAY: if (buffer != NULL) glIndexPointer(GL_SHORT, 0, buffer); break; // Indexed colors
-        default:
-            break;
+            case GL_VERTEX_ARRAY: glVertexPointer (3, GL_FLOAT, 0, buffer); break;
+            case GL_TEXTURE_COORD_ARRAY: glTexCoordPointer (2, GL_FLOAT, 0, buffer); break;
+            case GL_NORMAL_ARRAY:
+                if (buffer != NULL) glNormalPointer (GL_FLOAT, 0, buffer);
+                break;
+            case GL_COLOR_ARRAY:
+                if (buffer != NULL) glColorPointer (4, GL_UNSIGNED_BYTE, 0, buffer);
+                break;
+            // case GL_INDEX_ARRAY: if (buffer != NULL) glIndexPointer(GL_SHORT, 0, buffer); break; // Indexed colors
+            default: break;
         }
 #endif
 }
@@ -4869,24 +4682,19 @@ rlLoadShader (const char* code, int type)
         {
             switch (type)
                 {
-                case GL_VERTEX_SHADER:
-                    TRACELOG (RL_LOG_WARNING, "SHADER: [ID %i] Failed to compile vertex shader code", shaderId);
-                    break;
-                case GL_FRAGMENT_SHADER:
-                    TRACELOG (RL_LOG_WARNING, "SHADER: [ID %i] Failed to compile fragment shader code", shaderId);
-                    break;
-                    // case GL_GEOMETRY_SHADER:
+                    case GL_VERTEX_SHADER: TRACELOG (RL_LOG_WARNING, "SHADER: [ID %i] Failed to compile vertex shader code", shaderId); break;
+                    case GL_FRAGMENT_SHADER:
+                        TRACELOG (RL_LOG_WARNING, "SHADER: [ID %i] Failed to compile fragment shader code", shaderId);
+                        break;
+                        // case GL_GEOMETRY_SHADER:
 #if defined(GRAPHICS_API_OPENGL_43)
-                case GL_COMPUTE_SHADER:
-                    TRACELOG (RL_LOG_WARNING, "SHADER: [ID %i] Failed to compile compute shader code", shaderId);
-                    break;
+                    case GL_COMPUTE_SHADER: TRACELOG (RL_LOG_WARNING, "SHADER: [ID %i] Failed to compile compute shader code", shaderId); break;
 #elif defined(GRAPHICS_API_OPENGL_33)
-                case GL_COMPUTE_SHADER:
-                    TRACELOG (RL_LOG_WARNING, "SHADER: Compute shaders not enabled. Define GRAPHICS_API_OPENGL_43", shaderId);
-                    break;
+                    case GL_COMPUTE_SHADER:
+                        TRACELOG (RL_LOG_WARNING, "SHADER: Compute shaders not enabled. Define GRAPHICS_API_OPENGL_43", shaderId);
+                        break;
 #endif
-                default:
-                    break;
+                    default: break;
                 }
 
             int maxLength = 0;
@@ -4910,24 +4718,19 @@ rlLoadShader (const char* code, int type)
         {
             switch (type)
                 {
-                case GL_VERTEX_SHADER:
-                    TRACELOG (RL_LOG_INFO, "SHADER: [ID %i] Vertex shader compiled successfully", shaderId);
-                    break;
-                case GL_FRAGMENT_SHADER:
-                    TRACELOG (RL_LOG_INFO, "SHADER: [ID %i] Fragment shader compiled successfully", shaderId);
-                    break;
-                    // case GL_GEOMETRY_SHADER:
+                    case GL_VERTEX_SHADER: TRACELOG (RL_LOG_INFO, "SHADER: [ID %i] Vertex shader compiled successfully", shaderId); break;
+                    case GL_FRAGMENT_SHADER:
+                        TRACELOG (RL_LOG_INFO, "SHADER: [ID %i] Fragment shader compiled successfully", shaderId);
+                        break;
+                        // case GL_GEOMETRY_SHADER:
 #if defined(GRAPHICS_API_OPENGL_43)
-                case GL_COMPUTE_SHADER:
-                    TRACELOG (RL_LOG_INFO, "SHADER: [ID %i] Compute shader compiled successfully", shaderId);
-                    break;
+                    case GL_COMPUTE_SHADER: TRACELOG (RL_LOG_INFO, "SHADER: [ID %i] Compute shader compiled successfully", shaderId); break;
 #elif defined(GRAPHICS_API_OPENGL_33)
-                case GL_COMPUTE_SHADER:
-                    TRACELOG (RL_LOG_WARNING, "SHADER: Compute shaders not enabled. Define GRAPHICS_API_OPENGL_43", shaderId);
-                    break;
+                    case GL_COMPUTE_SHADER:
+                        TRACELOG (RL_LOG_WARNING, "SHADER: Compute shaders not enabled. Define GRAPHICS_API_OPENGL_43", shaderId);
+                        break;
 #endif
-                default:
-                    break;
+                    default: break;
                 }
         }
 #endif
@@ -5202,49 +5005,22 @@ rlSetUniform (int locIndex, const void* value, int uniformType, int count)
 #if defined(GRAPHICS_API_OPENGL_33) || defined(GRAPHICS_API_OPENGL_ES2)
     switch (uniformType)
         {
-        case RL_SHADER_UNIFORM_FLOAT:
-            glUniform1fv (locIndex, count, (float*)value);
-            break;
-        case RL_SHADER_UNIFORM_VEC2:
-            glUniform2fv (locIndex, count, (float*)value);
-            break;
-        case RL_SHADER_UNIFORM_VEC3:
-            glUniform3fv (locIndex, count, (float*)value);
-            break;
-        case RL_SHADER_UNIFORM_VEC4:
-            glUniform4fv (locIndex, count, (float*)value);
-            break;
-        case RL_SHADER_UNIFORM_INT:
-            glUniform1iv (locIndex, count, (int*)value);
-            break;
-        case RL_SHADER_UNIFORM_IVEC2:
-            glUniform2iv (locIndex, count, (int*)value);
-            break;
-        case RL_SHADER_UNIFORM_IVEC3:
-            glUniform3iv (locIndex, count, (int*)value);
-            break;
-        case RL_SHADER_UNIFORM_IVEC4:
-            glUniform4iv (locIndex, count, (int*)value);
-            break;
+            case RL_SHADER_UNIFORM_FLOAT: glUniform1fv (locIndex, count, (float*)value); break;
+            case RL_SHADER_UNIFORM_VEC2: glUniform2fv (locIndex, count, (float*)value); break;
+            case RL_SHADER_UNIFORM_VEC3: glUniform3fv (locIndex, count, (float*)value); break;
+            case RL_SHADER_UNIFORM_VEC4: glUniform4fv (locIndex, count, (float*)value); break;
+            case RL_SHADER_UNIFORM_INT: glUniform1iv (locIndex, count, (int*)value); break;
+            case RL_SHADER_UNIFORM_IVEC2: glUniform2iv (locIndex, count, (int*)value); break;
+            case RL_SHADER_UNIFORM_IVEC3: glUniform3iv (locIndex, count, (int*)value); break;
+            case RL_SHADER_UNIFORM_IVEC4: glUniform4iv (locIndex, count, (int*)value); break;
 #if !defined(GRAPHICS_API_OPENGL_ES2)
-        case RL_SHADER_UNIFORM_UINT:
-            glUniform1uiv (locIndex, count, (unsigned int*)value);
-            break;
-        case RL_SHADER_UNIFORM_UIVEC2:
-            glUniform2uiv (locIndex, count, (unsigned int*)value);
-            break;
-        case RL_SHADER_UNIFORM_UIVEC3:
-            glUniform3uiv (locIndex, count, (unsigned int*)value);
-            break;
-        case RL_SHADER_UNIFORM_UIVEC4:
-            glUniform4uiv (locIndex, count, (unsigned int*)value);
-            break;
+            case RL_SHADER_UNIFORM_UINT: glUniform1uiv (locIndex, count, (unsigned int*)value); break;
+            case RL_SHADER_UNIFORM_UIVEC2: glUniform2uiv (locIndex, count, (unsigned int*)value); break;
+            case RL_SHADER_UNIFORM_UIVEC3: glUniform3uiv (locIndex, count, (unsigned int*)value); break;
+            case RL_SHADER_UNIFORM_UIVEC4: glUniform4uiv (locIndex, count, (unsigned int*)value); break;
 #endif
-        case RL_SHADER_UNIFORM_SAMPLER2D:
-            glUniform1iv (locIndex, count, (int*)value);
-            break;
-        default:
-            TRACELOG (RL_LOG_WARNING, "SHADER: Failed to set uniform value, data type not recognized");
+            case RL_SHADER_UNIFORM_SAMPLER2D: glUniform1iv (locIndex, count, (int*)value); break;
+            default: TRACELOG (RL_LOG_WARNING, "SHADER: Failed to set uniform value, data type not recognized");
         }
 #endif
 }
@@ -5256,20 +5032,19 @@ rlSetVertexAttributeDefault (int locIndex, const void* value, int attribType, in
 #if defined(GRAPHICS_API_OPENGL_33) || defined(GRAPHICS_API_OPENGL_ES2)
     switch (attribType)
         {
-        case RL_SHADER_ATTRIB_FLOAT:
-            if (count == 1) glVertexAttrib1fv (locIndex, (float*)value);
-            break;
-        case RL_SHADER_ATTRIB_VEC2:
-            if (count == 2) glVertexAttrib2fv (locIndex, (float*)value);
-            break;
-        case RL_SHADER_ATTRIB_VEC3:
-            if (count == 3) glVertexAttrib3fv (locIndex, (float*)value);
-            break;
-        case RL_SHADER_ATTRIB_VEC4:
-            if (count == 4) glVertexAttrib4fv (locIndex, (float*)value);
-            break;
-        default:
-            TRACELOG (RL_LOG_WARNING, "SHADER: Failed to set attrib default value, data type not recognized");
+            case RL_SHADER_ATTRIB_FLOAT:
+                if (count == 1) glVertexAttrib1fv (locIndex, (float*)value);
+                break;
+            case RL_SHADER_ATTRIB_VEC2:
+                if (count == 2) glVertexAttrib2fv (locIndex, (float*)value);
+                break;
+            case RL_SHADER_ATTRIB_VEC3:
+                if (count == 3) glVertexAttrib3fv (locIndex, (float*)value);
+                break;
+            case RL_SHADER_ATTRIB_VEC4:
+                if (count == 4) glVertexAttrib4fv (locIndex, (float*)value);
+                break;
+            default: TRACELOG (RL_LOG_WARNING, "SHADER: Failed to set attrib default value, data type not recognized");
         }
 #endif
 }
@@ -5689,81 +5464,31 @@ rlGetPixelFormatName (unsigned int format)
 {
     switch (format)
         {
-        case RL_PIXELFORMAT_UNCOMPRESSED_GRAYSCALE:
-            return "GRAYSCALE";
-            break; // 8 bit per pixel (no alpha)
-        case RL_PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA:
-            return "GRAY_ALPHA";
-            break; // 8*2 bpp (2 channels)
-        case RL_PIXELFORMAT_UNCOMPRESSED_R5G6B5:
-            return "R5G6B5";
-            break; // 16 bpp
-        case RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8:
-            return "R8G8B8";
-            break; // 24 bpp
-        case RL_PIXELFORMAT_UNCOMPRESSED_R5G5B5A1:
-            return "R5G5B5A1";
-            break; // 16 bpp (1 bit alpha)
-        case RL_PIXELFORMAT_UNCOMPRESSED_R4G4B4A4:
-            return "R4G4B4A4";
-            break; // 16 bpp (4 bit alpha)
-        case RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8:
-            return "R8G8B8A8";
-            break; // 32 bpp
-        case RL_PIXELFORMAT_UNCOMPRESSED_R32:
-            return "R32";
-            break; // 32 bpp (1 channel - float)
-        case RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32:
-            return "R32G32B32";
-            break; // 32*3 bpp (3 channels - float)
-        case RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32A32:
-            return "R32G32B32A32";
-            break; // 32*4 bpp (4 channels - float)
-        case RL_PIXELFORMAT_UNCOMPRESSED_R16:
-            return "R16";
-            break; // 16 bpp (1 channel - half float)
-        case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16:
-            return "R16G16B16";
-            break; // 16*3 bpp (3 channels - half float)
-        case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16A16:
-            return "R16G16B16A16";
-            break; // 16*4 bpp (4 channels - half float)
-        case RL_PIXELFORMAT_COMPRESSED_DXT1_RGB:
-            return "DXT1_RGB";
-            break; // 4 bpp (no alpha)
-        case RL_PIXELFORMAT_COMPRESSED_DXT1_RGBA:
-            return "DXT1_RGBA";
-            break; // 4 bpp (1 bit alpha)
-        case RL_PIXELFORMAT_COMPRESSED_DXT3_RGBA:
-            return "DXT3_RGBA";
-            break; // 8 bpp
-        case RL_PIXELFORMAT_COMPRESSED_DXT5_RGBA:
-            return "DXT5_RGBA";
-            break; // 8 bpp
-        case RL_PIXELFORMAT_COMPRESSED_ETC1_RGB:
-            return "ETC1_RGB";
-            break; // 4 bpp
-        case RL_PIXELFORMAT_COMPRESSED_ETC2_RGB:
-            return "ETC2_RGB";
-            break; // 4 bpp
-        case RL_PIXELFORMAT_COMPRESSED_ETC2_EAC_RGBA:
-            return "ETC2_RGBA";
-            break; // 8 bpp
-        case RL_PIXELFORMAT_COMPRESSED_PVRT_RGB:
-            return "PVRT_RGB";
-            break; // 4 bpp
-        case RL_PIXELFORMAT_COMPRESSED_PVRT_RGBA:
-            return "PVRT_RGBA";
-            break; // 4 bpp
-        case RL_PIXELFORMAT_COMPRESSED_ASTC_4x4_RGBA:
-            return "ASTC_4x4_RGBA";
-            break; // 8 bpp
-        case RL_PIXELFORMAT_COMPRESSED_ASTC_8x8_RGBA:
-            return "ASTC_8x8_RGBA";
-            break; // 2 bpp
-        default:
-            return "UNKNOWN";
-            break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_GRAYSCALE: return "GRAYSCALE"; break;       // 8 bit per pixel (no alpha)
+            case RL_PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA: return "GRAY_ALPHA"; break;     // 8*2 bpp (2 channels)
+            case RL_PIXELFORMAT_UNCOMPRESSED_R5G6B5: return "R5G6B5"; break;             // 16 bpp
+            case RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8: return "R8G8B8"; break;             // 24 bpp
+            case RL_PIXELFORMAT_UNCOMPRESSED_R5G5B5A1: return "R5G5B5A1"; break;         // 16 bpp (1 bit alpha)
+            case RL_PIXELFORMAT_UNCOMPRESSED_R4G4B4A4: return "R4G4B4A4"; break;         // 16 bpp (4 bit alpha)
+            case RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8: return "R8G8B8A8"; break;         // 32 bpp
+            case RL_PIXELFORMAT_UNCOMPRESSED_R32: return "R32"; break;                   // 32 bpp (1 channel - float)
+            case RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32: return "R32G32B32"; break;       // 32*3 bpp (3 channels - float)
+            case RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32A32: return "R32G32B32A32"; break; // 32*4 bpp (4 channels - float)
+            case RL_PIXELFORMAT_UNCOMPRESSED_R16: return "R16"; break;                   // 16 bpp (1 channel - half float)
+            case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16: return "R16G16B16"; break;       // 16*3 bpp (3 channels - half float)
+            case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16A16: return "R16G16B16A16"; break; // 16*4 bpp (4 channels - half float)
+            case RL_PIXELFORMAT_COMPRESSED_DXT1_RGB: return "DXT1_RGB"; break;           // 4 bpp (no alpha)
+            case RL_PIXELFORMAT_COMPRESSED_DXT1_RGBA: return "DXT1_RGBA"; break;         // 4 bpp (1 bit alpha)
+            case RL_PIXELFORMAT_COMPRESSED_DXT3_RGBA: return "DXT3_RGBA"; break;         // 8 bpp
+            case RL_PIXELFORMAT_COMPRESSED_DXT5_RGBA: return "DXT5_RGBA"; break;         // 8 bpp
+            case RL_PIXELFORMAT_COMPRESSED_ETC1_RGB: return "ETC1_RGB"; break;           // 4 bpp
+            case RL_PIXELFORMAT_COMPRESSED_ETC2_RGB: return "ETC2_RGB"; break;           // 4 bpp
+            case RL_PIXELFORMAT_COMPRESSED_ETC2_EAC_RGBA: return "ETC2_RGBA"; break;     // 8 bpp
+            case RL_PIXELFORMAT_COMPRESSED_PVRT_RGB: return "PVRT_RGB"; break;           // 4 bpp
+            case RL_PIXELFORMAT_COMPRESSED_PVRT_RGBA: return "PVRT_RGBA"; break;         // 4 bpp
+            case RL_PIXELFORMAT_COMPRESSED_ASTC_4x4_RGBA: return "ASTC_4x4_RGBA"; break; // 8 bpp
+            case RL_PIXELFORMAT_COMPRESSED_ASTC_8x8_RGBA: return "ASTC_8x8_RGBA"; break; // 2 bpp
+            default: return "UNKNOWN"; break;
         }
 }
 
@@ -5780,8 +5505,7 @@ rlLoadShaderDefault (void)
     RLGL.State.defaultShaderLocs = (int*)RL_CALLOC (RL_MAX_SHADER_LOCATIONS, sizeof (int));
 
     // NOTE: All locations must be reseted to -1 (no location)
-    for (int i = 0; i < RL_MAX_SHADER_LOCATIONS; i++)
-        RLGL.State.defaultShaderLocs[i] = -1;
+    for (int i = 0; i < RL_MAX_SHADER_LOCATIONS; i++) RLGL.State.defaultShaderLocs[i] = -1;
 
     // Vertex shader directly defined, no external file required
     const char* defaultVShaderCode =
@@ -5937,188 +5661,72 @@ rlGetCompressedFormatName (int format)
 {
     switch (format)
         {
-        // GL_EXT_texture_compression_s3tc
-        case 0x83F0:
-            return "GL_COMPRESSED_RGB_S3TC_DXT1_EXT";
-            break;
-        case 0x83F1:
-            return "GL_COMPRESSED_RGBA_S3TC_DXT1_EXT";
-            break;
-        case 0x83F2:
-            return "GL_COMPRESSED_RGBA_S3TC_DXT3_EXT";
-            break;
-        case 0x83F3:
-            return "GL_COMPRESSED_RGBA_S3TC_DXT5_EXT";
-            break;
-        // GL_3DFX_texture_compression_FXT1
-        case 0x86B0:
-            return "GL_COMPRESSED_RGB_FXT1_3DFX";
-            break;
-        case 0x86B1:
-            return "GL_COMPRESSED_RGBA_FXT1_3DFX";
-            break;
-        // GL_IMG_texture_compression_pvrtc
-        case 0x8C00:
-            return "GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG";
-            break;
-        case 0x8C01:
-            return "GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG";
-            break;
-        case 0x8C02:
-            return "GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG";
-            break;
-        case 0x8C03:
-            return "GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG";
-            break;
-        // GL_OES_compressed_ETC1_RGB8_texture
-        case 0x8D64:
-            return "GL_ETC1_RGB8_OES";
-            break;
-        // GL_ARB_texture_compression_rgtc
-        case 0x8DBB:
-            return "GL_COMPRESSED_RED_RGTC1";
-            break;
-        case 0x8DBC:
-            return "GL_COMPRESSED_SIGNED_RED_RGTC1";
-            break;
-        case 0x8DBD:
-            return "GL_COMPRESSED_RG_RGTC2";
-            break;
-        case 0x8DBE:
-            return "GL_COMPRESSED_SIGNED_RG_RGTC2";
-            break;
-        // GL_ARB_texture_compression_bptc
-        case 0x8E8C:
-            return "GL_COMPRESSED_RGBA_BPTC_UNORM_ARB";
-            break;
-        case 0x8E8D:
-            return "GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_ARB";
-            break;
-        case 0x8E8E:
-            return "GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_ARB";
-            break;
-        case 0x8E8F:
-            return "GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_ARB";
-            break;
-        // GL_ARB_ES3_compatibility
-        case 0x9274:
-            return "GL_COMPRESSED_RGB8_ETC2";
-            break;
-        case 0x9275:
-            return "GL_COMPRESSED_SRGB8_ETC2";
-            break;
-        case 0x9276:
-            return "GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2";
-            break;
-        case 0x9277:
-            return "GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2";
-            break;
-        case 0x9278:
-            return "GL_COMPRESSED_RGBA8_ETC2_EAC";
-            break;
-        case 0x9279:
-            return "GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC";
-            break;
-        case 0x9270:
-            return "GL_COMPRESSED_R11_EAC";
-            break;
-        case 0x9271:
-            return "GL_COMPRESSED_SIGNED_R11_EAC";
-            break;
-        case 0x9272:
-            return "GL_COMPRESSED_RG11_EAC";
-            break;
-        case 0x9273:
-            return "GL_COMPRESSED_SIGNED_RG11_EAC";
-            break;
-        // GL_KHR_texture_compression_astc_hdr
-        case 0x93B0:
-            return "GL_COMPRESSED_RGBA_ASTC_4x4_KHR";
-            break;
-        case 0x93B1:
-            return "GL_COMPRESSED_RGBA_ASTC_5x4_KHR";
-            break;
-        case 0x93B2:
-            return "GL_COMPRESSED_RGBA_ASTC_5x5_KHR";
-            break;
-        case 0x93B3:
-            return "GL_COMPRESSED_RGBA_ASTC_6x5_KHR";
-            break;
-        case 0x93B4:
-            return "GL_COMPRESSED_RGBA_ASTC_6x6_KHR";
-            break;
-        case 0x93B5:
-            return "GL_COMPRESSED_RGBA_ASTC_8x5_KHR";
-            break;
-        case 0x93B6:
-            return "GL_COMPRESSED_RGBA_ASTC_8x6_KHR";
-            break;
-        case 0x93B7:
-            return "GL_COMPRESSED_RGBA_ASTC_8x8_KHR";
-            break;
-        case 0x93B8:
-            return "GL_COMPRESSED_RGBA_ASTC_10x5_KHR";
-            break;
-        case 0x93B9:
-            return "GL_COMPRESSED_RGBA_ASTC_10x6_KHR";
-            break;
-        case 0x93BA:
-            return "GL_COMPRESSED_RGBA_ASTC_10x8_KHR";
-            break;
-        case 0x93BB:
-            return "GL_COMPRESSED_RGBA_ASTC_10x10_KHR";
-            break;
-        case 0x93BC:
-            return "GL_COMPRESSED_RGBA_ASTC_12x10_KHR";
-            break;
-        case 0x93BD:
-            return "GL_COMPRESSED_RGBA_ASTC_12x12_KHR";
-            break;
-        case 0x93D0:
-            return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR";
-            break;
-        case 0x93D1:
-            return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR";
-            break;
-        case 0x93D2:
-            return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR";
-            break;
-        case 0x93D3:
-            return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR";
-            break;
-        case 0x93D4:
-            return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR";
-            break;
-        case 0x93D5:
-            return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR";
-            break;
-        case 0x93D6:
-            return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR";
-            break;
-        case 0x93D7:
-            return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR";
-            break;
-        case 0x93D8:
-            return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR";
-            break;
-        case 0x93D9:
-            return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR";
-            break;
-        case 0x93DA:
-            return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR";
-            break;
-        case 0x93DB:
-            return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR";
-            break;
-        case 0x93DC:
-            return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR";
-            break;
-        case 0x93DD:
-            return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR";
-            break;
-        default:
-            return "GL_COMPRESSED_UNKNOWN";
-            break;
+            // GL_EXT_texture_compression_s3tc
+            case 0x83F0: return "GL_COMPRESSED_RGB_S3TC_DXT1_EXT"; break;
+            case 0x83F1: return "GL_COMPRESSED_RGBA_S3TC_DXT1_EXT"; break;
+            case 0x83F2: return "GL_COMPRESSED_RGBA_S3TC_DXT3_EXT"; break;
+            case 0x83F3: return "GL_COMPRESSED_RGBA_S3TC_DXT5_EXT"; break;
+            // GL_3DFX_texture_compression_FXT1
+            case 0x86B0: return "GL_COMPRESSED_RGB_FXT1_3DFX"; break;
+            case 0x86B1: return "GL_COMPRESSED_RGBA_FXT1_3DFX"; break;
+            // GL_IMG_texture_compression_pvrtc
+            case 0x8C00: return "GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG"; break;
+            case 0x8C01: return "GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG"; break;
+            case 0x8C02: return "GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG"; break;
+            case 0x8C03: return "GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG"; break;
+            // GL_OES_compressed_ETC1_RGB8_texture
+            case 0x8D64: return "GL_ETC1_RGB8_OES"; break;
+            // GL_ARB_texture_compression_rgtc
+            case 0x8DBB: return "GL_COMPRESSED_RED_RGTC1"; break;
+            case 0x8DBC: return "GL_COMPRESSED_SIGNED_RED_RGTC1"; break;
+            case 0x8DBD: return "GL_COMPRESSED_RG_RGTC2"; break;
+            case 0x8DBE: return "GL_COMPRESSED_SIGNED_RG_RGTC2"; break;
+            // GL_ARB_texture_compression_bptc
+            case 0x8E8C: return "GL_COMPRESSED_RGBA_BPTC_UNORM_ARB"; break;
+            case 0x8E8D: return "GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_ARB"; break;
+            case 0x8E8E: return "GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_ARB"; break;
+            case 0x8E8F: return "GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_ARB"; break;
+            // GL_ARB_ES3_compatibility
+            case 0x9274: return "GL_COMPRESSED_RGB8_ETC2"; break;
+            case 0x9275: return "GL_COMPRESSED_SRGB8_ETC2"; break;
+            case 0x9276: return "GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2"; break;
+            case 0x9277: return "GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2"; break;
+            case 0x9278: return "GL_COMPRESSED_RGBA8_ETC2_EAC"; break;
+            case 0x9279: return "GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC"; break;
+            case 0x9270: return "GL_COMPRESSED_R11_EAC"; break;
+            case 0x9271: return "GL_COMPRESSED_SIGNED_R11_EAC"; break;
+            case 0x9272: return "GL_COMPRESSED_RG11_EAC"; break;
+            case 0x9273: return "GL_COMPRESSED_SIGNED_RG11_EAC"; break;
+            // GL_KHR_texture_compression_astc_hdr
+            case 0x93B0: return "GL_COMPRESSED_RGBA_ASTC_4x4_KHR"; break;
+            case 0x93B1: return "GL_COMPRESSED_RGBA_ASTC_5x4_KHR"; break;
+            case 0x93B2: return "GL_COMPRESSED_RGBA_ASTC_5x5_KHR"; break;
+            case 0x93B3: return "GL_COMPRESSED_RGBA_ASTC_6x5_KHR"; break;
+            case 0x93B4: return "GL_COMPRESSED_RGBA_ASTC_6x6_KHR"; break;
+            case 0x93B5: return "GL_COMPRESSED_RGBA_ASTC_8x5_KHR"; break;
+            case 0x93B6: return "GL_COMPRESSED_RGBA_ASTC_8x6_KHR"; break;
+            case 0x93B7: return "GL_COMPRESSED_RGBA_ASTC_8x8_KHR"; break;
+            case 0x93B8: return "GL_COMPRESSED_RGBA_ASTC_10x5_KHR"; break;
+            case 0x93B9: return "GL_COMPRESSED_RGBA_ASTC_10x6_KHR"; break;
+            case 0x93BA: return "GL_COMPRESSED_RGBA_ASTC_10x8_KHR"; break;
+            case 0x93BB: return "GL_COMPRESSED_RGBA_ASTC_10x10_KHR"; break;
+            case 0x93BC: return "GL_COMPRESSED_RGBA_ASTC_12x10_KHR"; break;
+            case 0x93BD: return "GL_COMPRESSED_RGBA_ASTC_12x12_KHR"; break;
+            case 0x93D0: return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR"; break;
+            case 0x93D1: return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR"; break;
+            case 0x93D2: return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR"; break;
+            case 0x93D3: return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR"; break;
+            case 0x93D4: return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR"; break;
+            case 0x93D5: return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR"; break;
+            case 0x93D6: return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR"; break;
+            case 0x93D7: return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR"; break;
+            case 0x93D8: return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR"; break;
+            case 0x93D9: return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR"; break;
+            case 0x93DA: return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR"; break;
+            case 0x93DB: return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR"; break;
+            case 0x93DC: return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR"; break;
+            case 0x93DD: return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR"; break;
+            default: return "GL_COMPRESSED_UNKNOWN"; break;
         }
 }
 #endif
@@ -6135,70 +5743,49 @@ rlGetPixelDataSize (int width, int height, int format)
 
     switch (format)
         {
-        case RL_PIXELFORMAT_UNCOMPRESSED_GRAYSCALE:
-            bpp = 8;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA:
-        case RL_PIXELFORMAT_UNCOMPRESSED_R5G6B5:
-        case RL_PIXELFORMAT_UNCOMPRESSED_R5G5B5A1:
-        case RL_PIXELFORMAT_UNCOMPRESSED_R4G4B4A4:
-            bpp = 16;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8:
-            bpp = 32;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8:
-            bpp = 24;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R32:
-            bpp = 32;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32:
-            bpp = 32 * 3;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32A32:
-            bpp = 32 * 4;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R16:
-            bpp = 16;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16:
-            bpp = 16 * 3;
-            break;
-        case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16A16:
-            bpp = 16 * 4;
-            break;
-        case RL_PIXELFORMAT_COMPRESSED_DXT1_RGB:
-        case RL_PIXELFORMAT_COMPRESSED_DXT1_RGBA:
-        case RL_PIXELFORMAT_COMPRESSED_ETC1_RGB:
-        case RL_PIXELFORMAT_COMPRESSED_ETC2_RGB:
-        case RL_PIXELFORMAT_COMPRESSED_PVRT_RGB:
-        case RL_PIXELFORMAT_COMPRESSED_PVRT_RGBA: // 8 bytes per each 4x4 block
-            {
-                int blockWidth  = (width + 3) / 4;
-                int blockHeight = (height + 3) / 4;
-                dataSize        = blockWidth * blockHeight * 8;
-            }
-            break;
-        case RL_PIXELFORMAT_COMPRESSED_DXT3_RGBA:
-        case RL_PIXELFORMAT_COMPRESSED_DXT5_RGBA:
-        case RL_PIXELFORMAT_COMPRESSED_ETC2_EAC_RGBA:
-        case RL_PIXELFORMAT_COMPRESSED_ASTC_4x4_RGBA: // 16 bytes per each 4x4 block
-            {
-                int blockWidth  = (width + 3) / 4;
-                int blockHeight = (height + 3) / 4;
-                dataSize        = blockWidth * blockHeight * 16;
-            }
-            break;
-        case RL_PIXELFORMAT_COMPRESSED_ASTC_8x8_RGBA: // 4 bytes per each 4x4 block
-            {
-                int blockWidth  = (width + 3) / 4;
-                int blockHeight = (height + 3) / 4;
-                dataSize        = blockWidth * blockHeight * 4;
-            }
-            break;
-        default:
-            break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_GRAYSCALE: bpp = 8; break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA:
+            case RL_PIXELFORMAT_UNCOMPRESSED_R5G6B5:
+            case RL_PIXELFORMAT_UNCOMPRESSED_R5G5B5A1:
+            case RL_PIXELFORMAT_UNCOMPRESSED_R4G4B4A4: bpp = 16; break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8: bpp = 32; break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8: bpp = 24; break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R32: bpp = 32; break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32: bpp = 32 * 3; break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R32G32B32A32: bpp = 32 * 4; break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R16: bpp = 16; break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16: bpp = 16 * 3; break;
+            case RL_PIXELFORMAT_UNCOMPRESSED_R16G16B16A16: bpp = 16 * 4; break;
+            case RL_PIXELFORMAT_COMPRESSED_DXT1_RGB:
+            case RL_PIXELFORMAT_COMPRESSED_DXT1_RGBA:
+            case RL_PIXELFORMAT_COMPRESSED_ETC1_RGB:
+            case RL_PIXELFORMAT_COMPRESSED_ETC2_RGB:
+            case RL_PIXELFORMAT_COMPRESSED_PVRT_RGB:
+            case RL_PIXELFORMAT_COMPRESSED_PVRT_RGBA: // 8 bytes per each 4x4 block
+                {
+                    int blockWidth  = (width + 3) / 4;
+                    int blockHeight = (height + 3) / 4;
+                    dataSize        = blockWidth * blockHeight * 8;
+                }
+                break;
+            case RL_PIXELFORMAT_COMPRESSED_DXT3_RGBA:
+            case RL_PIXELFORMAT_COMPRESSED_DXT5_RGBA:
+            case RL_PIXELFORMAT_COMPRESSED_ETC2_EAC_RGBA:
+            case RL_PIXELFORMAT_COMPRESSED_ASTC_4x4_RGBA: // 16 bytes per each 4x4 block
+                {
+                    int blockWidth  = (width + 3) / 4;
+                    int blockHeight = (height + 3) / 4;
+                    dataSize        = blockWidth * blockHeight * 16;
+                }
+                break;
+            case RL_PIXELFORMAT_COMPRESSED_ASTC_8x8_RGBA: // 4 bytes per each 4x4 block
+                {
+                    int blockWidth  = (width + 3) / 4;
+                    int blockHeight = (height + 3) / 4;
+                    dataSize        = blockWidth * blockHeight * 4;
+                }
+                break;
+            default: break;
         }
 
     // Compute dataSize for uncompressed texture data (no blocks)

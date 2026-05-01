@@ -126,10 +126,14 @@
 ## =============== TOOLCHAIN ===============
 # Compilador
 CC = gcc
-# Preprocesado: include path, define DEBUG, dependencias automaticas
+# Preprocesado: include path, define DEBUG, dependencias automaticas  
+#(Por fin!! Ha caído la tiranía de Ansi, Larga vida a la Revolución C11!!)
+#Crearemos programas con el estilo que se nos de la gana, los comentarios podrán tener // ,
+#las variables las podremos declarar en pleno for al lado de un return habrá un int i = 0; y no  pasará
+#nada ajjaajaj  que alegría.
 CPPFLAGS = -I ./headers -DDEBUG -MMD -MP
 # Procesado: warnings, debug, sin optimizacion, C89 estricto (exigido por I4)
-CFLAGS = -g -Wall -Wextra -Wpedantic -ansi -O0
+CFLAGS = -g -Wall -Wextra -Wpedantic  -O0
 # Linkeado: vacio (ver LDLIBS)
 LDFLAGS =
 # Valgrind: para targets *_v y debug de fugas de memoria

@@ -83,106 +83,62 @@ game_rule_walk_enemigo (Game* game)
     Set* space_num_ids = NULL;
     int *grid[HIGHT] = NULL, i, num_enemies = 0, loop;
 
-    if (!game)
-        {
-            return ERROR;
-        }
+    if (!game) { return ERROR; }
     player = game_get_player_at (game, PLAYER);
-    if (!player)
-        {
-            return ERROR;
-        }
+    if (!player) { return ERROR; }
     space = game_get_space (game, player_get_zone (player));
-    if (!space)
-        {
-            return ERROR;
-        }
+    if (!space) { return ERROR; }
     num_enemies = space_get_n_numens (space);
-    if (num_enemies == 0)
-        {
-            return OK;
-        }
+    if (num_enemies == 0) { return OK; }
     space_num_ids = space_get_numens (space);
 
     for (loop = 0; loop < num_enemies; loop++)
         {
             id_enemy = set_get_id_at (space_num_ids, loop);
-            if(id_enemy == NO_ID|| id_enemy == player_get_active_numen (player))
+            if (id_enemy == NO_ID || id_enemy == player_get_active_numen (player))
                 {
                     continue; /* Skip if the ID is NO_ID or if it's the player's active numen */
                 }
             enemy_num = game_get_numen_by_id (game, id_enemy);
 
-            if (!enemy_num || numen_get_health (enemy_num) <= 0)
-                {
-                   continue;
-                }
+            if (!enemy_num || numen_get_health (enemy_num) <= 0) { continue; }
 
             pos_current.pos_x = numen_get_pos_x (enemy_num);
             pos_current.pos_y = numen_get_pos_y (enemy_num);
 
             pos_player        = player_get_position (player);
 
-            if (pos_current.pos_x < pos_player.pos_x)
-                {
-                    direction = E;
-                }
-            else if (pos_current.pos_x > pos_player.pos_x)
-                {
-                    direction = W;
-                }
-            else if (pos_current.pos_y < pos_player.pos_y)
-                {
-                    direction = S;
-                }
-            else if (pos_current.pos_y > pos_player.pos_y)
-                {
-                    direction = N;
-                }
+            if (pos_current.pos_x < pos_player.pos_x) { direction = E; }
+            else if (pos_current.pos_x > pos_player.pos_x) { direction = W; }
+            else if (pos_current.pos_y < pos_player.pos_y) { direction = S; }
+            else if (pos_current.pos_y > pos_player.pos_y) { direction = N; }
             else
                 {
-                   continue; /* Enemy is already on the player's position */
+                    continue; /* Enemy is already on the player's position */
                 }
 
             if (numen_get_health (enemy_num) == 1)
                 {
                     switch (direction)
                         {
-                        case N:
-                            return S;
-                        case S:
-                            return N;
-                        case E:
-                            return W;
-                        case W:
-                            return E;
-                        default:
-                            return U;
+                            case N: return S;
+                            case S: return N;
+                            case E: return W;
+                            case W: return E;
+                            default: return U;
                         }
                 }
 
             switch (direction) /*Falta definir cuánto se mueve*/
                 {
-                case N:
-                    pos_current.pos_y -= HIGHT;
-                    break;
-                case S:
-                    pos_current.pos_y += HIGHT;
-                    break;
-                case W:
-                    pos_current.pos_x -= WIDHT;
-                    break;
-                case E:
-                    pos_current.pos_x += WIDHT;
-                    break;
-                default:
-                    break;
+                    case N: pos_current.pos_y -= HIGHT; break;
+                    case S: pos_current.pos_y += HIGHT; break;
+                    case W: pos_current.pos_x -= WIDHT; break;
+                    case E: pos_current.pos_x += WIDHT; break;
+                    default: break;
                 }
 
-            for (i = 0; i < HIGHT; i++)
-                {
-                    grid[i] = space_get_grid_by_line (game_get_space (game, game_get_numen_location (game, id_enemy)), i);
-                }
+            for (i = 0; i < HIGHT; i++) { grid[i] = space_get_grid_by_line (game_get_space (game, game_get_numen_location (game, id_enemy)), i); }
             if (grid[pos_current.pos_x][pos_current.pos_y] != 0)
                 {
                     if (numen_set_pos_x (enemy_num, pos_current.pos_x) == ERROR || numen_set_pos_y (enemy_num, pos_current.pos_y) == ERROR)
@@ -211,59 +167,33 @@ game_rule_move (Game* game)
 
     if (!game) return;
     player = game_get_player_at (game, PLAYER);
-    if (!player)
-        {
-            return ERROR;
-        }
+    if (!player) { return ERROR; }
 
     origin = player_get_zone (player);
-    if (origin == NO_ID)
-        {
-            return ERROR;
-        }
+    if (origin == NO_ID) { return ERROR; }
 
     dir_str = command_get_target (game_get_last_command (game));
-    if (!dir_str)
-        {
-            return ERROR;
-        }
+    if (!dir_str) { return ERROR; }
 
     dir = ge_parse_direction (dir_str);
-    if (dir == U)
-        {
-            return ERROR;
-        }
+    if (dir == U) { return ERROR; }
 
     dest = game_get_connection (game, origin, dir);
-    if (dest == NO_ID)
-        {
-            return ERROR;
-        }
+    if (dest == NO_ID) { return ERROR; }
 
-    if (game_connection_is_open (game, origin, dir) == FALSE)
-        {
-            return ERROR;
-        }
+    if (game_connection_is_open (game, origin, dir) == FALSE) { return ERROR; }
     pos_x = player_get_pos_x (player);
     pos_y = player_get_pos_y (player);
 
     switch (dir)
         {
-        case S:
-            player_set_position (player, pos_x, (int)((float)(HIGHT_SCREEN / SCALE)));
-            break;
+            case S: player_set_position (player, pos_x, (int)((float)(HIGHT_SCREEN / SCALE))); break;
 
-        case N:
-            player_set_position (player, pos_x, (int)(HIGHT_SCREEN - (float)(HIGHT_SCREEN / SCALE)));
-            break;
+            case N: player_set_position (player, pos_x, (int)(HIGHT_SCREEN - (float)(HIGHT_SCREEN / SCALE))); break;
 
-        case E:
-            player_set_position (player, (int)((float)(WIDHT_SCREEN / SCALE)), pos_y);
-            break;
+            case E: player_set_position (player, (int)((float)(WIDHT_SCREEN / SCALE)), pos_y); break;
 
-        case W:
-            player_set_position (player, (int)(WIDHT_SCREEN - (float)(WIDHT_SCREEN / SCALE)), pos_y);
-            break;
+            case W: player_set_position (player, (int)(WIDHT_SCREEN - (float)(WIDHT_SCREEN / SCALE)), pos_y); break;
         }
     player_set_zone (player, dest);
 

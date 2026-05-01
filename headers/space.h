@@ -111,8 +111,7 @@ Bool space_contains_object (Space* space, Id id_obj);
  * @param obj_pos the position of the object to remove
  * @return OK if removed, ERROR if not found or space is NULL
  */
-Status
-space_remove_object (Space* space, Id obj_id, Position obj_pos);
+Status space_remove_object (Space* space, Id obj_id, Position obj_pos);
 
 /**
  * @brief It returns the number of objects in the space
@@ -184,7 +183,7 @@ int space_get_n_characters (Space* space);
  * @param content a pointer to the array of integers representing the line
  * @return OK if set, ERROR if space is NULL or line is out of bounds
  */
-Status space_set_grid_by_line(Space *space, int line, int *content);
+Status space_set_grid_by_line (Space* space, int line, int* content);
 /**
  * @brief It gets a line of the grid for the space
  * @author Rafael

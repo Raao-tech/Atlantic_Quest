@@ -18,9 +18,9 @@
 /*Dimensiones de la pantalla del graphic Engine*/
 #define WIDHT_SCREEN 950
 #define HIGHT_SCREEN 650
-#define SCALE        20
-#define WIDHT   WIDHT_SCREEN/SCALE
-#define HIGHT   HIGHT_SCREEN/SCALE
+#define SCALE 20
+#define WIDHT WIDHT_SCREEN / SCALE
+#define HIGHT HIGHT_SCREEN / SCALE
 
 /* Consts to numbers */
 #define WORD_SIZE 1000
@@ -57,7 +57,6 @@
 /*<! Max_heald of skills*/
 #define PLAYER 0
 #define NUM_SKILLS 4
-
 
 typedef long Id;
 
@@ -110,8 +109,7 @@ typedef struct _Position
 {
     int pos_x; /*!< Posición x en el space */
     int pos_y; /*!< Posición y en el space */
-}Position;
-
+} Position;
 
 #define MIN_LIFE 0
 #define MIN_ATTACK 0

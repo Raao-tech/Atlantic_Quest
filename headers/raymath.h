@@ -2528,30 +2528,30 @@ QuaternionFromMatrix (Matrix mat)
 
     switch (biggestIndex)
         {
-        case 0:
-            result.w = biggestVal;
-            result.x = (mat.m6 - mat.m9) * mult;
-            result.y = (mat.m8 - mat.m2) * mult;
-            result.z = (mat.m1 - mat.m4) * mult;
-            break;
-        case 1:
-            result.x = biggestVal;
-            result.w = (mat.m6 - mat.m9) * mult;
-            result.y = (mat.m1 + mat.m4) * mult;
-            result.z = (mat.m8 + mat.m2) * mult;
-            break;
-        case 2:
-            result.y = biggestVal;
-            result.w = (mat.m8 - mat.m2) * mult;
-            result.x = (mat.m1 + mat.m4) * mult;
-            result.z = (mat.m6 + mat.m9) * mult;
-            break;
-        case 3:
-            result.z = biggestVal;
-            result.w = (mat.m1 - mat.m4) * mult;
-            result.x = (mat.m8 + mat.m2) * mult;
-            result.y = (mat.m6 + mat.m9) * mult;
-            break;
+            case 0:
+                result.w = biggestVal;
+                result.x = (mat.m6 - mat.m9) * mult;
+                result.y = (mat.m8 - mat.m2) * mult;
+                result.z = (mat.m1 - mat.m4) * mult;
+                break;
+            case 1:
+                result.x = biggestVal;
+                result.w = (mat.m6 - mat.m9) * mult;
+                result.y = (mat.m1 + mat.m4) * mult;
+                result.z = (mat.m8 + mat.m2) * mult;
+                break;
+            case 2:
+                result.y = biggestVal;
+                result.w = (mat.m8 - mat.m2) * mult;
+                result.x = (mat.m1 + mat.m4) * mult;
+                result.z = (mat.m6 + mat.m9) * mult;
+                break;
+            case 3:
+                result.z = biggestVal;
+                result.w = (mat.m1 - mat.m4) * mult;
+                result.x = (mat.m8 + mat.m2) * mult;
+                result.y = (mat.m6 + mat.m9) * mult;
+                break;
         }
 
     return result;
@@ -3007,14 +3007,10 @@ inline const Vector3& operator /= (Vector3 & lhs, const Vector3& rhs)
 }
 
 inline bool operator == (const Vector3& lhs, const Vector3& rhs)
-{
-    return FloatEquals (lhs.x, rhs.x) && FloatEquals (lhs.y, rhs.y) && FloatEquals (lhs.z, rhs.z);
-}
+{ return FloatEquals (lhs.x, rhs.x) && FloatEquals (lhs.y, rhs.y) && FloatEquals (lhs.z, rhs.z); }
 
 inline bool operator != (const Vector3& lhs, const Vector3& rhs)
-{
-    return !FloatEquals (lhs.x, rhs.x) || !FloatEquals (lhs.y, rhs.y) || !FloatEquals (lhs.z, rhs.z);
-}
+{ return !FloatEquals (lhs.x, rhs.x) || !FloatEquals (lhs.y, rhs.y) || !FloatEquals (lhs.z, rhs.z); }
 
 // Vector4 operators
 static constexpr Vector4 Vector4Zeros = { 0, 0, 0, 0 };
@@ -3073,14 +3069,10 @@ inline const Vector4& operator /= (Vector4 & lhs, const Vector4& rhs)
 }
 
 inline bool operator == (const Vector4& lhs, const Vector4& rhs)
-{
-    return FloatEquals (lhs.x, rhs.x) && FloatEquals (lhs.y, rhs.y) && FloatEquals (lhs.z, rhs.z) && FloatEquals (lhs.w, rhs.w);
-}
+{ return FloatEquals (lhs.x, rhs.x) && FloatEquals (lhs.y, rhs.y) && FloatEquals (lhs.z, rhs.z) && FloatEquals (lhs.w, rhs.w); }
 
 inline bool operator != (const Vector4& lhs, const Vector4& rhs)
-{
-    return !FloatEquals (lhs.x, rhs.x) || !FloatEquals (lhs.y, rhs.y) || !FloatEquals (lhs.z, rhs.z) || !FloatEquals (lhs.w, rhs.w);
-}
+{ return !FloatEquals (lhs.x, rhs.x) || !FloatEquals (lhs.y, rhs.y) || !FloatEquals (lhs.z, rhs.z) || !FloatEquals (lhs.w, rhs.w); }
 
 // Quaternion operators
 static constexpr Quaternion QuaternionZeros = { 0, 0, 0, 0 };

@@ -29,10 +29,7 @@ set_creat ()
 {
     Set* newset = NULL;
 
-    if ((newset = (Set*)malloc (sizeof (Set))) == NULL)
-        {
-            return NULL;
-        }
+    if ((newset = (Set*)malloc (sizeof (Set))) == NULL) { return NULL; }
     newset->n_ids = 0;
     newset->ids   = NULL;
 
@@ -44,17 +41,11 @@ set_destroy (Set* pset)
 
     int i;
 
-    if (!pset)
-        {
-            return ERROR;
-        }
+    if (!pset) { return ERROR; }
 
     if ((pset)->ids)
         {
-            for (i = 0; i < (pset)->n_ids; i++)
-                {
-                    (pset)->ids[i] = NO_ID;
-                }
+            for (i = 0; i < (pset)->n_ids; i++) { (pset)->ids[i] = NO_ID; }
             free ((pset)->ids);
             (pset)->ids = NULL;
         }
@@ -188,10 +179,7 @@ set_print (FILE* output, Set* pset)
         }
 
     fprintf (output, "**********The ids presents:**********\n");
-    for (int i = 0; i < pset->n_ids; i++)
-        {
-            fprintf (output, "\tn_Id (%d):\t" ROJO "%ld" RESET "\n", (i + 1), pset->ids[i]);
-        }
+    for (int i = 0; i < pset->n_ids; i++) { fprintf (output, "\tn_Id (%d):\t" ROJO "%ld" RESET "\n", (i + 1), pset->ids[i]); }
     fprintf (output, "**********END of the Ids*************\n");
 
     return OK;

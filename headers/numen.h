@@ -37,11 +37,11 @@ Status numen_set_pos_y (Numen* numen, int pos_y); /* tiene que estar entre los l
 int numen_get_pos_y (Numen* numen);
 
 /*======== (set/get) gdesc() ================*/
-Status numen_set_gdesc (Numen* numen, char* gdesc); // Será una línea de texto
+Status numen_set_gdesc (Numen* numen, char* gdesc); /*Será una línea de texto*/
 char* numen_get_gdesc (Numen* numen);
 
 /*======== (set/get) health ================*/
-Status numen_set_health (Numen* numen, int health); // tiene que ser mayor o igual a 0 siempre, sí fuera a ser negativo, se mantiene en 0
+Status numen_set_health (Numen* numen, int health); /* tiene que ser mayor o igual a 0 siempre, sí fuera a ser negativo, se mantiene en 0 */
 int numen_get_health (Numen* numen);
 
 /*======== (set/get) attack ================*/

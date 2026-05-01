@@ -95,10 +95,7 @@ numen_get_skill_by_id (Numen* numen, Id skill_id)
     if (!numen || skill_id < 0) return NO_ID;
     for (int i = 0; i < NUM_SKILLS; i++)
         {
-            if (numen->skills[i] == skill_id)
-                {
-                    return skill_id;
-                }
+            if (numen->skills[i] == skill_id) { return skill_id; }
         }
     return NO_ID;
 }
@@ -143,12 +140,14 @@ numen_get_corrupt (Numen* numen)
 }
 
 /*======== (set/get) position ================*/
-Status      numen_set_position (Numen* numen, int x, int y)
+Status
+numen_set_position (Numen* numen, int x, int y)
 {
     if (!numen) return ERROR;
     return entity_set_position (numen->c_numen, x, y);
 }
-Position    numen_get_position (Numen* numen)
+Position
+numen_get_position (Numen* numen)
 {
     Position numen_pos;
     numen_pos.pos_x = NO_POS;

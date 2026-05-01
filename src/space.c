@@ -21,16 +21,17 @@
  *
  *
  */
-struct _Space {
-  Id    id;                             /*!< Id number of the space, must be unique */
-  char  name[WORD_SIZE + 1];            /*!< Name of the space */
-  char  gdesc[WORD_SIZE +1];            /*!< Graphic description, only a filename */
-   char OST[WORD_SIZE +1];              /*!< Background music, only a filename */
-  int   *grid[HIGHT];                   /*!< Grid of graphi engine*/
-  Set  *objs_id;                        /*!< Set of object IDs in this space */
-  Set  *characters_id;                  /*!< Set of character IDs in this space */
-  Set  *numens_id;                      /*!< Set of numen IDs in this space */
-  Bool  discovered;                     /*!< Has this space been visited by a player? */
+struct _Space
+{
+    Id id;                     /*!< Id number of the space, must be unique */
+    char name[WORD_SIZE + 1];  /*!< Name of the space */
+    char gdesc[WORD_SIZE + 1]; /*!< Graphic description, only a filename */
+    char OST[WORD_SIZE + 1];   /*!< Background music, only a filename */
+    int* grid[HIGHT];          /*!< Grid of graphi engine*/
+    Set* objs_id;              /*!< Set of object IDs in this space */
+    Set* characters_id;        /*!< Set of character IDs in this space */
+    Set* numens_id;            /*!< Set of numen IDs in this space */
+    Bool discovered;           /*!< Has this space been visited by a player? */
 };
 
 /* ========== Create / Destroy ========== */
@@ -44,26 +45,28 @@ space_create ()
     newSpace = (Space*)calloc (1, sizeof (Space));
     if (!newSpace) return NULL;
 
-  newSpace->id = NO_ID;
-  newSpace->name[0] = '\0';
-  newSpace->gdesc[0] ='\0';
-   newSpace->OST[0] ='\0';
-  newSpace->discovered = FALSE;
-  newSpace->objs_id = set_creat();
-  if (!newSpace->objs_id) {
-    free(newSpace);
-    return NULL;
-  }
-  
-  /*Creamos la cuadrilla "grid" para la movilidad intra-space (Walk)*/
-  for (i = 0; i < HIGHT; i++) newSpace->grid[i]= NULL;
+    newSpace->id         = NO_ID;
+    newSpace->name[0]    = '\0';
+    newSpace->gdesc[0]   = '\0';
+    newSpace->OST[0]     = '\0';
+    newSpace->discovered = FALSE;
+    newSpace->objs_id    = set_creat ();
+    if (!newSpace->objs_id)
+        {
+            free (newSpace);
+            return NULL;
+        }
 
-  newSpace->characters_id = set_creat();
-  if (!newSpace->characters_id) {
-    set_destroy(newSpace->objs_id);
-    free(newSpace);
-    return NULL;
-  }
+    /*Creamos la cuadrilla "grid" para la movilidad intra-space (Walk)*/
+    for (i = 0; i < HIGHT; i++) newSpace->grid[i] = NULL;
+
+    newSpace->characters_id = set_creat ();
+    if (!newSpace->characters_id)
+        {
+            set_destroy (newSpace->objs_id);
+            free (newSpace);
+            return NULL;
+        }
 
     newSpace->numens_id = set_creat ();
     if (!newSpace->numens_id)
@@ -90,10 +93,8 @@ space_destroy (Space* space)
     set_destroy (space->characters_id);
     set_destroy (space->objs_id);
     set_destroy (space->numens_id);
-    for(i=0; i<HIGHT; i++)
-      if(space->grid[i])
-    free (space->grid);
-
+    for (i = 0; i < HIGHT; i++)
+        if (space->grid[i]) free (space->grid);
 
     free (space);
     return OK;
@@ -141,14 +142,11 @@ space_get_name (Space* space)
 Status
 space_set_object (Space* space, Id new_id, Position obj_pos)
 {
-       int *grid[HIGHT], i;
+    int *grid[HIGHT], i;
     if (!space) return ERROR;
-    
-    for(i=0; i<HIGHT; i++) grid[i]= space->grid[i];
-    if (grid[obj_pos.pos_y][obj_pos.pos_x] == new_id)
-        {
-            grid[obj_pos.pos_y][obj_pos.pos_x] = 0; 
-        }
+
+    for (i = 0; i < HIGHT; i++) grid[i] = space->grid[i];
+    if (grid[obj_pos.pos_y][obj_pos.pos_x] == new_id) { grid[obj_pos.pos_y][obj_pos.pos_x] = 0; }
     return set_add (space->objs_id, new_id);
 }
 
@@ -164,12 +162,9 @@ space_remove_object (Space* space, Id obj_id, Position obj_pos)
 {
     int *grid[HIGHT], i;
     if (!space) return ERROR;
-    
-    for(i=0; i<HIGHT; i++) grid[i]= space->grid[i];
-    if (grid[obj_pos.pos_y][obj_pos.pos_x] == obj_id)
-        {
-            grid[obj_pos.pos_y][obj_pos.pos_x] = 1; 
-        }
+
+    for (i = 0; i < HIGHT; i++) grid[i] = space->grid[i];
+    if (grid[obj_pos.pos_y][obj_pos.pos_x] == obj_id) { grid[obj_pos.pos_y][obj_pos.pos_x] = 1; }
     return set_delete_id (space->objs_id, obj_id);
 }
 
@@ -223,28 +218,29 @@ space_get_n_characters (Space* space)
 
 /* ========== Grid ================ */
 
-Status space_set_grid_by_line(Space *space, int line, int *content){
- int i=0;
-  if(!space || !content || line < 0 || line >= HIGHT) return ERROR;
+Status
+space_set_grid_by_line (Space* space, int line, int* content)
+{
+    int i = 0;
+    if (!space || !content || line < 0 || line >= HIGHT) return ERROR;
 
-  if(space->grid[line])
- {
-   free(space->grid[line]);
-}
-  space->grid[line]=content;
-  
- return OK;
+    if (space->grid[line]) { free (space->grid[line]); }
+    space->grid[line] = content;
+
+    return OK;
 }
 
-int* space_get_grid_by_line(Space* space, int line){
-  if(!space || line < 0 || line >= HIGHT) return NULL;
-  return space->grid[line];
+int*
+space_get_grid_by_line (Space* space, int line)
+{
+    if (!space || line < 0 || line >= HIGHT) return NULL;
+    return space->grid[line];
 }
 
 /* ========== OST ====================== */
 
-
-Status space_set_ost (Space* space, char* ost)
+Status
+space_set_ost (Space* space, char* ost)
 {
     if (!space || !ost) return ERROR;
 
@@ -254,7 +250,8 @@ Status space_set_ost (Space* space, char* ost)
     return OK;
 }
 
-char* space_get_ost (Space* space)
+char*
+space_get_ost (Space* space)
 {
     if (!space) return NULL;
     return space->OST;

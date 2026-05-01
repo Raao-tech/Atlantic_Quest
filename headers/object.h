@@ -149,7 +149,7 @@ Status obj_set_position (Object* obj, int x, int y);
  * @param obj a pointer to the object
  * @return position of the object, two NO_POS if there was some mistake
  */
-Position  obj_get_position (Object* obj);
+Position obj_get_position (Object* obj);
 /**
  * @brief It gets the position x of the object
  * @author Rafael and Violeta

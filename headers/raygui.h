@@ -1637,23 +1637,17 @@ GuiDisable (void)
 // Lock gui global state
 void
 GuiLock (void)
-{
-    guiLocked = true;
-}
+{ guiLocked = true; }
 
 // Unlock gui global state
 void
 GuiUnlock (void)
-{
-    guiLocked = false;
-}
+{ guiLocked = false; }
 
 // Check if gui is locked (global state)
 bool
 GuiIsLocked (void)
-{
-    return guiLocked;
-}
+{ return guiLocked; }
 
 // Set gui controls alpha global state
 void
@@ -1668,16 +1662,12 @@ GuiSetAlpha (float alpha)
 // Set gui state (global state)
 void
 GuiSetState (int state)
-{
-    guiState = (GuiState)state;
-}
+{ guiState = (GuiState)state; }
 
 // Get gui state (global state)
 int
 GuiGetState (void)
-{
-    return guiState;
-}
+{ return guiState; }
 
 // Set custom gui font
 // NOTE: Font loading/unloading is external to raygui
@@ -1697,9 +1687,7 @@ GuiSetFont (Font font)
 // Get custom gui font
 Font
 GuiGetFont (void)
-{
-    return guiFont;
-}
+{ return guiFont; }
 
 // Set control style property value
 void
@@ -1711,8 +1699,7 @@ GuiSetStyle (int control, int property, int value)
     // Default properties are propagated to all controls
     if ((control == 0) && (property < RAYGUI_MAX_PROPS_BASE))
         {
-            for (int i = 1; i < RAYGUI_MAX_CONTROLS; i++)
-                guiStyle[i * (RAYGUI_MAX_PROPS_BASE + RAYGUI_MAX_PROPS_EXTENDED) + property] = value;
+            for (int i = 1; i < RAYGUI_MAX_CONTROLS; i++) guiStyle[i * (RAYGUI_MAX_PROPS_BASE + RAYGUI_MAX_PROPS_EXTENDED) + property] = value;
         }
 }
 
@@ -2821,12 +2808,10 @@ GuiTextBox (Rectangle bounds, char* text, int textSize, bool editMode)
                                     if (pasteLength > 0)
                                         {
                                             // Move forward data from cursor position
-                                            for (int i = textLength + pasteLength; i > textBoxCursorIndex; i--)
-                                                text[i] = text[i - pasteLength];
+                                            for (int i = textLength + pasteLength; i > textBoxCursorIndex; i--) text[i] = text[i - pasteLength];
 
                                             // Paste data in at cursor
-                                            for (int i = 0; i < pasteLength; i++)
-                                                text[textBoxCursorIndex + i] = pasteText[i];
+                                            for (int i = 0; i < pasteLength; i++) text[textBoxCursorIndex + i] = pasteText[i];
 
                                             textBoxCursorIndex += pasteLength;
                                             textLength += pasteLength;
@@ -2839,12 +2824,10 @@ GuiTextBox (Rectangle bounds, char* text, int textSize, bool editMode)
                             // Adding codepoint to text, at current cursor position
 
                             // Move forward data from cursor position
-                            for (int i = (textLength + codepointSize); i > textBoxCursorIndex; i--)
-                                text[i] = text[i - codepointSize];
+                            for (int i = (textLength + codepointSize); i > textBoxCursorIndex; i--) text[i] = text[i - codepointSize];
 
                             // Add new codepoint in current cursor position
-                            for (int i = 0; i < codepointSize; i++)
-                                text[textBoxCursorIndex + i] = charEncoded[i];
+                            for (int i = 0; i < codepointSize; i++) text[textBoxCursorIndex + i] = charEncoded[i];
 
                             textBoxCursorIndex += codepointSize;
                             textLength += codepointSize;
@@ -2893,8 +2876,7 @@ GuiTextBox (Rectangle bounds, char* text, int textSize, bool editMode)
                                 }
 
                             // Move text after cursor forward (including final null terminator)
-                            for (int i = offset; i <= textLength; i++)
-                                text[i - accCodepointSize] = text[i];
+                            for (int i = offset; i <= textLength; i++) text[i - accCodepointSize] = text[i];
 
                             textLength -= accCodepointSize;
                         }
@@ -2907,8 +2889,7 @@ GuiTextBox (Rectangle bounds, char* text, int textSize, bool editMode)
                             GetCodepointNext (text + textBoxCursorIndex, &nextCodepointSize);
 
                             // Move text after cursor forward (including final null terminator)
-                            for (int i = textBoxCursorIndex + nextCodepointSize; i <= textLength; i++)
-                                text[i - nextCodepointSize] = text[i];
+                            for (int i = textBoxCursorIndex + nextCodepointSize; i <= textLength; i++) text[i - nextCodepointSize] = text[i];
 
                             textLength -= nextCodepointSize;
                         }
@@ -2947,8 +2928,7 @@ GuiTextBox (Rectangle bounds, char* text, int textSize, bool editMode)
                                 }
 
                             // Move text after cursor forward (including final null terminator)
-                            for (int i = textBoxCursorIndex; i <= textLength; i++)
-                                text[i - accCodepointSize] = text[i];
+                            for (int i = textBoxCursorIndex; i <= textLength; i++) text[i - accCodepointSize] = text[i];
 
                             textLength -= accCodepointSize;
                             textBoxCursorIndex -= accCodepointSize;
@@ -2963,8 +2943,7 @@ GuiTextBox (Rectangle bounds, char* text, int textSize, bool editMode)
                             GetCodepointPrevious (text + textBoxCursorIndex, &prevCodepointSize);
 
                             // Move text after cursor forward (including final null terminator)
-                            for (int i = textBoxCursorIndex; i <= textLength; i++)
-                                text[i - prevCodepointSize] = text[i];
+                            for (int i = textBoxCursorIndex; i <= textLength; i++) text[i - prevCodepointSize] = text[i];
 
                             textLength -= prevCodepointSize;
                             textBoxCursorIndex -= prevCodepointSize;
@@ -3309,8 +3288,7 @@ GuiValueBox (Rectangle bounds, const char* text, int* value, int minValue, int m
                         {
                             if (textValue[0] == '-')
                                 {
-                                    for (int i = 0; i < keyCount; i++)
-                                        textValue[i] = textValue[i + 1];
+                                    for (int i = 0; i < keyCount; i++) textValue[i] = textValue[i + 1];
 
                                     keyCount--;
                                     valueHasChanged = true;
@@ -3324,8 +3302,7 @@ GuiValueBox (Rectangle bounds, const char* text, int* value, int minValue, int m
                                             keyCount++;
                                         }
 
-                                    for (int i = keyCount; i > -1; i--)
-                                        textValue[i + 1] = textValue[i];
+                                    for (int i = keyCount; i > -1; i--) textValue[i + 1] = textValue[i];
 
                                     textValue[0] = '-';
                                     keyCount++;
@@ -3456,8 +3433,7 @@ GuiValueBoxFloat (Rectangle bounds, const char* text, char* textValue, float* va
                         {
                             if (textValue[0] == '-')
                                 {
-                                    for (int i = 0; i < keyCount; i++)
-                                        textValue[i] = textValue[i + 1];
+                                    for (int i = 0; i < keyCount; i++) textValue[i] = textValue[i + 1];
 
                                     keyCount--;
                                     valueHasChanged = true;
@@ -3471,8 +3447,7 @@ GuiValueBoxFloat (Rectangle bounds, const char* text, char* textValue, float* va
                                             keyCount++;
                                         }
 
-                                    for (int i = keyCount; i > -1; i--)
-                                        textValue[i + 1] = textValue[i];
+                                    for (int i = keyCount; i > -1; i--) textValue[i + 1] = textValue[i];
 
                                     textValue[0] = '-';
                                     keyCount++;
@@ -4664,23 +4639,17 @@ GuiGrid (Rectangle bounds, const char* text, float spacing, int subdivs, Vector2
 // Enable gui tooltips (global state)
 void
 GuiEnableTooltip (void)
-{
-    guiTooltip = true;
-}
+{ guiTooltip = true; }
 
 // Disable gui tooltips (global state)
 void
 GuiDisableTooltip (void)
-{
-    guiTooltip = false;
-}
+{ guiTooltip = false; }
 
 // Set tooltip string
 void
 GuiSetTooltip (const char* tooltip)
-{
-    guiTooltipPtr = tooltip;
-}
+{ guiTooltipPtr = tooltip; }
 
 //----------------------------------------------------------------------------------
 // Styles loading functions
@@ -4715,64 +4684,64 @@ GuiLoadStyle (const char* fileName)
                         {
                             switch (buffer[0])
                                 {
-                                case 'p':
-                                    {
-                                        // Style property: p <control_id> <property_id> <property_value> <property_name>
+                                    case 'p':
+                                        {
+                                            // Style property: p <control_id> <property_id> <property_value> <property_name>
 
-                                        sscanf (buffer, "p %d %d 0x%x", &controlId, &propertyId, &propertyValue);
-                                        GuiSetStyle (controlId, propertyId, (int)propertyValue);
-                                    }
-                                    break;
-                                case 'f':
-                                    {
-                                        // Style font: f <gen_font_size> <charmap_file> <font_file>
+                                            sscanf (buffer, "p %d %d 0x%x", &controlId, &propertyId, &propertyValue);
+                                            GuiSetStyle (controlId, propertyId, (int)propertyValue);
+                                        }
+                                        break;
+                                    case 'f':
+                                        {
+                                            // Style font: f <gen_font_size> <charmap_file> <font_file>
 
-                                        int fontSize              = 0;
-                                        char charmapFileName[256] = { 0 };
-                                        char fontFileName[256]    = { 0 };
-                                        sscanf (buffer, "f %d %s %[^\r\n]s", &fontSize, charmapFileName, fontFileName);
+                                            int fontSize              = 0;
+                                            char charmapFileName[256] = { 0 };
+                                            char fontFileName[256]    = { 0 };
+                                            sscanf (buffer, "f %d %s %[^\r\n]s", &fontSize, charmapFileName, fontFileName);
 
-                                        Font font          = { 0 };
-                                        int* codepoints    = NULL;
-                                        int codepointCount = 0;
+                                            Font font          = { 0 };
+                                            int* codepoints    = NULL;
+                                            int codepointCount = 0;
 
-                                        if (charmapFileName[0] != '0')
-                                            {
-                                                // Load text data from file
-                                                // NOTE: Expected an UTF-8 array of codepoints, no separation
-                                                char* textData = LoadFileText (TextFormat ("%s/%s", GetDirectoryPath (fileName), charmapFileName));
-                                                codepoints     = LoadCodepoints (textData, &codepointCount);
-                                                UnloadFileText (textData);
-                                            }
+                                            if (charmapFileName[0] != '0')
+                                                {
+                                                    // Load text data from file
+                                                    // NOTE: Expected an UTF-8 array of codepoints, no separation
+                                                    char* textData
+                                                        = LoadFileText (TextFormat ("%s/%s", GetDirectoryPath (fileName), charmapFileName));
+                                                    codepoints = LoadCodepoints (textData, &codepointCount);
+                                                    UnloadFileText (textData);
+                                                }
 
-                                        if (fontFileName[0] != '\0')
-                                            {
-                                                // In case a font is already loaded and it is not default internal font, unload it
-                                                if (font.texture.id != GetFontDefault ().texture.id) UnloadTexture (font.texture);
+                                            if (fontFileName[0] != '\0')
+                                                {
+                                                    // In case a font is already loaded and it is not default internal font, unload it
+                                                    if (font.texture.id != GetFontDefault ().texture.id) UnloadTexture (font.texture);
 
-                                                if (codepointCount > 0)
-                                                    font = LoadFontEx (TextFormat ("%s/%s", GetDirectoryPath (fileName), fontFileName), fontSize,
-                                                                       codepoints, codepointCount);
-                                                else
-                                                    font = LoadFontEx (TextFormat ("%s/%s", GetDirectoryPath (fileName), fontFileName), fontSize,
-                                                                       NULL, 0); // Default to 95 standard codepoints
-                                            }
+                                                    if (codepointCount > 0)
+                                                        font = LoadFontEx (TextFormat ("%s/%s", GetDirectoryPath (fileName), fontFileName), fontSize,
+                                                                           codepoints, codepointCount);
+                                                    else
+                                                        font = LoadFontEx (TextFormat ("%s/%s", GetDirectoryPath (fileName), fontFileName), fontSize,
+                                                                           NULL, 0); // Default to 95 standard codepoints
+                                                }
 
-                                        // If font texture not properly loaded, revert to default font and size/spacing
-                                        if (font.texture.id == 0)
-                                            {
-                                                font = GetFontDefault ();
-                                                GuiSetStyle (DEFAULT, TEXT_SIZE, 10);
-                                                GuiSetStyle (DEFAULT, TEXT_SPACING, 1);
-                                            }
+                                            // If font texture not properly loaded, revert to default font and size/spacing
+                                            if (font.texture.id == 0)
+                                                {
+                                                    font = GetFontDefault ();
+                                                    GuiSetStyle (DEFAULT, TEXT_SIZE, 10);
+                                                    GuiSetStyle (DEFAULT, TEXT_SPACING, 1);
+                                                }
 
-                                        UnloadCodepoints (codepoints);
+                                            UnloadCodepoints (codepoints);
 
-                                        if ((font.texture.id > 0) && (font.glyphCount > 0)) GuiSetFont (font);
-                                    }
-                                    break;
-                                default:
-                                    break;
+                                            if ((font.texture.id > 0) && (font.glyphCount > 0)) GuiSetFont (font);
+                                        }
+                                        break;
+                                    default: break;
                                 }
 
                             fgets (buffer, MAX_LINE_BUFFER_SIZE, rgsFile);
@@ -4954,9 +4923,7 @@ GuiIconText (int iconId, const char* text)
 // Get full icons data pointer
 unsigned int*
 GuiGetIcons (void)
-{
-    return guiIconsPtr;
-}
+{ return guiIconsPtr; }
 
 // Load raygui icons file (.rgi)
 // NOTE: In case nameIds are required, they can be requested with loadIconsName,
@@ -5215,8 +5182,7 @@ GuiLoadStyleFromMemory (const unsigned char* fileData, int dataSize)
                             GuiSetStyle (0, (int)propertyId, propertyValue);
 
                             if (propertyId < RAYGUI_MAX_PROPS_BASE)
-                                for (int j = 1; j < RAYGUI_MAX_CONTROLS; j++)
-                                    GuiSetStyle (j, (int)propertyId, propertyValue);
+                                for (int j = 1; j < RAYGUI_MAX_CONTROLS; j++) GuiSetStyle (j, (int)propertyId, propertyValue);
                         }
                     else GuiSetStyle ((int)controlId, (int)propertyId, propertyValue);
                 }
@@ -5416,22 +5382,22 @@ GetTextBounds (int control, Rectangle bounds)
     // Depending on control, TEXT_PADDING and TEXT_ALIGNMENT properties could affect the text-bounds
     switch (control)
         {
-        case COMBOBOX:
-        case DROPDOWNBOX:
-        case LISTVIEW:
-            // TODO: Special cases (no label): COMBOBOX, DROPDOWNBOX, LISTVIEW
-        case SLIDER:
-        case CHECKBOX:
-        case VALUEBOX:
-        case CONTROL11:
-            // TODO: More special cases (label on side): SLIDER, CHECKBOX, VALUEBOX, SPINNER
-        default:
-            {
-                // TODO: WARNING: TEXT_ALIGNMENT is already considered in GuiDrawText()
-                if (GuiGetStyle (control, TEXT_ALIGNMENT) == TEXT_ALIGN_RIGHT) textBounds.x -= GuiGetStyle (control, TEXT_PADDING);
-                else textBounds.x += GuiGetStyle (control, TEXT_PADDING);
-            }
-            break;
+            case COMBOBOX:
+            case DROPDOWNBOX:
+            case LISTVIEW:
+                // TODO: Special cases (no label): COMBOBOX, DROPDOWNBOX, LISTVIEW
+            case SLIDER:
+            case CHECKBOX:
+            case VALUEBOX:
+            case CONTROL11:
+                // TODO: More special cases (label on side): SLIDER, CHECKBOX, VALUEBOX, SPINNER
+            default:
+                {
+                    // TODO: WARNING: TEXT_ALIGNMENT is already considered in GuiDrawText()
+                    if (GuiGetStyle (control, TEXT_ALIGNMENT) == TEXT_ALIGN_RIGHT) textBounds.x -= GuiGetStyle (control, TEXT_PADDING);
+                    else textBounds.x += GuiGetStyle (control, TEXT_PADDING);
+                }
+                break;
         }
 
     return textBounds;
@@ -5477,8 +5443,7 @@ GetTextLines (const char* text, int* count)
 #define RAYGUI_MAX_TEXT_LINES 128
 
     static const char* lines[RAYGUI_MAX_TEXT_LINES] = { 0 };
-    for (int i = 0; i < RAYGUI_MAX_TEXT_LINES; i++)
-        lines[i] = NULL; // Init NULL pointers to substrings
+    for (int i = 0; i < RAYGUI_MAX_TEXT_LINES; i++) lines[i] = NULL; // Init NULL pointers to substrings
 
     int textLength = (int)strlen (text);
 
@@ -5589,36 +5554,27 @@ GuiDrawText (const char* text, Rectangle textBounds, int alignment, Color tint)
             // Check guiTextAlign global variables
             switch (alignment)
                 {
-                case TEXT_ALIGN_LEFT:
-                    textBoundsPosition.x = textBounds.x;
-                    break;
-                case TEXT_ALIGN_CENTER:
-                    textBoundsPosition.x = textBounds.x + textBounds.width / 2 - textSizeX / 2;
-                    break;
-                case TEXT_ALIGN_RIGHT:
-                    textBoundsPosition.x = textBounds.x + textBounds.width - textSizeX;
-                    break;
-                default:
-                    break;
+                    case TEXT_ALIGN_LEFT: textBoundsPosition.x = textBounds.x; break;
+                    case TEXT_ALIGN_CENTER: textBoundsPosition.x = textBounds.x + textBounds.width / 2 - textSizeX / 2; break;
+                    case TEXT_ALIGN_RIGHT: textBoundsPosition.x = textBounds.x + textBounds.width - textSizeX; break;
+                    default: break;
                 }
 
             if (textSizeX > textBounds.width && (lines[i] != NULL) && (lines[i][0] != '\0')) textBoundsPosition.x = textBounds.x;
 
             switch (alignmentVertical)
                 {
-                // Only valid in case of wordWrap = 0;
-                case TEXT_ALIGN_TOP:
-                    textBoundsPosition.y = textBounds.y + posOffsetY;
-                    break;
-                case TEXT_ALIGN_MIDDLE:
-                    textBoundsPosition.y
-                        = textBounds.y + posOffsetY + textBounds.height / 2 - totalHeight / 2 + TEXT_VALIGN_PIXEL_OFFSET (textBounds.height);
-                    break;
-                case TEXT_ALIGN_BOTTOM:
-                    textBoundsPosition.y = textBounds.y + posOffsetY + textBounds.height - totalHeight + TEXT_VALIGN_PIXEL_OFFSET (textBounds.height);
-                    break;
-                default:
-                    break;
+                    // Only valid in case of wordWrap = 0;
+                    case TEXT_ALIGN_TOP: textBoundsPosition.y = textBounds.y + posOffsetY; break;
+                    case TEXT_ALIGN_MIDDLE:
+                        textBoundsPosition.y
+                            = textBounds.y + posOffsetY + textBounds.height / 2 - totalHeight / 2 + TEXT_VALIGN_PIXEL_OFFSET (textBounds.height);
+                        break;
+                    case TEXT_ALIGN_BOTTOM:
+                        textBoundsPosition.y
+                            = textBounds.y + posOffsetY + textBounds.height - totalHeight + TEXT_VALIGN_PIXEL_OFFSET (textBounds.height);
+                        break;
+                    default: break;
                 }
 
             // NOTE: Make sure getting pixel-perfect coordinates,
@@ -5644,9 +5600,7 @@ GuiDrawText (const char* text, Rectangle textBounds, int alignment, Color tint)
             // Get size in bytes of text,
             // considering end of line and line break
             int lineSize = 0;
-            for (int c = 0; (lines[i][c] != '\0') && (lines[i][c] != '\n') && (lines[i][c] != '\r'); c++, lineSize++)
-                {
-                }
+            for (int c = 0; (lines[i][c] != '\0') && (lines[i][c] != '\n') && (lines[i][c] != '\r'); c++, lineSize++) {}
             float scaleFactor     = (float)GuiGetStyle (DEFAULT, TEXT_SIZE) / guiFont.baseSize;
 
             int lastSpaceIndex    = 0;
@@ -5983,49 +5937,49 @@ ConvertHSVtoRGB (Vector3 hsv)
 
     switch (i)
         {
-        case 0:
-            {
-                rgb.x = hsv.z;
-                rgb.y = t;
-                rgb.z = p;
-            }
-            break;
-        case 1:
-            {
-                rgb.x = q;
-                rgb.y = hsv.z;
-                rgb.z = p;
-            }
-            break;
-        case 2:
-            {
-                rgb.x = p;
-                rgb.y = hsv.z;
-                rgb.z = t;
-            }
-            break;
-        case 3:
-            {
-                rgb.x = p;
-                rgb.y = q;
-                rgb.z = hsv.z;
-            }
-            break;
-        case 4:
-            {
-                rgb.x = t;
-                rgb.y = p;
-                rgb.z = hsv.z;
-            }
-            break;
-        case 5:
-        default:
-            {
-                rgb.x = hsv.z;
-                rgb.y = p;
-                rgb.z = q;
-            }
-            break;
+            case 0:
+                {
+                    rgb.x = hsv.z;
+                    rgb.y = t;
+                    rgb.z = p;
+                }
+                break;
+            case 1:
+                {
+                    rgb.x = q;
+                    rgb.y = hsv.z;
+                    rgb.z = p;
+                }
+                break;
+            case 2:
+                {
+                    rgb.x = p;
+                    rgb.y = hsv.z;
+                    rgb.z = t;
+                }
+                break;
+            case 3:
+                {
+                    rgb.x = p;
+                    rgb.y = q;
+                    rgb.z = hsv.z;
+                }
+                break;
+            case 4:
+                {
+                    rgb.x = t;
+                    rgb.y = p;
+                    rgb.z = hsv.z;
+                }
+                break;
+            case 5:
+            default:
+                {
+                    rgb.x = hsv.z;
+                    rgb.y = p;
+                    rgb.z = q;
+                }
+                break;
         }
 
     return rgb;
@@ -6258,9 +6212,7 @@ GetColor (int hexValue)
 // Returns hexadecimal value for a Color
 static int
 ColorToInt (Color color)
-{
-    return (((int)color.r << 24) | ((int)color.g << 16) | ((int)color.b << 8) | (int)color.a);
-}
+{ return (((int)color.r << 24) | ((int)color.g << 16) | ((int)color.b << 8) | (int)color.a); }
 
 // Check if point is inside rectangle
 static bool
@@ -6362,8 +6314,7 @@ TextToInteger (const char* text)
             text++;
         }
 
-    for (int i = 0; ((text[i] >= '0') && (text[i] <= '9')); i++)
-        value = value * 10 + (int)(text[i] - '0');
+    for (int i = 0; ((text[i] >= '0') && (text[i] <= '9')); i++) value = value * 10 + (int)(text[i] - '0');
 
     return value * sign;
 }
@@ -6384,8 +6335,7 @@ TextToFloat (const char* text)
         }
 
     int i = 0;
-    for (; ((text[i] >= '0') && (text[i] <= '9')); i++)
-        value = value * 10.0f + (float)(text[i] - '0');
+    for (; ((text[i] >= '0') && (text[i] <= '9')); i++) value = value * 10.0f + (float)(text[i] - '0');
 
     if (text[i++] != '.') value *= sign;
     else
@@ -6456,30 +6406,21 @@ GetCodepointNext (const char* text, int* codepointSize)
     if (0xf0 == (0xf8 & ptr[0]))
         {
             // 4 byte UTF-8 codepoint
-            if (((ptr[1] & 0xC0) ^ 0x80) || ((ptr[2] & 0xC0) ^ 0x80) || ((ptr[3] & 0xC0) ^ 0x80))
-                {
-                    return codepoint;
-                } // 10xxxxxx checks
+            if (((ptr[1] & 0xC0) ^ 0x80) || ((ptr[2] & 0xC0) ^ 0x80) || ((ptr[3] & 0xC0) ^ 0x80)) { return codepoint; } // 10xxxxxx checks
             codepoint      = ((0x07 & ptr[0]) << 18) | ((0x3f & ptr[1]) << 12) | ((0x3f & ptr[2]) << 6) | (0x3f & ptr[3]);
             *codepointSize = 4;
         }
     else if (0xe0 == (0xf0 & ptr[0]))
         {
             // 3 byte UTF-8 codepoint
-            if (((ptr[1] & 0xC0) ^ 0x80) || ((ptr[2] & 0xC0) ^ 0x80))
-                {
-                    return codepoint;
-                } // 10xxxxxx checks
+            if (((ptr[1] & 0xC0) ^ 0x80) || ((ptr[2] & 0xC0) ^ 0x80)) { return codepoint; } // 10xxxxxx checks
             codepoint      = ((0x0f & ptr[0]) << 12) | ((0x3f & ptr[1]) << 6) | (0x3f & ptr[2]);
             *codepointSize = 3;
         }
     else if (0xc0 == (0xe0 & ptr[0]))
         {
             // 2 byte UTF-8 codepoint
-            if ((ptr[1] & 0xC0) ^ 0x80)
-                {
-                    return codepoint;
-                } // 10xxxxxx checks
+            if ((ptr[1] & 0xC0) ^ 0x80) { return codepoint; } // 10xxxxxx checks
             codepoint      = ((0x1f & ptr[0]) << 6) | (0x3f & ptr[1]);
             *codepointSize = 2;
         }

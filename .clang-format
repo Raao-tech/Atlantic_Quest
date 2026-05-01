@@ -15,4 +15,18 @@ AlignConsecutiveAssignments:
   AcrossComments: false
 AllowShortIfStatementsOnASingleLine: AllIfsAndElse
 
+# Permite que 'case LABEL: statement; break;' esté en una sola línea
+AllowShortCaseLabelsOnASingleLine: true
+
+# Controla si los nombres de los casos tienen sangría respecto al switch
+IndentCaseLabels: true 
+
+# Asegura que no se rompan las llamadas a funciones si caben en la columna
+BinPackArguments: true
+
+# Permite que un bucle 'for' con una sola sentencia se quede en una línea
+AllowShortLoopsOnASingleLine: true
+
+# Controla si se permiten bloques vacíos o muy cortos en una línea
+AllowShortBlocksOnASingleLine: Always
 

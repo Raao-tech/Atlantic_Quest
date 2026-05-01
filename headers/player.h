@@ -155,7 +155,7 @@ Status player_set_max_objects (Player* player, int max);
  * @param player a pointer to the player
  * @return the maximum number of objects the player can carry, or ERROR if player is NULL
  */
-int player_get_max_objects (Player* player); 
+int player_get_max_objects (Player* player);
 /* ========== Numens ==========*/
 
 /**
@@ -205,7 +205,7 @@ int player_get_n_numens (Player* player); /*!< Cuántos tiene?*/
  * @param max_numens the maximum capacity of the numen inventory
  * @return OK if successful, ERROR if player is NULL or max_numens < 0
  */
-Status player_set_max_numens (Player* player, int max_numens); 
+Status player_set_max_numens (Player* player, int max_numens);
 
 /**
  * @brief It gets the maximum number of numens the player can carry
@@ -214,7 +214,7 @@ Status player_set_max_numens (Player* player, int max_numens);
  * @param player a pointer to the player
  * @return the maximum number of numens the player can carry, or ERROR if player is NULL
  */
-int player_get_max_numens (Player* player); 
+int player_get_max_numens (Player* player);
 
 /**
  * @brief It gets the id of the active numen
@@ -310,8 +310,7 @@ char* player_get_gdesc (Player* player);
  */
 Status player_set_position (Player* player, int x, int y);
 
-
-Position	player_get_position (Player* player);
+Position player_get_position (Player* player);
 
 /**
  * @brief It gets the position x of the player
@@ -332,15 +331,14 @@ int player_get_pos_x (Player* player);
 int player_get_pos_y (Player* player);
 
 /* =========== Vision (Set/Get) ==========*/
-Status  player_set_vision(Player* player, int x, int y);
-Position player_get_vision(Player* player);
+Status player_set_vision (Player* player, int x, int y);
+Position player_get_vision (Player* player);
 
-Status  player_set_vision_x(Player* player, int x);
-int     player_get_vision_x(Player* player);
+Status player_set_vision_x (Player* player, int x);
+int player_get_vision_x (Player* player);
 
-Status  player_set_vision_y(Player* player, int y);
-int     player_get_vision_y(Player* player);
-
+Status player_set_vision_y (Player* player, int y);
+int player_get_vision_y (Player* player);
 
 /* ========== Print ========== */
 

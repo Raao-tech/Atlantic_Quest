@@ -22,12 +22,12 @@
 struct _Object
 {
     Entity* e_obj;
-    Bool movable;    /*!< Whether the object can be taken or not */
-    Id open;         /*!< Id of the link that this object can open (for use command) */
-    Id dependency;   /*!< Id of the object that this object depends on (for use
-                        command) */
-    char gdesc[WORD_SIZE+1]; /*!< Graphic description of the object */
-    Bool consumable; /*!< If the object could be consumable or not */
+    Bool movable;              /*!< Whether the object can be taken or not */
+    Id open;                   /*!< Id of the link that this object can open (for use command) */
+    Id dependency;             /*!< Id of the object that this object depends on (for use
+                                  command) */
+    char gdesc[WORD_SIZE + 1]; /*!< Graphic description of the object */
+    Bool consumable;           /*!< If the object could be consumable or not */
 };
 
 /* ========== Create / Destroy ========== */
@@ -50,7 +50,7 @@ obj_create ()
     newObj->open       = NO_ID;
     newObj->dependency = NO_ID;
     newObj->consumable = FALSE;
-    newObj->gdesc[0] = '\0';
+    newObj->gdesc[0]   = '\0';
     return newObj;
 }
 
@@ -118,13 +118,15 @@ obj_get_description (Object* obj)
 }
 /* ========== Gdesc ========== */
 
-Status obj_set_gdesc (Object* obj, char* gdesc)
+Status
+obj_set_gdesc (Object* obj, char* gdesc)
 {
     if (!obj || !gdesc) return ERROR;
     return entity_set_gdesc (obj->e_obj, gdesc);
 }
 
-char* obj_get_gdesc (Object* obj)
+char*
+obj_get_gdesc (Object* obj)
 {
     if (!obj) return NULL;
     return entity_get_gdesc (obj->e_obj);
@@ -132,13 +134,15 @@ char* obj_get_gdesc (Object* obj)
 
 /* ========== Position ========== */
 
-Status  obj_set_position (Object* obj, int x, int y)
+Status
+obj_set_position (Object* obj, int x, int y)
 {
     if (!obj) return ERROR;
     return entity_set_position (obj->e_obj, x, y);
 }
 
-Position  obj_get_position (Object* obj)
+Position
+obj_get_position (Object* obj)
 {
     Position obj_pos;
     obj_pos.pos_x = NO_POS;
@@ -148,13 +152,15 @@ Position  obj_get_position (Object* obj)
     return entity_get_position (obj->e_obj);
 }
 
-int obj_get_pos_x (Object* obj)
+int
+obj_get_pos_x (Object* obj)
 {
     if (!obj) return NO_POS;
     return entity_get_pos_x (obj->e_obj);
 }
 
-int obj_get_pos_y (Object* obj)
+int
+obj_get_pos_y (Object* obj)
 {
     if (!obj) return NO_POS;
     return entity_get_pos_y (obj->e_obj);

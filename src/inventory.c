@@ -55,10 +55,7 @@ inventory_destroy (Inventory* inventory)
     if (!inventory) return ERROR;
 
     /* FIX: free the internal Set first */
-    if (inventory->objs)
-        {
-            set_destroy (inventory->objs);
-        }
+    if (inventory->objs) { set_destroy (inventory->objs); }
 
     free (inventory);
     return OK;

@@ -26,7 +26,6 @@ struct _Stats
     int speed;  /*!< Velocidad */
 };
 
-
 struct _Entity
 {
     Id id;             /*!< Id única */
@@ -295,21 +294,21 @@ Status
 entity_set_position (Entity* entity, int x, int y)
 {
     if (!entity) return ERROR;
-    if(y >= HIGHT_SCREEN || y < 0 || x >= WIDHT_SCREEN || x < 0 )
-        return ERROR;
+    if (y >= HIGHT_SCREEN || y < 0 || x >= WIDHT_SCREEN || x < 0) return ERROR;
     entity->position.pos_x = x;
     entity->position.pos_y = y;
 
     return OK;
 }
 
-Position    entity_get_position (Entity* entity)
+Position
+entity_get_position (Entity* entity)
 {
     Position position;
     position.pos_x = NO_POS;
     position.pos_y = NO_POS;
 
-    if(!entity) return position;
+    if (!entity) return position;
 
     position = entity->position;
     return position;
@@ -333,26 +332,26 @@ Status
 entity_set_pos_x (Entity* entity, int x)
 {
     if (!entity) return ERROR;
-    if( x >= WIDHT_SCREEN || x < 0 )
-    {
-		entity->position.pos_x = NO_POS;
-		entity->position.pos_y = NO_POS;
-        return ERROR; /*Es un error que notifica que Vision ya no existirá*/
-    }
+    if (x >= WIDHT_SCREEN || x < 0)
+        {
+            entity->position.pos_x = NO_POS;
+            entity->position.pos_y = NO_POS;
+            return ERROR; /*Es un error que notifica que Vision ya no existirá*/
+        }
     entity->position.pos_x = x;
-    return  OK;
+    return OK;
 }
 
 Status
 entity_set_pos_y (Entity* entity, int y)
 {
     if (!entity) return ERROR;
-    if( y >= HIGHT_SCREEN || y < 0  )
-    {
-		entity->position.pos_x = NO_POS;
-		entity->position.pos_y = NO_POS;
-        return ERROR; /*Es un error que notifica que Vision ya no existirá*/
-    }
+    if (y >= HIGHT_SCREEN || y < 0)
+        {
+            entity->position.pos_x = NO_POS;
+            entity->position.pos_y = NO_POS;
+            return ERROR; /*Es un error que notifica que Vision ya no existirá*/
+        }
     entity->position.pos_y = y;
-    return  OK;
+    return OK;
 }

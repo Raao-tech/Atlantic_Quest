@@ -206,16 +206,11 @@ link_get_opposite_direction (Links* link)
 
     switch (link->direction)
         {
-        case N:
-            return S;
-        case S:
-            return N;
-        case E:
-            return W;
-        case W:
-            return E;
-        default:
-            return U;
+            case N: return S;
+            case S: return N;
+            case E: return W;
+            case W: return E;
+            default: return U;
         }
 }
 

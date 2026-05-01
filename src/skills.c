@@ -75,24 +75,13 @@ skill_apply_effect (Skills_id id, Numen* sender, Numen* reciver, int distance)
     numen_set_energy (sender, energy);
     switch (id)
         {
-        case TAKLE:
-            skill_active_takle (sender, reciver, id, distance);
-            break;
-        case QUICK_ATTACK:
-            skill_active_quick_attack (sender, reciver, id, distance);
-            break;
-        case STEAM_ERUPTION:
-            skill_active_steam_eruptiom (sender, reciver, id, distance);
-            break;
-        case STAND_PLATINUM:
-            skill_active_stand_platinum (sender, reciver, id, distance);
-            break;
-        case THUNDER_SHOCK:
-            skill_active_thunder_shock (sender, reciver, id, distance);
-            break;
+            case TAKLE: skill_active_takle (sender, reciver, id, distance); break;
+            case QUICK_ATTACK: skill_active_quick_attack (sender, reciver, id, distance); break;
+            case STEAM_ERUPTION: skill_active_steam_eruptiom (sender, reciver, id, distance); break;
+            case STAND_PLATINUM: skill_active_stand_platinum (sender, reciver, id, distance); break;
+            case THUNDER_SHOCK: skill_active_thunder_shock (sender, reciver, id, distance); break;
 
-        default:
-            break;
+            default: break;
         }
     return OK;
 }

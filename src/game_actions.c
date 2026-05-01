@@ -84,53 +84,22 @@ game_actions_update (Game* game, Command* command)
 
     switch (cmd)
         {
-        case UNKNOWN:
-            game_actions_unknown (game);
-            break;
-        case EXIT:
-            game_actions_exit (game);
-            break;
-        case MOVE:
-            game_actions_move (game);
-            break;
-        case WALK:
-            game_actions_walk (game);
-            break;
-        case TAKE:
-            game_actions_take (game);
-            break;
-        case DROP:
-            game_actions_drop (game);
-            break;
-        case ATTACK:
-            game_actions_attack (game);
-            break;
-        case CHAT:
-            game_actions_chat (game);
-            break;
-        case INSPECT:
-            game_actions_inspect (game);
-            break;
-        case USE:
-            game_actions_use (game);
-            break;
-        case OPEN:
-            game_actions_open (game);
-            break;
-        case SAVE:
-            game_actions_save (game);
-            break;
-        case LOAD:
-            game_actions_load (game);
-            break;
-        case RECRUIT:
-            game_actions_recruit (game);
-            break;
-        case KICK:
-            game_actions_kick (game);
-            break;
-        default:
-            break;
+            case UNKNOWN: game_actions_unknown (game); break;
+            case EXIT: game_actions_exit (game); break;
+            case MOVE: game_actions_move (game); break;
+            case WALK: game_actions_walk (game); break;
+            case TAKE: game_actions_take (game); break;
+            case DROP: game_actions_drop (game); break;
+            case ATTACK: game_actions_attack (game); break;
+            case CHAT: game_actions_chat (game); break;
+            case INSPECT: game_actions_inspect (game); break;
+            case USE: game_actions_use (game); break;
+            case OPEN: game_actions_open (game); break;
+            case SAVE: game_actions_save (game); break;
+            case LOAD: game_actions_load (game); break;
+            case RECRUIT: game_actions_recruit (game); break;
+            case KICK: game_actions_kick (game); break;
+            default: break;
         }
     return OK;
 }
@@ -353,7 +322,7 @@ game_actions_walk (Game* game)
     char* dir_str       = NULL;
     Direction direction = NULL;
     Position pos_current;
-    int speed = 0, *grid[HIGHT] = NULL, i;
+    int speed = 0, *grid[HIGHT] = NULL, i, pos_update = 0;
 
     if (!game)
         {
@@ -386,39 +355,26 @@ game_actions_walk (Game* game)
 
     switch (direction)
         {
-        case N:
-            pos_current.pos_y -= HIGHT;
-            break;
-        case S:
-            pos_current.pos_y += HIGHT;
-            break;
-        case W:
-            pos_current.pos_x -= WIDHT;
-            break;
-        case E:
-            pos_current.pos_x += WIDHT;
-            break;
-        default:
-            break;
+            case N: pos_current.pos_y -= SCALE; break;
+            case S: pos_current.pos_y += SCALE; break;
+            case W: pos_current.pos_x -= SCALE; break;
+            case E: pos_current.pos_x += SCALE; break;
+            default: break;
         }
 
-    for (i = 0; i < HIGHT; i++)
-        {
-            grid[i] = space_get_grid_by_line (game_get_space (game, player_get_zone (player)), i);
-        }
-    if (grid[pos_current.pos_x][pos_current.pos_y] != 0)
-        {
-            if (player_set_position (player, pos_current.pos_x, pos_current.pos_y) == ERROR)
-                {
-                    game_set_last_cmd_status (game, ERROR_walk);
-                    return;
-                }
-        }
-    else
+    for (i = 0; i < HIGHT; i++) { grid[i] = space_get_grid_by_line (game_get_space (game, player_get_zone (player)), i); }
+    pos_update = grid[pos_current.pos_x][pos_current.pos_y];
+    if (pos_update == 0 || pos_update == (int)N) /*Se ha puesto en un sitio */
         {
             game_set_last_cmd_status (game, ERROR_walk);
             return;
         }
+    if (player_set_position (player, pos_current.pos_x, pos_current.pos_y) == ERROR)
+        {
+            game_set_last_cmd_status (game, ERROR_walk);
+            return;
+        }
+
     game_set_last_cmd_status (game, OK);
     return;
 }
@@ -526,10 +482,7 @@ game_actions_attack (Game* game)
             enemy_num = game_get_numen_by_id (game, set_get_id_at (space_numens, i));
             if (enemy_num && enemy_num && numen_get_id (enemy_num) != num_id && numen_get_corrupt (enemy_num) == FALSE)
                 {
-                    if(numen_get_health (enemy_num) <= 0)
-                        {
-                            continue; /* Skip dead enemies */
-                        }
+                    if (numen_get_health (enemy_num) <= 0) { continue; /* Skip dead enemies */ }
                     enemy_pos_x = numen_get_pos_x (enemy_num);
                     enemy_pos_y = numen_get_pos_y (enemy_num);
                     distance    = sqrt (pow (active_pos_x - enemy_pos_x, 2) + pow (active_pos_y - enemy_pos_y, 2));
@@ -677,7 +630,7 @@ static void
 game_actions_use (Game* game)
 {
     Player* player = NULL;
-    Numen* num    = NULL;
+    Numen* num     = NULL;
     Object* obj    = NULL;
     char* obj_name = NULL;
     Id obj_id;
@@ -721,15 +674,12 @@ game_actions_use (Game* game)
     consumable = obj_get_consumable (obj);
 
     obj_health = obj_get_health (obj);
-    num    = game_get_numen_by_id (game, player_get_active_numen(player));
+    num        = game_get_numen_by_id (game, player_get_active_numen (player));
     /*Object of health or damage*/
     if (obj_health != 0)
         {
             numen_set_health (num, numen_get_health (num) + obj_health);
-            if (consumable == TRUE)
-                {
-                    player_delete_object (player, obj_id);
-                }
+            if (consumable == TRUE) { player_delete_object (player, obj_id); }
 
             game_set_last_cmd_status (game, OK);
             return;
@@ -810,14 +760,8 @@ game_actions_open (Game* game)
             return;
         }
 
-    if (link_get_destination_id (link) == space_id)
-        {
-            link_set_open_dest_to_origin (link, TRUE);
-        }
-    else if (link_get_origin_id (link) == space_id)
-        {
-            link_set_open_origin_to_dest (link, TRUE);
-        }
+    if (link_get_destination_id (link) == space_id) { link_set_open_dest_to_origin (link, TRUE); }
+    else if (link_get_origin_id (link) == space_id) { link_set_open_origin_to_dest (link, TRUE); }
     game_set_last_cmd_status (game, OK);
     return;
 }

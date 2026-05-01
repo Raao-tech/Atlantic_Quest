@@ -147,14 +147,8 @@ graphic_engine_init (Graphic_engine* ge)
                 {
                     DrawText (TITLE, (int)(WIDHT_SCREEN * (3.0 / 8.0)), 100, 20, DARKGRAY);
 
-                    if (GuiButton ((Rectangle){ (int)(WIDHT_SCREEN * (2.0 / 8.0)), 150, 200, 50 }, "NEW GAME"))
-                        {
-                            result.menu_out = NEW_GAME;
-                        }
-                    if (GuiButton ((Rectangle){ (int)(WIDHT_SCREEN * (2.0 / 8.0)), 220, 200, 50 }, "LOAD GAME"))
-                        {
-                            result.menu_out = LOAD_GAME;
-                        }
+                    if (GuiButton ((Rectangle){ (int)(WIDHT_SCREEN * (2.0 / 8.0)), 150, 200, 50 }, "NEW GAME")) { result.menu_out = NEW_GAME; }
+                    if (GuiButton ((Rectangle){ (int)(WIDHT_SCREEN * (2.0 / 8.0)), 220, 200, 50 }, "LOAD GAME")) { result.menu_out = LOAD_GAME; }
                     if (GuiButton ((Rectangle){ (int)(WIDHT_SCREEN * (2.0 / 8.0)), 290, 200, 50 }, "Exit"))
                         {
                             result.menu_out = EXIT_Q;
@@ -166,10 +160,7 @@ graphic_engine_init (Graphic_engine* ge)
                 {
                     DrawText ("Choose your Initial Numen", (int)(WIDHT_SCREEN * (3.0 / 8.0)), 100, 20, DARKGRAY);
 
-                    if (GuiButton ((Rectangle){ (int)(WIDHT_SCREEN * (6.0 / 8.0)), 10, 100, 30 }, "BACK"))
-                        {
-                            result.menu_out = OUT_ERR;
-                        }
+                    if (GuiButton ((Rectangle){ (int)(WIDHT_SCREEN * (6.0 / 8.0)), 10, 100, 30 }, "BACK")) { result.menu_out = OUT_ERR; }
                     if (GuiButton ((Rectangle){ (int)(WIDHT_SCREEN * (2.0 / 8.0)), 150, 200, 50 }, "BROCOCHACHO"))
                         {
                             strncpy (result.data_name, F_DATA_N, WORD_SIZE);
@@ -197,10 +188,7 @@ graphic_engine_init (Graphic_engine* ge)
                 {
                     DrawText ("WHITCH YOUR GAME?", 300, 100, 20, DARKGRAY);
 
-                    if (GuiButton ((Rectangle){ (int)(WIDHT_SCREEN * (6.0 / 8.0)), 10, 100, 30 }, "BACK"))
-                        {
-                            result.menu_out = OUT_ERR;
-                        }
+                    if (GuiButton ((Rectangle){ (int)(WIDHT_SCREEN * (6.0 / 8.0)), 10, 100, 30 }, "BACK")) { result.menu_out = OUT_ERR; }
                     if (GuiButton ((Rectangle){ (int)(WIDHT_SCREEN * (2.0 / 8.0)), 150, 200, 50 }, "LOAD GAME #1"))
                         {
                             strncpy (result.data_name, F_DATA_S_1, WORD_SIZE);

@@ -18,9 +18,11 @@
 #include "skills.h"
 #include <time.h>
 
-Status game_rule_attack_enemigo (Game* game, Id id_enemy);
+Status game_rule_attack_enemy (Game* game, Id id_enemy);
 
-Status game_rule_walk_enemigo (Game* game);
+Status game_rule_walk_enemy (Game* game);
+
+Status game_rule_walk_active (Game* game);
 
 Status game_rule_move (Game* game);
 

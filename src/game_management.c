@@ -162,6 +162,7 @@ game_load_objects (Game* game, char* filename)
     Player *player = NULL, *players_game[MAX_OBJECTS];
     Status status  = OK;
     Bool consumable, movable;
+    Effect  effect;
     int tam_format, health, attack, energy, speed, pos_x, pos_y, check, bucle, n_play;
 
     if (!game || !filename) return ERROR;
@@ -215,6 +216,16 @@ game_load_objects (Game* game, char* filename)
 
                     consumable = atoi (toks) ? TRUE : FALSE;
 
+                    /* --- effect --- */
+                    toks = strtok (NULL, "|");
+                    if (!toks) continue;
+                    
+
+                    effect = atoi (toks);
+
+                    if(effect < NO_EFECT || effect > MAX_EFFECT)
+                        effect = NO_EFECT;
+
                     /* --- health --- */
                     toks = strtok (NULL, "|");
                     if (!toks) continue;
@@ -240,11 +251,8 @@ game_load_objects (Game* game, char* filename)
 
                     /* --- dependency (optional) --- */
                     toks = strtok (NULL, "|");
-                    if (toks) { dependency = atol (toks); }
-                    else
-                        {
-                            dependency = NO_ID;
-                        }
+                    if (toks) 	{ dependency = atol (toks); }
+                    else    	{dependency = NO_ID;}
 
                     /* --- movable (0 or 1) --- */
                     toks = strtok (NULL, "|\n");
@@ -263,6 +271,7 @@ game_load_objects (Game* game, char* filename)
                             obj_set_name (obj, name);
                             obj_set_gdesc (obj, gdesc);
                             obj_set_position (obj, pos_x, pos_y);
+                            obj_set_effect (obj, effect);
 
                             if (description[0] != '\0') { obj_set_description (obj, description); }
                             game_add_object (game, obj);
@@ -273,14 +282,12 @@ game_load_objects (Game* game, char* filename)
                             else
                                 {
                                     check = game_get_n_players (game);
-                                    for (bucle = 0; bucle < check; bucle++) { players_game[bucle] = game_get_player_at (game, bucle); }
+                                    for (bucle = 0; bucle < check; bucle++) 
+                                        { players_game[bucle] = game_get_player_at (game, bucle); }
                                     for (bucle = 0; bucle < check; bucle++)
                                         {
-                                            if (player_get_id (players_game[bucle]) == space_id)
-                                                {
-                                                    player_add_object (players_game[bucle], obj);
-                                                    break;
-                                                }
+                                            if (player_get_id (players_game[bucle]) == space_id)    
+                                                {player_add_object (players_game[bucle], obj);    break;}
                                         }
                                 }
 
@@ -359,11 +366,8 @@ game_load_characters (Game* game, char* filename)
 
                     /* --- message (rest of line, may contain spaces) --- */
                     toks = strtok (NULL, "\n");
-                    if (toks) { strcpy (message, toks); }
-                    else
-                        {
-                            message[0] = '\0';
-                        }
+                    if (toks)	{ strcpy (message, toks); }
+                    else		{message[0] = '\0';}
 
 #ifdef DEBUG
                     printf ("Leido character: c:%ld|%s|%s|%ld|%d|%d|%s\n", id, name, gdesc, space_id, health, friendly, message);

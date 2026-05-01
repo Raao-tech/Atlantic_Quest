@@ -584,64 +584,7 @@ game_actions_use (Game* game)
 	game_set_last_cmd_status (game, result_effect);
 	return;
 }
-/* ========================================================================= */
-/*                      OPEN: open with <object_name>      tal ves es un effecto de un objeto                   */
-/* ========================================================================= */
-static void
-game_actions_open (Game* game)
-{
-	Player* player = NULL;
-	Object* key    = NULL;
-	char* key_name = NULL;
-	Id key_id, space_id, link_id = NO_ID;
-	Bool in_inventory = FALSE;
-	int obj_health    = 0;
-	Links* link       = NULL;
 
-	if (!game) return;
-
-	/*Obtenemos player*/
-	player = game_get_player_by_turn (game);
-	if (!player)	{game_set_last_cmd_status (game, ERROR_open);	return;}
-	/*Obtenemos el nombre de la llaver*/
-	key_name = command_get_target (game_get_last_command (game));
-	if (!key_name)	{game_set_last_cmd_status (game, ERROR_open);	return;}
-	/*Obtenemos el objeto llave*/
-	key = game_get_object_by_name (game, key_name);
-	if (!key)		{game_set_last_cmd_status (game, ERROR_open);	return;}
-
-	/*Obtenemos el Id de la llave*/
-	key_id = obj_get_id (key);
-
-	/* Verifcamos que el id de la llave esté en el */
-	in_inventory = player_contains_object (player, key_id);
-	if (in_inventory == FALSE)	{game_set_last_cmd_status (game, ERROR_open);	return;}
-
-
-
-
-
-
-	/*Obtenemos el id del sapce en el que este el player*/
-	space_id = player_get_zone (player);
-
-	/*Obtenemos el id del link (puerta) que abre la llave*/
-	link_id  = obj_get_open (key);
-	/*Obtenemos el objeto del link que es abierta por la llave*/
-	link     = game_get_link_by_id (game, link_id);
-	if (!link)	{game_set_last_cmd_status (game, ERROR_open);	return;}
-
-	if (game_connection_is_open (game, space_id, link_get_direction (link)) == TRUE)
-		{game_set_last_cmd_status (game, ERROR_open);	return;}
-
-	if (link_get_origin_id (link) != space_id && link_get_destination_id (link) != space_id)
-		{game_set_last_cmd_status (game, ERROR_open);	return;}
-
-	if (link_get_destination_id (link) == space_id) { link_set_open_dest_to_origin (link, TRUE); }
-	else if (link_get_origin_id (link) == space_id) { link_set_open_origin_to_dest (link, TRUE); }
-	game_set_last_cmd_status (game, OK);
-	return;
-}
 
 /* ========================================================================= */
 /*                      SAVE: save                                           */

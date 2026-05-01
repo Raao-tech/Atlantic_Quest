@@ -122,7 +122,8 @@ typedef enum
     HEALTH_LESS,
     SPEED_PLUS,
     SPEED_LESS,
-    OPEN
+    OPEN,
+    MAX_EFFECT
 }Effect;
 
 #define MIN_LIFE 0

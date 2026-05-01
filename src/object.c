@@ -42,11 +42,8 @@ obj_create ()
     if (newObj == NULL) return NULL;
 
     newObj->e_obj = entity_create ();
-    if (!newObj->e_obj)
-        {
-            free (newObj);
-            return NULL;
-        }
+    if (!newObj->e_obj) {free (newObj); return NULL;}
+    
     newObj->movable    = FALSE;
     newObj->open       = NO_ID;
     newObj->dependency = NO_ID;

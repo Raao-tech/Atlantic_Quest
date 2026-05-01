@@ -24,6 +24,7 @@ struct _Player
     Id zone;                    /*!< Id of the space where the player is */
     Position vision;
     Id active_numen; /*!< Id of the active numen */
+    Id active_object; /*!< Id of the active numen */
 };
 
 /* ========== Create / Destroy ========== */
@@ -38,6 +39,7 @@ player_create ()
     newPlayer->vision.pos_x = NO_POS;
     newPlayer->vision.pos_y = NO_POS;
     newPlayer->active_numen = NO_ID;
+    newPlayer->active_object = NO_ID;
 
     newPlayer->e_player     = entity_create ();
     if (!newPlayer->e_player)
@@ -150,6 +152,7 @@ Status
 player_delete_object (Player* player, Id trash_obj)
 {
     if (!player) return ERROR;
+
     return inventory_delete_obj (player->backpack_items, trash_obj);
 }
 
@@ -224,6 +227,15 @@ player_get_max_numens (Player* player)
     return inventory_get_max_objs (player->backpack_numens);
 }
 
+/* ========== Numen_active ========== */
+Status
+player_set_active_numen (Player* player, Id numen_id)
+{
+    if (!player || player_contains_numen (player, numen_id) == FALSE) return ERROR;
+    player->active_numen = numen_id;
+    return OK;
+}
+
 Id
 player_get_active_numen (Player* player)
 {
@@ -231,11 +243,22 @@ player_get_active_numen (Player* player)
     return player->active_numen;
 }
 
-Status
-player_set_active_numen (Player* player, Id numen_id)
+/* ========== Object_active ========== */
+Id
+player_get_active_object (Player* player)
 {
-    if (!player || player_contains_numen (player, numen_id) == FALSE) return ERROR;
-    player->active_numen = numen_id;
+    if (!player) return NO_ID;
+    return player->active_object;   /* nuevo campo en struct _Player */
+}
+
+Status
+player_set_active_object (Player* player, Id obj_id)
+{
+    if (!player) return ERROR;
+    /* Permitimos NO_ID para "deseleccionar" */
+    if (obj_id != NO_ID && player_contains_object (player, obj_id) == FALSE)
+        return ERROR;
+    player->active_object = obj_id;
     return OK;
 }
 

@@ -235,6 +235,33 @@ Id player_get_active_numen (Player* player);
  */
 Status player_set_active_numen (Player* player, Id numen_id);
 
+/* ========== Active Object (cursor de inventario) ========== */
+
+/**
+ * @brief Devuelve el id del objeto actualmente seleccionado en el inventario
+ * @author Rafael
+ *
+ * Se utiliza como "cursor" cuando el modo de entrada (Raylib) no permite
+ * tipear el nombre del objeto. En modo texto puede dejarse a NO_ID, ya que
+ * la resolución se hace por nombre.
+ *
+ * @param player puntero al jugador
+ * @return id del objeto activo, o NO_ID si no hay ninguno
+ */
+Id player_get_active_object (Player* player);
+
+/**
+ * @brief Establece el objeto activo del jugador
+ * @author Rafael
+ *
+ * Solo permite seleccionar objetos que el jugador realmente porta.
+ *
+ * @param player puntero al jugador
+ * @param obj_id id del objeto a marcar como activo
+ * @return OK si el objeto está en el inventario, ERROR en caso contrario
+ */
+Status player_set_active_object (Player* player, Id obj_id);
+
 /* ========== Zone   ========== */
 
 /**

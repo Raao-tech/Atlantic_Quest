@@ -217,10 +217,11 @@ game_actions_take (Game* game)
 static void
 game_actions_drop (Game* game)
 {
-	Player* player = NULL;
-	Space* space   = NULL;
-	Object* obj    = NULL;
-	char* obj_name = NULL;
+	Player* player 			= NULL;
+	Space* space   			= NULL;
+	Object* obj    			= NULL;
+	Command* last_command	= NULL; 
+	char*obj_char			= NULL;
 	Id space_id, obj_id;
 	Position ply_vision;
 
@@ -230,42 +231,47 @@ game_actions_drop (Game* game)
 
 	if (!game) return;
 
+
+	/*Obtenemos el puntero a player*/
 	player = game_get_player_by_turn (game);
 	if (!player)	{ game_set_last_cmd_status (game, ERROR_drop);	return;}
 
+	/*Obtenemos el valor de la posicion a la que esta viendo el player*/
 	ply_vision = player_get_vision (player);
 	if (ply_vision.pos_x == NO_POS || ply_vision.pos_y == NO_POS)
 		{game_set_last_cmd_status (game, ERROR_drop);	return;}
 
+	/*Obtenemos el utlimo comando del jgador*/
+	last_command = game_get_last_command (game);
+	if (!last_command)	{game_set_last_cmd_status (game, ERROR_drop);	return;}
+
+	/*Obtenemos el Objeto que tiene activo el jugador*/
+	obj_char = command_get_target(last_command);
+	if (obj_char)
+	{
+		obj = game_get_object_by_name (game, obj_char);
+		if (!obj)	{game_set_last_cmd_status (game, ERROR_drop);	return;}
+		obj_id = obj_get_id (obj);
+	}
+	else
+	{
+		obj_id = player_get_active_object(player);
+		obj = game_get_object_by_id (game, obj_id);
+		if (!obj)	{game_set_last_cmd_status (game, ERROR_drop);	return;}
+	}
+
+
+	
+
+	/*Obtenemos el Objeto que tiene activo el space en el que esta el jugador*/
 	space_id = player_get_zone (player);
-	if (space_id == NO_ID)
-		{
-			game_set_last_cmd_status (game, ERROR_drop);
-			return;
-		}
+	if (space_id == NO_ID)	{game_set_last_cmd_status (game, ERROR_drop);	return;}
 
-	obj_name = command_get_target (game_get_last_command (game));
-	if (!obj_name)
-		{
-			game_set_last_cmd_status (game, ERROR_drop);
-			return;
-		}
-
-	obj = game_get_object_by_name (game, obj_name);
-	if (!obj)
-		{
-			game_set_last_cmd_status (game, ERROR_drop);
-			return;
-		}
-
-	obj_id = obj_get_id (obj);
-
+	/*Volvemos a comprobar que el jugador tenga el objeto en su invetario*/
 	if (player_contains_object (player, obj_id) == FALSE)
-		{
-			game_set_last_cmd_status (game, ERROR_drop);
-			return;
-		}
+		{game_set_last_cmd_status (game, ERROR_drop);return;}
 
+	
 	player_delete_object (player, obj_id);
 	space = game_get_space (game, space_id);
 	space_set_object (space, obj_id, obj_get_position (obj));

@@ -188,7 +188,7 @@ numen_get_gdesc (Numen* numen)
 Status
 numen_set_health (Numen* numen, int life)
 {
-    if (!numen) return ERROR;
+    if (!numen||life>MAX_LIFE && numen_get_corrupt(numen)==FALSE||life>MAX_LIFE_CORRUPT) return ERROR;
     return entity_set_health (numen->c_numen, life);
 }
 int

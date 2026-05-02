@@ -127,7 +127,11 @@ game_load_spaces (Game* game, char* filename)
                                     for (loop = 0; loop < (WIDHT); loop++)
                                         {
                                             l[loop] = (int)toks[loop] % GRID_MODULE;
-                                            space_set_grid_by_line (space, i, l);
+                                            if (space_set_grid_by_line (space, i, l) == ERROR)
+                                                {
+                                                    status = ERROR;
+                                                    break;
+                                                }
                                         }
                                     /* ----------------------------------------------------------------------------------------------- */
                                     if (space) { game_add_space (game, space); }
@@ -505,22 +509,22 @@ game_load_players (Game* game, char* filename)
                     player = player_create ();
                     if (player != NULL)
                         {
-                            player_set_id (player, id);
-                            player_set_name (player, name);
-                            player_set_gdesc (player, gdesc);
-                            player_set_zone (player, zone);
-                            player_set_position (player, pos_x, pos_y);
-                            player_set_max_numens (player, max_numens);
-                            player_set_max_objects (player, max_bag);
-                            player_set_vision (player, vision_x, vision_y);
+                            if (player_set_id (player, id) == ERROR || player_set_name (player, name) == ERROR
+                                || player_set_gdesc (player, gdesc) == ERROR || player_set_zone (player, zone) == ERROR
+                                || player_set_position (player, pos_x, pos_y) == ERROR || player_set_max_numens (player, max_numens) == ERROR
+                                || player_set_max_objects (player, max_bag) == ERROR || player_set_vision (player, vision_x, vision_y) == ERROR)
+                                {
 
-                            player_set_loading (player, TRUE); /* Set loading flag to TRUE to allow setting active numen and object even if they are not in the player's inventory yet */
-                            player_set_active_numen (player, active_num_id);
-                            player_set_active_object (player, active_obj_id);
-                            player_set_loading (player, FALSE); /* Set loading flag back to FALSE after setting active numen and object */
+                                    player_destroy (player);
+                                    return ERROR;
+                                }
 
+                            player_set_loading (player, TRUE); /* Set loading flag to TRUE to allow setting active numen and object even if they are
+                                                                  not in the player's inventory yet */
+                            player_set_active_numen (player, active_num_id) == ERROR;
                             if (active_obj_id != NO_ID) player_set_active_object (player, active_obj_id);
 
+                            player_set_loading (player, FALSE); /* Set loading flag back to FALSE after setting active numen and object */
                             game_add_player (game, player);
 
                             space = game_get_space (game, zone);
@@ -631,15 +635,16 @@ game_load_numens (Game* game, char* filename)
                     numen = numen_create ();
                     if (numen != NULL)
                         {
-                            numen_set_id (numen, id);
-                            numen_set_pos_x (numen, pos_x);
-                            numen_set_pos_y (numen, pos_y);
-                            numen_set_name (numen, name);
-                            numen_set_gdesc (numen, gdesc);
-                            numen_set_health (numen, health);
-                            numen_set_energy (numen, energy);
-                            numen_set_attack (numen, attack);
-                            numen_set_speed (numen, speed);
+                            if (numen_set_id (numen, id) == ERROR || numen_set_pos_x (numen, pos_x) == ERROR
+                                || numen_set_pos_y (numen, pos_y) == ERROR || numen_set_name (numen, name) == ERROR
+                                || numen_set_gdesc (numen, gdesc) == ERROR || numen_set_health (numen, health) == ERROR
+                                || numen_set_energy (numen, energy) == ERROR || numen_set_attack (numen, attack) == ERROR
+                                || numen_set_speed (numen, speed) == ERROR)
+                                {
+
+                                    numen_destroy (numen);
+                                    continue;
+                                }
                             for (int i = 0; i < NUM_SKILLS; i++) numen_set_skill (numen, skills[i]);
 
                             numen_set_following (numen, following);
@@ -670,12 +675,16 @@ game_load_numens (Game* game, char* filename)
 
     for (bucle = 0; bucle < check; bucle++)
         {
-            if(player_get_n_numens(players_game[bucle]) == 0) { return ERROR; } /*The player must have at least one numen*/
+            if (player_get_n_numens (players_game[bucle]) == 0) { return ERROR; } /*The player must have at least one numen*/
             active_numen_id = player_get_active_numen (players_game[bucle]);
             if (player_contains_numen (players_game[bucle], active_numen_id) == FALSE)
-             { 
-                player_set_active_numen (players_game[bucle], player_get_numen_at_inventory (players_game[bucle], 0)); /* If the active numen is not in the player's inventory, set it to the first numen in the inventory */
-             }
+                {
+                    player_set_active_numen (
+                        players_game[bucle],
+                        player_get_numen_at_inventory (
+                            players_game[bucle],
+                            0)); /* If the active numen is not in the player's inventory, set it to the first numen in the inventory */
+                }
         }
 
     if (ferror (file)) status = ERROR;
@@ -930,8 +939,7 @@ game_management_save_file (Game** game)
             active_num_id = player_get_active_numen (player);
             active_obj_id = player_get_active_object (player);
             fprintf (new_sfile, "#p:%ld|%s|%ld|%d|%d|%d|%d|%s|%d|%d|%ld|%ld|\n", id, name, zone, pos_x, pos_y, vision_x, vision_y,
-                     gdesc == NULL ? "" : gdesc, max_bag, max_numens, active_num_id,
-                     active_obj_id != NO_ID ? active_obj_id : "");
+                     gdesc == NULL ? "" : gdesc, max_bag, max_numens, active_num_id, active_obj_id != NO_ID ? active_obj_id : "");
 
             free (name);
             free (gdesc);

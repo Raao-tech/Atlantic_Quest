@@ -7,14 +7,17 @@
  * @date 24-01-2026
  * @copyright GNU Public License
  */
-
 #include "command.h"
+#include "raylib.h"
+
+
+
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-#include <time.h>
+
 
 #define CMD_LENGHT 30
 
@@ -65,7 +68,7 @@ Bool _command_get_is_command (Command* command);
  *   - GetKeyPressed()      -> devuelve int (keycode); util para texto,
  *                             NO para reconocer una tecla concreta.
  * ---------------------------------------------------------------------- */
-static void
+void
 command_raylib_get_user_input (Command* command)
 {
 	if (!command)	return;
@@ -75,7 +78,6 @@ command_raylib_get_user_input (Command* command)
 	if (IsKeyPressed (KEY_ESCAPE))
 		{
 			command_set_code (command, EXIT);
-			sleep (WAIT);
 			return;
 		}
 
@@ -84,44 +86,46 @@ command_raylib_get_user_input (Command* command)
 		{
 			_command_set_target (command, Nc);
 			command_set_code (command, WALK);
-			sleep (WAIT);
 			return;
 		}
 	if (IsKeyPressed (KEY_DOWN))
 		{
 			_command_set_target (command, Sc);
 			command_set_code (command, WALK);
-			sleep (WAIT);
 			return;
 		}
 	if (IsKeyPressed (KEY_RIGHT))
 		{
 			_command_set_target (command, Ec);
 			command_set_code (command, WALK);
-			sleep (WAIT);
 			return;
 		}
 	if (IsKeyPressed (KEY_LEFT))
 		{
 			_command_set_target (command, Wc);
 			command_set_code (command, WALK);
-			sleep (WAIT);
 			return;
 		}
 	/*========== ========== TAKE ========== ============*/
 	if (IsKeyPressed (KEY_T))
 		{
 			command_set_code (command, TAKE);
-			sleep (WAIT);
 			return;
 		}
 	/*========== ========== DROP ========== ============*/
 	if (IsKeyPressed (KEY_R))
 		{
 			command_set_code (command, DROP);
-			sleep (WAIT);
 			return;
 		}
+	/*========== ========== DROP ========== ============*/
+	if (IsKeyPressed (KEY_R))
+		{
+			command_set_code (command, DROP);
+			return;
+		}
+	/* ========== Selección de objeto activo ========== */
+
 	
 
 
@@ -167,7 +171,7 @@ command_raylib_get_user_input (Command* command)
 	 *   En todos los casos: command_set_has_input(command, TRUE).
 	 */
 
-	return result;
+	return;
 }
 /* ----------------------------------------------------------------------
  * (Set / Get) Code or Accion
@@ -191,7 +195,7 @@ _command_set_target (Command* command, char* target)
 	lentgh_target   = strlen (target);
 
 	command->target = (char*)calloc (lentgh_target + 1, sizeof (char));
-	if (!target) return ERROR;
+	if (!command->target) return ERROR;
 
 	strncpy (command->target, target, lentgh_target);
 	command->target[lentgh_target] = '\0';

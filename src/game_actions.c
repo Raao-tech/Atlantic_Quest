@@ -32,18 +32,47 @@ static void game_actions_attack (Game* game);
 static void game_actions_chat (Game* game);
 static void game_actions_inspect (Game* game);
 static void game_actions_use (Game* game);
-static void game_actions_open (Game* game);
 static void game_actions_save (Game* game);
 static void game_actions_load (Game* game);
 static void game_actions_recruit (Game* game);
 static void game_actions_kick (Game* game);
+
+
+/* ======================================================
+*				PRIVATE FUNCIONS TO EFFECTS				
+=========================================================
+*/
+
+/**
+ * @brief Esta función sirve como selccionador entre todas los posibles efectos
+ * 
+ *  @note	esta comprueba si el objeto es consumible o no al finalizar su función, por lo que 
+ * 		asigna a NO_ID el objeto que es consumible y fue usado
+ * 		
+ * Por otro lado, no esoty seguro en sid ebería de ser Públia o no, 
+ * Porque podríamos usar dichos efectos en otras cosas como por ejemplo en skill, aunque también 
+ * pienso que si hay algún efecto, eso es problema de las acciones de player
+ * 
+ * 
+ * 
+ * 
+ * 
+*/
+Status	game_actions_apply_effect (Game *game, Object *obj, Effect obj_effect); /*Todavía no estoy seguro de si hacerla publica o no*/
+
+Status	_game_actions_apply_health_plus (Game* game, Object* obj);
+Status	_game_actions_apply_health_less (Game* game, Object* obj);
+Status	_game_actions_apply_open_door 	(Game* game, Object* obj);
+Status	_game_actions_apply_speed_plus  (Game* game, Object* obj); 	/*Falta implementar*/
+Status	_game_actions_apply_speed_less  (Game* game, Object* obj);	/*Falta implementar*/
+
 /**
  * @brief Converts a direction string to a Direction enum value
  *
  * Accepts "north"/"n", "south"/"s", "east"/"e", "west"/"w"
  * (case-insensitive).  Returns U if unrecognized.
  */
-static Direction ge_parse_direction (const char* str);
+Direction ge_parse_direction (const char* str);
 
 /* ========================================================================= */
 /*                          PUBLIC: DISPATCHER                               */
@@ -94,7 +123,6 @@ game_actions_update (Game* game, Command* command)
 			case CHAT: game_actions_chat (game); break;
 			case INSPECT: game_actions_inspect (game); break;
 			case USE: game_actions_use (game); break;
-			case OPEN: game_actions_open (game); break;
 			case SAVE: game_actions_save (game); break;
 			case LOAD: game_actions_load (game); break;
 			case RECRUIT: game_actions_recruit (game); break;
@@ -149,7 +177,7 @@ game_actions_take (Game* game)
 	Player* player = NULL;
 	Space* space   = NULL;
 	Object* obj    = NULL;
-	char* obj_name = NULL;
+/* 	char* obj_name = NULL; */
 	Position obj_pos;
 	Position ply_vision;
 	Id space_id, obj_id, dependency_id;
@@ -263,7 +291,7 @@ game_actions_drop (Game* game)
 
 	
 
-	/*Obtenemos el Objeto que tiene activo el space en el que esta el jugador*/
+	/*Obtenemos space en el que esta el jugador*/
 	space_id = player_get_zone (player);
 	if (space_id == NO_ID)	{game_set_last_cmd_status (game, ERROR_drop);	return;}
 
@@ -272,11 +300,15 @@ game_actions_drop (Game* game)
 		{game_set_last_cmd_status (game, ERROR_drop);return;}
 
 	
-	player_delete_object (player, obj_id);
-	space = game_get_space (game, space_id);
-	space_set_object (space, obj_id, obj_get_position (obj));
-	obj_set_position (obj, ply_vision.pos_x, ply_vision.pos_y); /*Seteamos la ubicación del objeto en la cuadrilla doinde esta viendo player*/
+   /* Mecánica del drop */
+    player_delete_object (player, obj_id);
+    space_set_object (space, obj_id, ply_vision);   /* o la posición que toque */
+    obj_set_position (obj, ply_vision.pos_x, ply_vision.pos_y);
 
+    /* Si era el active_object, lo limpiamos: ya no lo porta */
+    if (player_get_active_object (player) == obj_id)
+        player_set_active_object (player, NO_ID);
+	
 	game_set_last_cmd_status (game, OK);
 }
 
@@ -286,47 +318,68 @@ game_actions_drop (Game* game)
 static void
 game_actions_walk (Game* game)
 {
-	Command* lst_cmd    = NULL;
-	Player* player      = NULL;
-	char* dir_str       = NULL;
-	Direction direction = NULL;
-	Position pos_current;
-	int speed = 0, *grid[HIGHT] = NULL, i, pos_update = 0;
+    Command*  lst_cmd;
+    Player*   player;
+    char*     dir_str;
+    Space*    space;
+    int*      grid_line;
+    Direction direction;
+    Position  pos_current;
+    int       cell_x, cell_y, pos_update;
 
-	if (!game)	{game_set_last_cmd_status (game, ERROR_walk);	return;}
-	lst_cmd = game_get_last_command (game);
-	if (!lst_cmd)	{game_set_last_cmd_status (game, ERROR_walk);	return;}
+    if (!game)                            { game_set_last_cmd_status (game, ERROR_walk); return; }
+    lst_cmd = game_get_last_command (game);
+    if (!lst_cmd)                         { game_set_last_cmd_status (game, ERROR_walk); return; }
+    dir_str = command_get_target (lst_cmd);
+    if (!dir_str)                         { game_set_last_cmd_status (game, ERROR_walk); return; }
+    direction = ge_parse_direction (dir_str);
+    if (direction == U)                   { game_set_last_cmd_status (game, ERROR_walk); return; }
 
-	dir_str = command_get_target (lst_cmd);
-	if (!dir_str)	{game_set_last_cmd_status (game, ERROR_walk);	return;}
-	direction = ge_parse_direction (dir_str);
+    player = game_get_player_at (game, PLAYER);
+    if (!player)                          { game_set_last_cmd_status (game, ERROR_walk); return; }
 
-	player    = game_get_player_at (game, PLAYER);
-	if (!player)	{game_set_last_cmd_status (game, ERROR_walk);	return;}
+    pos_current = player_get_position (player);
 
-	pos_current = player_get_position (player);
+    /* Calculamos la posicion destino EN PIXELES */
+    switch (direction)
+    {
+        case N: pos_current.pos_y -= SCALE; break;
+        case S: pos_current.pos_y += SCALE; break;
+        case W: pos_current.pos_x -= SCALE; break;
+        case E: pos_current.pos_x += SCALE; break;
+        default: game_set_last_cmd_status (game, ERROR_walk); return;
+    }
 
-	switch (direction)
-		{
-			case N: pos_current.pos_y -= SCALE; break;
-			case S: pos_current.pos_y += SCALE; break;
-			case W: pos_current.pos_x -= SCALE; break;
-			case E: pos_current.pos_x += SCALE; break;
-			default: break;
-		}
+    /* Convertimos a CELDAS y validamos rango */
+    cell_x = pos_current.pos_x / SCALE;
+    cell_y = pos_current.pos_y / SCALE;
+    if (cell_x < 0 || cell_x >= WIDHT ||
+        cell_y < 0 || cell_y >= HIGHT)
+    {
+        /* Salirte del mapa por el borde es un walk fallido (de momento).
+         * esto sera el detector para cambiar de space. */
+        game_set_last_cmd_status (game, ERROR_walk);
+        return;
+    }
 
-	for (i = 0; i < HIGHT; i++) { grid[i] = space_get_grid_by_line (game_get_space (game, player_get_zone (player)), i); }
-	pos_update = grid[pos_current.pos_x][pos_current.pos_y];
+    /* Pedimos solo la fila que necesitamos, no el grid entero */
+    space = game_get_space (game, player_get_zone (player));
+    if (!space)                           { game_set_last_cmd_status (game, ERROR_walk); return; }
 
-	if (pos_update == 0 || pos_update == (int)N || pos_update == (int)S || pos_update == (int)E || pos_update == (int)W) 
-		{game_set_last_cmd_status (game, ERROR_walk);	return;}
-	if (player_set_position (player, pos_current.pos_x, pos_current.pos_y) == ERROR)
-		{game_set_last_cmd_status (game, ERROR_walk);	return;}
+    grid_line = space_get_grid_by_line (space, cell_y);
+    if (!grid_line)                       { game_set_last_cmd_status (game, ERROR_walk); return; }
 
-	game_set_last_cmd_status (game, OK);
-	return;
+    pos_update = grid_line[cell_x];
+
+    /* Celda no transitable: 0 (pared) o un id de objeto bloqueante.
+     * Por ahora simplemente pedimos transitable=1. */
+    if (pos_update == 0)	{game_set_last_cmd_status (game, ERROR_walk);	return;}
+
+    if (player_set_position (player, pos_current.pos_x, pos_current.pos_y) == ERROR)
+    	{game_set_last_cmd_status (game, ERROR_walk);	return;}
+
+    game_set_last_cmd_status (game, OK);
 }
-
 /* ========================================================================= */
 /*            ATTACK: attack <name>  (NPC or PvP)                            */
 /* ========================================================================= */
@@ -405,10 +458,47 @@ game_actions_attack (Game* game)
 						{
 							if (skill_active (num, enemy_num, skill, distance) == ERROR) /*por implementar status skill_apply_effect*/
 								{game_set_last_cmd_status (game, ERROR_Attack);	return;}
+
+							/*====== Efectos Secudarios ============*/
+							/**
+							 *  Propagacion de Fire Ball: tras golpear al primer enemigo,
+						 	 * lanzamos una FIRE_BALL_A desde su posicion a todos sus vecinos.	
+							 * 	
+							 * 
+							 * Estos efectos secudnarios puede que sea mejor implemantar un switch
+							 * y hacerlos funciones privadas de game_actions attack, más que nada porque }
+							 * generan muhco ruido en el código, el cual debería de ser lo más simple y legible
+							 * que se pueda.  Pero por cuestiones de tiempo lo tendremos así
+							 * 
+							 * Por favor, alguien que recuerde que esto lo tenemos que cambiar o mjeorar, pero 
+							 * lo primero es que funcione.
+							 * 
+							 * 
+							 * 
+							*/
+							if (skill == FIRE_BALL)
+							{
+							    int radio_a = skill_get_radio (FIRE_BALL_A);
+							    int j;
+							    for (j = 0; j < num_enemies; j++)
+							    {
+							        Numen* secondary = game_get_numen_by_id (game, set_get_id_at (space_numens, j));
+							        if (!secondary || secondary == enemy_num) continue;
+							        if (numen_get_id (secondary) == num_id) continue;
+							        if (numen_get_corrupt (secondary) == FALSE) continue;
+							        if (numen_get_health (secondary) <= 0) continue;
+								
+							        int dx = numen_get_pos_x (secondary) - numen_get_pos_x (enemy_num);
+							        int dy = numen_get_pos_y (secondary) - numen_get_pos_y (enemy_num);
+							        int sec_distance = (int)sqrt (pow (dx, 2) + pow (dy, 2));
+								
+							        if (sec_distance <= radio_a)
+							            skill_active (enemy_num, secondary, FIRE_BALL_A, sec_distance);
+							    }
+							}
 						}
 				}
 		}
-
 	game_set_last_cmd_status (game, OK);
 	return;
 }
@@ -464,7 +554,7 @@ game_actions_chat (Game* game)
 			return;
 		}
 
-	if (numen_get_following (ch) == FALSE)
+	if (numen_get_following (ch) == NO_ID)
 		{
 			game_set_last_cmd_status (game, ERROR_Chat);
 			return;
@@ -572,17 +662,37 @@ game_actions_save (Game* game)
 {
 	if (!game)	{game_set_last_cmd_status (game, ERROR_save);		return;}
 
-	if (game_save_file (&game) == OK) game_set_last_cmd_status (game, OK);
+	if (game_management_save_file (&game) == OK) game_set_last_cmd_status (game, OK);
 	else	{game_set_last_cmd_status (game, ERROR_save);}
 
 	return;
 }
 
+void game_actions_load (Game* game)
+{
+	if(!game) return;
+	return;
+}
+
+void game_actions_recruit (Game* game)
+{
+	if(!game) return;
+	return;
+}
+void game_actions_kick (Game* game)
+{
+	if(!game) return;
+	return;
+}
+
+
+
+
 /* ========================================================================= */
 /*                      HELPER: PARSE DIRECTION                              */
 /* ========================================================================= */
 
-static Direction
+Direction
 ge_parse_direction (const char* str)
 {
 	if (!str) return U;
@@ -629,18 +739,34 @@ game_actions_apply_effect (Game *game, Object *obj, Effect obj_effect)
 }
 
 
+/* ========================== FALTA IMPLEMENTAR ============================*/
+Status _game_actions_apply_speed_plus  (Game* game, Object* obj)
+{
+	if(!game || !obj) return ERROR_use;
+	return OK;
+}
+Status _game_actions_apply_speed_less  (Game* game, Object* obj)
+{
+	if(!game || !obj) return ERROR_use;
+	return OK;
+}
+/* ========================== ======================== ============================*/
+
 
 Status
 _game_actions_apply_health_plus (Game* game, Object* obj)
 {
 	Numen   *numen_active = NULL;
 	Player  *player       = NULL;
+	Id		 active_id	  = NO_ID;
 	int      life_update  = 0;
 	if(!game || !obj) return  ERROR_use;
 
 	player = game_get_player (game);
 	if (!player) return ERROR_use;
-	numen_active = player_get_active_numen (player);
+	active_id = player_get_active_numen (player);
+	if (active_id == NO_ID) return ERROR_use;
+	numen_active = game_get_numen_by_id (game, active_id);
 	if (!numen_active) return ERROR_use;
 
 	life_update = numen_get_health (numen_active) + obj_get_health (obj);
@@ -654,12 +780,15 @@ _game_actions_apply_health_less (Game* game, Object* obj)
 {
 	Numen   *numen_active = NULL;
 	Player  *player       = NULL;
+	Id		active_id	  = NO_ID;
 	int      life_update  = 0;
 	if(!game || !obj) return  ERROR_use;
 
 	player = game_get_player (game);
 	if (!player) return ERROR_use;
-	numen_active = player_get_active_numen (player);
+	active_id = player_get_active_numen (player);
+	if (numen_active == NO_ID) return ERROR_use;
+	numen_active = game_get_numen_by_id (game, active_id);
 	if (!numen_active) return ERROR_use;
 
 	life_update = numen_get_health (numen_active) - obj_get_health (obj);

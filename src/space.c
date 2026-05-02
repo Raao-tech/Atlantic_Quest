@@ -86,20 +86,22 @@ space_destroy (Space* space)
     int i;
     if (!space) return ERROR;
 
-    /*
-     * We must destroy the Sets before freeing the Space struct.
-     * set_destroy handles NULL gracefully (returns ERROR but no crash).
-     */
     set_destroy (space->characters_id);
     set_destroy (space->objs_id);
     set_destroy (space->numens_id);
+
     for (i = 0; i < HIGHT; i++)
-        if (space->grid[i]) free (space->grid);
+    {
+        if (space->grid[i])
+        {
+            free (space->grid[i]);
+            space->grid[i] = NULL;
+        }
+    }
 
     free (space);
     return OK;
 }
-
 /* ========== Id ========== */
 
 Status
@@ -142,11 +144,29 @@ space_get_name (Space* space)
 Status
 space_set_object (Space* space, Id new_id, Position obj_pos)
 {
-    int *grid[HIGHT], i;
+    int cell_x, cell_y;
+
     if (!space) return ERROR;
 
-    for (i = 0; i < HIGHT; i++) grid[i] = space->grid[i];
-    if (grid[obj_pos.pos_y][obj_pos.pos_x] == new_id) { grid[obj_pos.pos_y][obj_pos.pos_x] = 0; }
+    /* Convertimos pixeles → celda. Solo tocamos el grid si las
+     * coordenadas estan dentro del rango valido. Pero si vienen como
+     * NO_POS o fuera de pantalla, simplemente añadimos al set
+     * sin tocar el grid. */
+    if (obj_pos.pos_x != NO_POS && obj_pos.pos_y != NO_POS)
+    {
+        cell_x = obj_pos.pos_x / SCALE;
+        cell_y = obj_pos.pos_y / SCALE;
+
+        if (cell_x >= 0 && cell_x < WIDHT &&
+            cell_y >= 0 && cell_y < HIGHT &&
+            space->grid[cell_y] != NULL)
+        {
+            /* Ahora si: marcar la celda como no transitable (a 0) porque ahora estará ese objeto */
+            if (space->grid[cell_y][cell_x] == new_id)
+                space->grid[cell_y][cell_x] = 0;
+        }
+    }
+
     return set_add (space->objs_id, new_id);
 }
 
@@ -160,11 +180,24 @@ space_contains_object (Space* space, Id id_obj)
 Status
 space_remove_object (Space* space, Id obj_id, Position obj_pos)
 {
-    int *grid[HIGHT], i;
+    int cell_x, cell_y;
+
     if (!space) return ERROR;
 
-    for (i = 0; i < HIGHT; i++) grid[i] = space->grid[i];
-    if (grid[obj_pos.pos_y][obj_pos.pos_x] == obj_id) { grid[obj_pos.pos_y][obj_pos.pos_x] = 1; }
+    if (obj_pos.pos_x != NO_POS && obj_pos.pos_y != NO_POS)
+    {
+        cell_x = obj_pos.pos_x / SCALE;
+        cell_y = obj_pos.pos_y / SCALE;
+
+        if (cell_x >= 0 && cell_x < WIDHT &&
+            cell_y >= 0 && cell_y < HIGHT &&
+            space->grid[cell_y] != NULL)
+        {
+            if (space->grid[cell_y][cell_x] == obj_id)
+                space->grid[cell_y][cell_x] = 1;
+        }
+    }
+
     return set_delete_id (space->objs_id, obj_id);
 }
 
@@ -175,10 +208,6 @@ space_get_n_objects (Space* space)
     return set_get_n_ids (space->objs_id);
 }
 
-/*
- * NEW: Allows graphic_engine to iterate over objects in a space
- * without breaking Set encapsulation.
- */
 Id
 space_get_object_id_at (Space* space, int position)
 {
@@ -219,14 +248,15 @@ space_get_n_characters (Space* space)
 /* ========== Grid ================ */
 
 Status
-space_set_grid_by_line (Space* space, int line, int* content)
+space_set_grid_by_line (Space* space, int line, int* l)
 {
-    int i = 0;
-    if (!space || !content || line < 0 || line >= HIGHT) return ERROR;
+    if (!space || !l) return ERROR;
+    if (line < 0 || line >= HIGHT) return ERROR;
 
-    if (space->grid[line]) { free (space->grid[line]); }
-    space->grid[line] = content;
+    /* Liberamos la fila anterior si la habia (caso de re-asignacion) */
+    if (space->grid[line]) free (space->grid[line]);
 
+    space->grid[line] = l;
     return OK;
 }
 

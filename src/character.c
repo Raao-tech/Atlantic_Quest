@@ -213,6 +213,66 @@ character_get_following (Character* character)
     return character->following;
 }
 
+
+
+/*======== (set/get) position ================*/
+Status
+character_set_position (Character* cha, int x, int y)
+{
+    if (!cha) return ERROR;
+    if (x < 0 || x >= WIDHT_SCREEN || y < 0 || y >= HIGHT_SCREEN) return ERROR;
+    return entity_set_position (cha->e_character, x, y);
+}
+
+Position
+character_get_position (Character* cha)
+{
+    Position pos;
+    pos.pos_x = NO_POS;
+    pos.pos_y = NO_POS;
+
+    if (!cha) return pos;
+    return entity_get_position (cha->e_character);
+}
+
+Status
+character_set_pos_x (Character* cha, int pos_x)
+{
+    if (!cha) return ERROR;
+    return entity_set_pos_x (cha->e_character, pos_x);
+}
+
+int
+character_get_pos_x (Character* cha)
+{
+    if (!cha) return NO_POS;
+    return entity_get_pos_x (cha->e_character);
+}
+
+Status
+character_set_pos_y (Character* cha, int pos_y)
+{
+    if (!cha) return ERROR;
+    return entity_set_pos_y (cha->e_character, pos_y);  
+}
+
+int
+character_get_pos_y (Character* cha)
+{
+    if (!cha) return NO_POS;
+    return entity_get_pos_y (cha->e_character);
+}
+
+
+
+
+
+
+
+
+
+
+
 /* ================ PRINT ============================ */
 
 Status

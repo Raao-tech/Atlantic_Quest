@@ -277,7 +277,7 @@ game_get_object_by_vision (Game* game, Position vision_player)
 	pos_obj.pos_x = NO_POS;
 	pos_obj.pos_y = NO_POS;
 
-	if (!game || vision_player.pos_x == NO_POS || vision_player.pos_y == NO_POS) return NO_ID;
+	if (!game || vision_player.pos_x == NO_POS || vision_player.pos_y == NO_POS) return NULL;
 
 	for (i = 0; i < game->n_objects; i++)
 		{
@@ -327,6 +327,30 @@ game_get_numen_by_id (Game* game, Id id_numen)
 			if (numen_get_id (game->numens[i]) == id_numen) return game->numens[i];
 		}
 	return NULL;
+}
+Numen* 
+game_get_numen_by_vision (Game* game, Position vision_player)
+{
+    Numen*   num = NULL;
+    Position pos_num;
+    int      i;
+
+    if (!game || vision_player.pos_x == NO_POS || vision_player.pos_y == NO_POS)
+        return NULL;
+
+    for (i = 0; i < game->n_numens; i++)
+    {
+        num = game_get_numen_at (game, i);
+        if (!num) continue;
+
+        pos_num = numen_get_position (num);
+        if (pos_num.pos_x == NO_POS || pos_num.pos_y == NO_POS) continue;
+
+        if (pos_num.pos_x == vision_player.pos_x &&
+            pos_num.pos_y == vision_player.pos_y)
+            return num;
+    }
+    return NULL;
 }
 
 Numen*

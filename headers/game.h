@@ -26,7 +26,7 @@
 
 /*Usar ctrl + f para escanear todo lo que diga charcter, y adpatarlo a numens*/
 /** @brief Maximum number of spaces the game can hold */
-#define MAX_SPACES 100
+#define MAX_SPACES 10
 /** @brief Maximum number of objects the game can hold */
 #define MAX_OBJECTS 100
 /** @brief Maximum number of NUMENS the game can hold */
@@ -227,6 +227,21 @@ Status game_add_player (Game* game, Player* player);
  */
 Status game_add_links (Game* game, Links* link);
 
+/**
+ * @brief It adds a link to the game
+ * @author Salvador
+ * 
+ * Esta función tiene como objetivo aañadir los numens 
+ * en el historial de todos los numens del game a medida 
+ * que load vaya leyendo.
+ * 
+ *
+ * @param game a pointer to the game
+ * @param link a pointer to the link to add
+ * @return OK if added, ERROR if NULL or array full
+ */
+Status  game_add_numen (Game* game, Numen* numen);
+
 /* ========================================================================= */
 /*                          SEARCH: OBJECTS                                  */
 /* ========================================================================= */
@@ -308,6 +323,29 @@ Numen* game_get_numen_by_id (Game* game, Id numen_id);
  */
 Numen* game_get_numen_by_name (Game* game, char* numen_name);
 
+
+
+
+/**
+ * @brief Esta función busca el Numen que coincide con la posicion que se le pase
+ * @author Rafael
+ *
+ * Itera por todos los numens presentes en el array total de objetos en el juego
+ * si llega a coincidir las coordenadas del object con las de la visión del player
+ * devuelve el puntero de dicho object
+ *
+ * @param game a pointer to the game
+ * @param Vision_player es la cuadrilla (Position) a la que está viedno el player
+ * @return the id of the space containing the object, or NO_ID
+ */
+Numen*  game_get_numen_by_vision (Game* game, Position vision_player);
+
+
+
+
+
+
+
 /**
  * @brief It get location numen
  * @author Rafa
@@ -317,6 +355,10 @@ Numen* game_get_numen_by_name (Game* game, char* numen_name);
  * @return the id of the space containing the numen, or NO_ID
  */
 Id game_get_numen_location (Game* game, Id numen_id);
+
+
+
+
 
 /* ========================================================================= */
 /*                         SEARCH: PLAYERS                                   */
@@ -506,6 +548,8 @@ int game_get_n_players (Game* game);
  * @return number of links, or -1 if game is NULL
  */
 int game_get_n_links (Game* game);
+
+int game_get_n_numens (Game* game);
 
 /* ========================================================================= */
 /*                            GAME STATE                                     */

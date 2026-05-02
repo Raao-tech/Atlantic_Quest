@@ -202,24 +202,47 @@ main (int argc, char* argv[])
 		}
 
 	/*=============== BUCLE PRINCIPAL ======================================*/
-	/*
-	 * Bloque 2: aqui ira el while real.
-	 *
-	 * Modo test:
-	 *   while (cmd != EXIT && !game_finished) {
-	 *     command_get_user_input(last_cmd);
-	 *     game_actions_update(game, last_cmd);
-	 *     if (log_enabled) game_loop_print_log(game, last_cmd, log_file);
-	 *   }
-	 *
-	 * Modo visual:
-	 *   while (!WindowShouldClose() && cmd != EXIT && !game_finished) {
-	 *     graphic_engine_paint_game(gp_raylib, game);
-	 *     command_raylib_get_user_input(last_cmd);
-	 *     if (command_has_input(last_cmd))
-	 *         game_actions_update(game, last_cmd);
-	 *   }
-	 */
+	if (test_enabled == TRUE)
+	{
+	    /* ----- Modo test: stdin → command → action → log ----- */
+	    while (command_get_code (game_loop->last_cmd) != EXIT
+	           && game_get_finished (game_loop->game) == FALSE)
+	    {
+	        command_get_user_input (game_loop->last_cmd);
+	        game_actions_update    (game_loop->game, game_loop->last_cmd);
+	        if (log_enabled)
+	            game_loop_print_log (game_loop->game, game_loop->last_cmd, log_file);
+	    }
+	}
+	else
+	{
+	    /* ----- Modo visual: input cosmetico → input de comando → action ----- */
+	    while (!WindowShouldClose ()
+	           && command_get_code (game_loop->last_cmd) != EXIT
+	           && game_get_finished (game_loop->game) == FALSE)
+	    {
+	        BeginDrawing ();
+	        graphic_engine_paint_game     (game_loop->gp_raylib, game_loop->game);
+	        EndDrawing ();
+		
+	        graphic_engine_handle_ui_input (game_loop->gp_raylib, game_loop->game);
+	        command_raylib_get_user_input  (game_loop->last_cmd);
+		
+	        if (command_get_code (game_loop->last_cmd) != NO_CMD
+	         && command_get_code (game_loop->last_cmd) != UNKNOWN)
+	        {
+	            game_actions_update (game_loop->game, game_loop->last_cmd);
+	            if (log_enabled)
+	                game_loop_print_log (game_loop->game, game_loop->last_cmd, log_file);
+			
+	            /* Tras procesar, devolvemos el code a NO_CMD para que el
+	             * usuario pueda volver a actuar el siguiente frame */
+	            command_set_code (game_loop->last_cmd, NO_CMD);
+	        }
+	    }
+	}
+	
+
 
 	game_loop_cleanup (game_loop, log_file);
 	return 0;
@@ -278,7 +301,8 @@ game_loop_init_user (GameLoop* game_loop)
 
 	/* 3. Cargar la partida desde el .dat elegido en el menu */
 	if (game_management_create_from_file (&game_loop->game, result_ge.data_name) == ERROR) { return INIT_ERR_GAME; }
-
+	/* 3.5 Cargar las texturas — necesita game cargado y ventana abierta */
+	graphic_engine_load_textures (game_loop->gp_raylib, game_loop->game);
 	/* 4. Recuperar el last_cmd que vive dentro del Game */
 	game_loop->last_cmd = game_get_last_command (game_loop->game);
 	if (!game_loop->last_cmd) return INIT_ERR_CMD;
@@ -331,7 +355,6 @@ game_loop_print_log (Game* game, Command* last_cmd, FILE* log_file)
 					case CHAT: print (log_file, "Chat", target_name, skill_id, result_str); break;
 					case INSPECT: print (log_file, "Inspect", target_name, skill_id, result_str); break;
 					case USE: print (log_file, "Use", target_name, skill_id, result_str); break;
-					case OPEN: print (log_file, "Open", target_name, skill_id, result_str); break;
 					case SAVE: print (log_file, "Save", target_name, skill_id, result_str); break;
 					default: print (log_file, "UNKNOW", "???", NO_ID, "ERROR"); break;
 				}

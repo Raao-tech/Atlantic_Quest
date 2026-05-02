@@ -174,6 +174,16 @@ Status character_set_attack (Character* character, int value);
  */
 int character_get_attack (Character* character);
 
+Status  character_set_position (Character* cha, int x, int y);
+Position    character_get_position (Character* cha);
+Status  character_set_pos_x (Character* cha, int pos_x);
+
+int character_get_pos_x (Character* cha);
+
+Status  character_set_pos_y (Character* cha, int pos_x);
+
+int character_get_pos_y (Character* cha);
+
 /**
  * @brief It sets whether the character is friendly or not
  * @author Violeta y Rafa
@@ -211,6 +221,10 @@ Status character_set_following (Character* character, Id id_following);
  */
 Id character_get_following (Character* character);
 
+/* SETEA Y DEVUELVE EL SPEED */
+Status  character_set_speed (Character* character, int speed);
+int character_get_speed (Character* character);
+
 /**
  * @brief It prints all the character information for debugging
  * @author Violeta y Rafa
@@ -219,6 +233,8 @@ Id character_get_following (Character* character);
  * @return OK, if everything goes well, or ERROR if character is NULL
  */
 Status character_print (Character* character);
+
+
 
 #endif
 

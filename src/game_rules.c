@@ -9,6 +9,9 @@
  */
 
 #include "game_rules.h"
+#include "skills.h"
+#include "game_actions.h"
+#include "raymath.h"
 
 Status
 game_rule_attack_enemy (Game* game, Id id_enemy)
@@ -41,13 +44,18 @@ game_rule_attack_enemy (Game* game, Id id_enemy)
     enemy_num = game_get_numen_by_id (game, id_enemy);
     if (!enemy_num || numen_get_health (enemy_num) <= 0) return ERROR_enemy_attack;
 
-    skill_indx = rand () % NUM_SKILLS; /* Enemy randomly selects a skill from its held skills */
+    /* El enemigo elige una skill aleatoria entre LAS SUYAS */
+    skill_indx = rand () % NUM_SKILLS;
     for (i = 0; i < NUM_SKILLS; i++)
-        {
-            skill = numen_get_skill_by_index (num, skill_indx);
+    {
+        skill = numen_get_skill_by_index (enemy_num, skill_indx);
+        if (skill != NO_SKILL) break;             /* la encontre, salgo */
+        skill_indx = (skill_indx + 1) % NUM_SKILLS;
+    }
+    if (skill == NO_SKILL) return ERROR_enemy_attack;
 
-            if (skill == NO_SKILL) skill_indx = (skill_indx + 1) % NUM_SKILLS; /* Try another skill if the selected one is NO_SKILL */
-        }
+    num = game_get_numen_by_id (game, num_id);    /* el del jugador, va a recibir */
+    if (!num) return ERROR_enemy_attack;
     if (skill == NO_SKILL) return ERROR_enemy_attack; /* Enemy has no valid skills to attack */
 
     num = game_get_numen_by_id (game, num_id);
@@ -76,13 +84,16 @@ game_rule_walk_enemy (Game* game)
 {
     Player* player      = NULL;
     Numen* enemy_num    = NULL;
-    Direction direction = NULL;
+    Direction direction = U;
     Space* space        = NULL;
+    int *grid[HIGHT];
     Position pos_current, pos_player;
     Id id_enemy        = NO_ID;
     Set* space_num_ids = NULL;
-    int *grid[HIGHT] = NULL, i, num_enemies = 0, loop;
+    int  i, num_enemies = 0, loop;
     Status ret = OK;
+
+    for (i = 0; i < HIGHT; i++) grid[i] = NULL;
 
     if (!game) { return ERROR; }
     player = game_get_player_at (game, PLAYER);
@@ -118,24 +129,23 @@ game_rule_walk_enemy (Game* game)
                     continue; /* Enemy is already on the player's position */
                 }
 
-            if (numen_get_health (enemy_num) == 1)
-                {
-                    switch (direction)
-                        {
-                            case N: return S;
-                            case S: return N;
-                            case E: return W;
-                            case W: return E;
-                            default: return U;
-                        }
-                }
-
+        if (numen_get_health (enemy_num) == 1)
+        {
+            switch (direction)
+            {
+                case N: direction = S; break;
+                case S: direction = N; break;
+                case E: direction = W; break;
+                case W: direction = E; break;
+                default: continue;
+            }
+        }
             switch (direction) /*Falta definir cuánto se mueve*/
                 {
-                    case N: pos_current.pos_y -= SCALE; break;
-                    case S: pos_current.pos_y += SCALE; break;
-                    case W: pos_current.pos_x -= SCALE; break;
-                    case E: pos_current.pos_x += SCALE; break;
+                    case N: pos_current.pos_y -= SCALE*numen_get_speed(enemy_num); break;
+                    case S: pos_current.pos_y += SCALE*numen_get_speed(enemy_num); break;
+                    case W: pos_current.pos_x -= SCALE*numen_get_speed(enemy_num); break;
+                    case E: pos_current.pos_x += SCALE*numen_get_speed(enemy_num); break;
                     default: break;
                 }
 
@@ -183,10 +193,13 @@ game_rule_walk_active (Game* game)
     Player* player      = NULL;
     Numen* active_num   = NULL;
     Space* space        = NULL;
-    Direction direction = NULL;
+    int*    grid[HIGHT];
+    Direction direction = U;
     Position pos_current, pos_player;
     Id id_active     = NO_ID;
-    int *grid[HIGHT] = NULL, i, radio = SCALE * 4, distance, speed;
+    int  i, radio = SCALE * 4, distance, speed;
+
+    for (i = 0; i < HIGHT; i++) grid[i] = NULL;
 
     if (!game) { return ERROR; }
     player = game_get_player_at (game, PLAYER);
@@ -323,7 +336,7 @@ game_rule_move (Game* game)
     Id origin, dest;
     int pos_x, pos_y;
 
-    if (!game) return;
+    if (!game) return ERROR;
     player = game_get_player_at (game, PLAYER);
     if (!player) { return ERROR; }
 

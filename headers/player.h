@@ -156,6 +156,23 @@ Status player_set_max_objects (Player* player, int max);
  * @return the maximum number of objects the player can carry, or ERROR if player is NULL
  */
 int player_get_max_objects (Player* player);
+
+/**
+ * @brief Devuelve el id del objeto en la posicion i del inventario
+ * @author Rafael
+ *
+ * Wrapper sobre inventory_get_id_at, respetando la encapsulacion:
+ * el graphic_engine itera el inventario sin tocar la struct interna.
+ *
+ * @param player puntero al jugador
+ * @param position indice de 0 a player_get_n_objects() - 1
+ * @return el id en esa posicion, o NO_ID si esta fuera de rango
+ */
+Id player_get_object_at_inventory (Player* player, int position);
+
+
+
+
 /* ========== Numens ==========*/
 
 /**
@@ -206,6 +223,20 @@ int player_get_n_numens (Player* player); /*!< Cuántos tiene?*/
  * @return OK if successful, ERROR if player is NULL or max_numens < 0
  */
 Status player_set_max_numens (Player* player, int max_numens);
+
+/**
+ * @brief Devuelve el id del numen en la posicion i del backpack_numens
+ * @author Rafael
+ *
+ * Wrapper sobre inventory_get_id_at, paralelo a
+ * player_get_object_at_inventory. Permite a graphic_engine iterar
+ * los 3 numens capturados sin tocar la struct interna.
+ *
+ * @param player puntero al jugador
+ * @param position indice de 0 a player_get_n_numens(player) - 1
+ * @return el id del numen en esa posicion, o NO_ID si fuera de rango
+ */
+Id player_get_numen_at_inventory (Player* player, int position);
 
 /**
  * @brief It gets the maximum number of numens the player can carry

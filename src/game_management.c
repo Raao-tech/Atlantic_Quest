@@ -11,6 +11,7 @@
 
 #include "game_management.h"
 #include "links.h"
+#include "skills.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -93,58 +94,54 @@ game_load_spaces (Game* game, char* filename)
                     /* --- OST (optional) --- */
                     toks = strtok (NULL, "|");
 
-                    if (toks) { strcpy (OST, toks); }
-                    else
-                        {
-                            OST[0] = '\0';
-                        }
+                    if (toks && strcmp(toks, "none") != 0)  strcpy (OST, toks);
+                    else    OST[0] = '\0';
+                    
+                    fprintf(stderr, "Tras OST: id=%ld, name='%s', gdesc='%s', OST='%s'\n",
+                            id, name, gdesc, OST);
 
 #ifdef DEBUG
                     printf ("Leido space: s:%ld|%s\n", id, name);
-#endif
+#endif  
 
                     space = space_create ();
-                    if (space != NULL)
+                        if (!space) continue;
+
+                        space_set_id    (space, id);
+                        space_set_name  (space, name);
+                        space_set_gdesc (space, gdesc);
+                        if (OST[0] != '\0') space_set_ost (space, OST);
+
+                                                /* Grid: HIGHT lineas, cada una con WIDHT chars */
+                        for (i = 0; i < HIGHT; i++)
                         {
-                            space_set_id (space, id);
-                            space_set_name (space, name);
-                            space_set_gdesc (space, gdesc);
-                            if (OST[0] != '\0') space_set_ost (space, OST);
-
-                            /* --------------------------------------------- GRID --------------------------------------------- */
-                            for (i = 0; i < (HIGHT); i++)
-                                {
-                                    l    = (int*)malloc (WIDHT * sizeof (int));
-
-                                    toks = strtok (NULL, "|");
-                                    if (!toks || strlen (toks) != WIDHT)
-                                        {
-                                            space_destroy (space);
-                                            space = NULL;
-                                            break;
-                                        }
-
-                                    for (loop = 0; loop < (WIDHT); loop++)
-                                        {
-                                            l[loop] = (int)toks[loop] % GRID_MODULE;
-                                            space_set_grid_by_line (space, i, l);
-                                        }
-                                    /* ----------------------------------------------------------------------------------------------- */
-                                    if (space) { game_add_space (game, space); }
-                                    else
-                                        {
-                                            status = ERROR;
-                                            break;
-                                        }
-                                }
+                            l = (int*)malloc (WIDHT * sizeof (int));
+                            if (!l) { space_destroy (space); space = NULL; break; }
+                        
+                            toks = strtok (NULL, "|\n");        /* <-- CAMBIO: era "|" */
+                            fprintf(stderr, "  grid line %d: toks=%p strlen=%zu first10='%.10s'\n",
+                                    i, (void*)toks, toks ? strlen(toks) : 0, toks ? toks : "(null)");
+                            if (!toks || (int)strlen (toks) != WIDHT)
+                            {
+                                free (l);
+                                space_destroy (space);
+                                space = NULL;
+                                break;
+                            }
+                        
+                            for (loop = 0; loop < WIDHT; loop++)
+                                l[loop] = (int)toks[loop] % GRID_MODULE;
+                        
+                            space_set_grid_by_line (space, i, l);
                         }
+                        if (space) game_add_space (game, space);
+                        else    status = ERROR;
                 }
-
-            if (ferror (file)) status = ERROR;
-
-            fclose (file);
-            return status;
         }
+
+    if (ferror (file)) status = ERROR;
+    fclose (file);
+    return status;
 }
 
 static Status
@@ -249,16 +246,13 @@ game_load_objects (Game* game, char* filename)
                     if (!toks) continue;
                     speed = atoi (toks);
 
-                    /* --- dependency (optional) --- */
+                    /* --- dependecy --- */
                     toks = strtok (NULL, "|");
-                    if (toks) 	{ dependency = atol (toks); }
-                    else    	{dependency = NO_ID;}
-
-                    /* --- movable (0 or 1) --- */
+                    dependency = (toks) ? atol (toks) : NO_ID;
+                                    
+                    /* --- movable --- */
                     toks = strtok (NULL, "|\n");
-                    if (!toks) continue;
-
-                    movable = atoi (toks) ? TRUE : FALSE;
+                    movable = (toks && atoi (toks)) ? TRUE : FALSE;
 
 #ifdef DEBUG
                     printf ("Leido object: o:%ld|%s|%ld|%s\n", id, name, space_id, description);
@@ -287,7 +281,7 @@ game_load_objects (Game* game, char* filename)
                                     for (bucle = 0; bucle < check; bucle++)
                                         {
                                             if (player_get_id (players_game[bucle]) == space_id)    
-                                                {player_add_object (players_game[bucle], obj);    break;}
+                                                {player_add_object (players_game[bucle], obj_get_id (obj));    break;}
                                         }
                                 }
 
@@ -502,7 +496,8 @@ game_load_numens (Game* game, char* filename)
     Numen* numen          = NULL;
     Space* space          = NULL;
     Id id = NO_ID, space_id = NO_ID;
-    int health = 0, attack = 0, energy = 0, speed = 0, skills[4] = { NO_ID, NO_ID, NO_ID, NO_ID }, pos_x, pos_y;
+    int health = 0, attack = 0, energy = 0, speed = 0, pos_x, pos_y;
+    Skills_id   skills[N_SKILLS] = { NO_ID, NO_ID, NO_ID, NO_ID };
     Id following  = NO_ID;
     Status status = OK;
     int tam_format;
@@ -544,9 +539,9 @@ game_load_numens (Game* game, char* filename)
                     pos_y = atoi (toks);
 
                     /* --- gdesc --- */
-                    toks = strtok (NULL, "");
+                    toks = strtok (NULL, "|");
                     if (!toks) continue;
-                    else strcpy (gdesc, toks);
+                    strcpy (gdesc, toks);
 
                     /* --- health --- */
                     toks = strtok (NULL, "|");
@@ -572,8 +567,8 @@ game_load_numens (Game* game, char* filename)
                     for (int i = 0; i < 4; i++)
                         {
                             toks = strtok (NULL, "|");
-                            if (toks) 	{skills[i] = atol (toks); }
-                            else		{skills[i] = NO_ID;}
+                            if (toks) 	{skills[i] = (Skills_id) atol (toks); }
+                            else		{skills[i] = (Skills_id) NO_ID;}
                         }
 
                     /* --- following (optional) --- */
@@ -592,13 +587,13 @@ game_load_numens (Game* game, char* filename)
                             numen_set_energy (numen, energy);
                             numen_set_attack (numen, attack);
                             numen_set_speed (numen, speed);
-                            for (int i = 0; i < NUM_SKILLS; i++) numen_set_skill (numen, skills[i]);
+                            for (int i = 0; i < N_SKILLS; i++) numen_add_skill (numen, skills[i]);
 
                             numen_set_following (numen, following);
                             if (following != NO_ID)
                                 player_add_numen (game_get_player_by_id (game, following), id); /* check if following id exists as a player, if not,
 *                                                                                                   it will be set to NO_ID in numen_set_following */
-                            game_add_numens (game, numen);
+                            game_add_numen (game, numen);
 
                             /* Place numen in its space */
                             space = game_get_space (game, space_id);
@@ -721,49 +716,41 @@ game_management_create_from_file (Game** game, char* filename)
 
     *game = game_create ();
     if (*game == NULL) return ERROR;
-
-    if (game_load_spaces (*game, filename) == ERROR)
-        {
-            game_destroy (*game);
-            *game = NULL;
-            return ERROR;
-        }
-
-    if (game_load_players (*game, filename) == ERROR)
-        {
-            game_destroy (*game);
-            *game = NULL;
-            return ERROR;
-        }
-
-    if (game_load_objects (*game, filename) == ERROR)
-        {
-            game_destroy (*game);
-            *game = NULL;
-            return ERROR;
-        }
-
-    if (game_load_characters (*game, filename) == ERROR)
-        {
-            game_destroy (*game);
-            *game = NULL;
-            return ERROR;
-        }
-
-    if (game_load_links (*game, filename) == ERROR)
-        {
-            game_destroy (*game);
-            *game = NULL;
-            return ERROR;
-        }
-
-    if (game_load_numens (*game, filename) == ERROR)
-        {
-            game_destroy (*game);
-            *game = NULL;
-            return ERROR;
-        }
-
+    if (game_load_spaces (*game, filename) == ERROR) {
+        fprintf(stderr, "FAIL: spaces\n");
+        game_destroy (*game); *game = NULL; return ERROR;
+    }
+    fprintf(stderr, "OK: spaces (%d cargados)\n", game_get_n_spaces(*game));
+    
+    if (game_load_players (*game, filename) == ERROR) {
+        fprintf(stderr, "FAIL: players\n");
+        game_destroy (*game); *game = NULL; return ERROR;
+    }
+    fprintf(stderr, "OK: players (%d cargados)\n", game_get_n_players(*game));
+    
+    if (game_load_objects (*game, filename) == ERROR) {
+        fprintf(stderr, "FAIL: objects\n");
+        game_destroy (*game); *game = NULL; return ERROR;
+    }
+    fprintf(stderr, "OK: objects (%d cargados)\n", game_get_n_objects(*game));
+    
+    if (game_load_characters (*game, filename) == ERROR) {
+        fprintf(stderr, "FAIL: characters\n");
+        game_destroy (*game); *game = NULL; return ERROR;
+    }
+    fprintf(stderr, "OK: characters\n");
+    
+    if (game_load_links (*game, filename) == ERROR) {
+        fprintf(stderr, "FAIL: links\n");
+        game_destroy (*game); *game = NULL; return ERROR;
+    }
+    fprintf(stderr, "OK: links\n");
+    
+    if (game_load_numens (*game, filename) == ERROR) {
+        fprintf(stderr, "FAIL: numens\n");
+        game_destroy (*game); *game = NULL; return ERROR;
+    }
+    fprintf(stderr, "OK: numens\n");
     return OK;
 }
 
@@ -772,7 +759,7 @@ game_management_save_file (Game** game)
 {
     Space* space   = NULL;
     Object* object = NULL;
-    Object* players_game[MAX_OBJECTS];
+    Player* players_game[MAX_PLAYERS];
     Player* player = NULL;
     Numen* numen   = NULL;
     Links* link    = NULL;
@@ -783,13 +770,13 @@ game_management_save_file (Game** game)
     Id dest        = NO_ID;
     Id dependency  = NO_ID;
     Id following   = NO_ID;
-    Set* skills[NUM_SKILLS];
+    Skills_id skills[N_SKILLS];
     int check = 0;
     int bucle2;
     int bucle;
     int pos_x = 0;
     int pos_y = 0;
-    int n_play;
+    int n_play = 0;
     int health = MIN_LIFE;
     int attack = MIN_ATTACK;
     int energy = MIN_ENGY;
@@ -817,7 +804,7 @@ game_management_save_file (Game** game)
     check = game_get_n_spaces (*game);
     for (bucle = 0; bucle < check; bucle++)
         {
-            id    = game_get_space_id_at (game, bucle);
+            id    = game_get_space_id_at (*game, bucle);
             space = game_get_space (*game, id);
             name  = space_get_name (space);
             gdesc = space_get_gdesc (space);
@@ -840,7 +827,7 @@ game_management_save_file (Game** game)
     check = game_get_n_players (*game);
     for (bucle = 0; bucle < check; bucle++)
         {
-            player     = game_get_player_at (game, bucle);
+            player     = game_get_player_at (*game, bucle);
             id         = player_get_id (player);
             name       = player_get_name (player);
             zone       = player_get_zone (player);
@@ -857,20 +844,26 @@ game_management_save_file (Game** game)
 
     /* ============================== OBJECTS ============================== */
 
-    n_play = game_get_n_players (*game);
-    for (bucle = 0; bucle < n_play; bucle++) players_game[bucle] = game_get_object_at (game, bucle);
-
+    for ( bucle = 0; bucle < MAX_PLAYERS; bucle++) 
+    { 
+        Player* player_posible = game_get_player_at  (*game, bucle); 
+        if (!player_posible){continue;}
+        players_game[bucle] = player_posible;
+        n_play++;
+    }
+    
     check = game_get_n_objects (*game);
     for (bucle = 0; bucle < check; bucle++)
         {
-            object = game_get_object_at (game, bucle);
+            object = game_get_object_at (*game, bucle);
             id     = obj_get_id (object);
             name   = obj_get_name (object);
-            zone   = game_get_object_location (game, id);
+            zone   = game_get_object_location (*game, id);
             if (zone == NO_ID)
                 {
                     for (bucle2 = 0; bucle2 < n_play; bucle2++)
                         {
+                            if(!players_game[bucle2]) continue;
                             if (player_contains_object (players_game[bucle2], id) == TRUE) { zone = player_get_id (players_game[bucle2]); }
                         }
                 }
@@ -885,9 +878,19 @@ game_management_save_file (Game** game)
             dependency = obj_get_dependency (object);
             consumable = obj_get_consumable (object);
 
-            fprintf (new_sfile, "#o:%ld|%s|%ld|%d|%d|%s|%s|%d|%d|%d|%d|%d|%d|%d|%d|\n", id, name, zone, pos_x, pos_y, message,
-                     gdesc == NULL ? "" : gdesc, consumable == TRUE ? 1 : 0, health, energy, attack, speed, dependency == NO_ID ? "" : dependency,
-                     movable == TRUE ? 1 : 0);
+            fprintf (new_sfile, "#o:%ld|%s|%ld|%d|%d|%s|%s|%d|%d|%d|%d|%d|%d|%ld|%d|\n", 
+                id, 
+                name, 
+                zone, 
+                pos_x, pos_y, 
+                message,
+                gdesc == NULL ? "" : gdesc, consumable == TRUE ? 1 : 0, 
+                health, 
+                energy, 
+                attack, 
+                speed, 
+                dependency,
+                movable == TRUE ? 1 : 0);
             free (name);
             free (gdesc);
             free (message);
@@ -897,10 +900,10 @@ game_management_save_file (Game** game)
     check = game_get_n_numens (*game);
     for (bucle = 0; bucle < check; bucle++)
         {
-            numen  = game_get_numen_at (game, bucle);
+            numen  = game_get_numen_at (*game, bucle);
             id     = numen_get_id (numen);
             name   = numen_get_name (numen);
-            zone   = game_get_numen_location (game, id);
+            zone   = game_get_numen_location (*game, id);
             pos_x  = numen_get_pos_x (numen);
             pos_y  = numen_get_pos_y (numen);
             gdesc  = numen_get_gdesc (numen);
@@ -909,7 +912,7 @@ game_management_save_file (Game** game)
             energy = numen_get_energy (numen);
             speed  = numen_get_speed (numen);
 
-            for (int j = 0; j < NUM_SKILLS; j++) skills[j] = numen_get_skill_by_index (numen, j);
+            for (int j = 0; j < N_SKILLS; j++) skills[j] = numen_get_skill_by_index (numen, j);
             following = numen_get_following (numen);
 
             fprintf (new_sfile, "#n:%ld|%s|%ld|%d|%d|%s|%d|%d|%d|%d|%ld|%ld|%ld|%ld|%ld|\n", id, name, zone, pos_x, pos_y, gdesc == NULL ? "" : gdesc,
@@ -922,7 +925,7 @@ game_management_save_file (Game** game)
     check = game_get_n_links (*game);
     for (bucle = 0; bucle < check; bucle++)
         {
-            link     = game_get_link_at (game, bucle);
+            link     = game_get_link_at (*game, bucle);
             id       = link_get_id (link);
             name     = link_get_name (link);
             origin   = link_get_origin_id (link);

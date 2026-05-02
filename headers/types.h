@@ -16,11 +16,11 @@
 #include <string.h>
 
 /*Dimensiones de la pantalla del graphic Engine*/
-#define WIDHT_SCREEN 950
-#define HIGHT_SCREEN 650
-#define SCALE 20
-#define WIDHT WIDHT_SCREEN / SCALE
-#define HIGHT HIGHT_SCREEN / SCALE
+#define WIDHT_SCREEN 512
+#define HIGHT_SCREEN 512
+#define SCALE 21
+#define WIDHT 25
+#define HIGHT 25
 
 /* Consts to numbers */
 #define WORD_SIZE 1000
@@ -56,7 +56,8 @@
 
 /*<! Max_heald of skills*/
 #define PLAYER 0
-#define NUM_SKILLS 4
+
+#define N_SKILLS 4
 
 typedef long Id;
 

@@ -11,7 +11,6 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-#include "raylib.h"
 #include "types.h"
 
 #define N_CMDT 2
@@ -36,7 +35,6 @@ typedef enum
     CHAT,
     INSPECT,
     USE,
-    OPEN,
     SAVE,
     LOAD,
     RECRUIT,
@@ -60,6 +58,6 @@ char* command_get_target (Command* command);
 Status command_get_user_input (Command* command);
 
 /*========== User Input - modo visual (Raylib) ===========*/
-static void command_raylib_get_user_input (Command* command);
+void command_raylib_get_user_input (Command* command);
 
 #endif

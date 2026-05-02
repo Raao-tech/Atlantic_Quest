@@ -184,6 +184,13 @@ player_get_max_objects (Player* player)
     return inventory_get_max_objs (player->backpack_items);
 }
 
+Id
+player_get_object_at_inventory (Player* player, int position)
+{
+    if (!player) return NO_ID;
+    return inventory_get_id_at (player->backpack_items, position);
+}
+
 /* =========== Backpack_Numens (Inventory) ==========*/
 Status
 player_add_numen (Player* player, Id new_numen)
@@ -227,6 +234,13 @@ player_get_max_numens (Player* player)
     return inventory_get_max_objs (player->backpack_numens);
 }
 
+Id
+player_get_numen_at_inventory (Player* player, int position)
+{
+    if (!player) return NO_ID;
+    return inventory_get_id_at (player->backpack_numens, position);
+}
+
 /* ========== Numen_active ========== */
 Status
 player_set_active_numen (Player* player, Id numen_id)
@@ -256,7 +270,7 @@ player_set_active_object (Player* player, Id obj_id)
 {
     if (!player) return ERROR;
     /* Permitimos NO_ID para "deseleccionar" */
-    if (obj_id != NO_ID && player_contains_object (player, obj_id) == FALSE)
+    if (player_contains_object (player, obj_id) == FALSE)
         return ERROR;
     player->active_object = obj_id;
     return OK;

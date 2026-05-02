@@ -30,6 +30,8 @@ Bool numen_has_name (Numen* numen, char* name);
 Bool numen_is_errant (Numen* numen);
 
 /*======== (set/get) position ================*/
+Status  numen_set_position (Numen* numen, int x, int y);
+Position    numen_get_position (Numen* numen);
 Status numen_set_pos_x (Numen* numen, int pos_x); /* tiene que estar entre los límites x */
 int numen_get_pos_x (Numen* numen);
 
@@ -57,8 +59,9 @@ Status numen_set_speed (Numen* numen, int speed);
 int numen_get_speed (Numen* numen);
 
 /*======== (set/get) skills ================*/
-Status numen_set_skill (Numen* numen, Id skill_id);
-Id numen_get_skill (Numen* numen, Id skill_id);
+Status  numen_add_skill (Numen* numen, Id skill_id);
+Id  numen_get_skill_by_id (Numen* numen, Id skill_id);
+Skills_id   numen_get_skill_by_index (Numen* numen, int skill_indx);
 
 /*======== (set/get) following ================*/
 Status numen_set_following (Numen* numen, Id following);

@@ -31,8 +31,10 @@
 /*                     OVERLAY (HUD MINIMO ARRIBA)                         */
 /* ====================================================================== */
 
-#define OVERLAY_H        56      /* franja superior con HP y nombre */
+#define OVERLAY_H        56      /* franja superior con HP, nombre y objeto activo*/
 #define OVERLAY_PAD      8
+
+#define RIGHT_SIDE_PANEL_W       56     /* Franja derecha con numens activos y objetos*/
 
 #define COLOR_OVERLAY    (Color){ 0, 0, 0, 160 }
 #define COLOR_HP_OK      GREEN
@@ -87,6 +89,8 @@ static Bool ge_texture_is_valid (Texture2D* tex);
 static void ge_paint_background  (Graphic_engine* ge, Game* game, Player* player);
 static void ge_paint_player      (Graphic_engine* ge, Player* player);
 static void ge_paint_overlay     (Game* game, Player* player);
+static void ge_paint_right_side_panel(Game* game, Player* player);
+
 static void ge_paint_active_numen (Graphic_engine* ge, Game* game, Player* player);
 static void ge_paint_objects (Graphic_engine* ge, Game* game, Player* player);
 
@@ -170,7 +174,7 @@ graphic_engine_init (Graphic_engine* ge)
 
     if (!ge) return result;
 
-    InitWindow (WIDHT_SCREEN, HIGHT_SCREEN, TITLE);
+    InitWindow (WIDHT_SCREEN+OVERLAY_H, HIGHT_SCREEN+RIGHT_SIDE_PANEL_W, TITLE);
     SetTargetFPS (FPS);
 
     while (!WindowShouldClose () && exit_on == FALSE)
@@ -495,7 +499,7 @@ ge_paint_overlay (Game* game, Player* player)
     hp_numen = numen_get_health (numen);
     hp_color  = (hp_numen > 3) ? COLOR_HP_OK : COLOR_HP_LOW;
     DrawText (TextFormat ("HP %d", hp_numen),
-              OVERLAY_PAD, 14, 21, hp_color);
+              OVERLAY_PAD, 21, 14, hp_color);
 
     /* Nombre del space en el centro */
     sp         = game_get_space (game, player_get_zone (player));
@@ -527,6 +531,11 @@ ge_paint_overlay (Game* game, Player* player)
         {
             num_inv[n]=player_get_numen_at_inventory(player, i);
         }*/
+
+/* ====================================================================== */
+/*                 PRIVATE: RIHT SIDE PANEL (HUD DERECHA)                 */
+/* ====================================================================== */
+static void ge_paint_right_side_panel(Game* game, Player* player);
 /* ====================================================================== */
 /*                       PRIVATE: TEXTURE LOOKUP                           */
 /* ====================================================================== */

@@ -1,0 +1,290 @@
+\chapter{The Haunted Castle — PPROG · Violeta \& Rafael \& Salva \& Javier }
+\hypertarget{md_README}{}\label{md_README}\index{The Haunted Castle — PPROG · Violeta \& Rafael \& Salva \& Javier@{The Haunted Castle — PPROG · Violeta \& Rafael \& Salva \& Javier}}
+\label{md_README_autotoc_md0}%
+\Hypertarget{md_README_autotoc_md0}%
+
+
+\begin{quote}
+Juego de aventura {\bfseries{textual en ASCII}} desarrollado en C para la asignatura de PPROG (UAM · EPS). Versión I3 — Abril 2026 \end{quote}
+
+
+\DoxyHorRuler{0}
+\hypertarget{md_README_autotoc_md2}{}\doxysection{\texorpdfstring{Descripción}{Descripción}}\label{md_README_autotoc_md2}
+El jugador (o jugadores) exploran un castillo compuesto por salas conectadas mediante {\bfseries{enlaces (Links)}} bidireccionales que pueden estar abiertos o cerrados. Es posible recoger objetos, inspeccionarlos, hablar con personajes amistosos y combatir contra enemigos en un sistema de combate por turnos con resultado aleatorio.
+
+El motor gráfico renderiza en ASCII la sala actual junto con las cuatro salas adyacentes (N/\+\+S/\+\+E/\+W), el inventario del jugador activo, las barras de salud y los mensajes de los personajes.
+
+\DoxyHorRuler{0}
+\hypertarget{md_README_autotoc_md4}{}\doxysection{\texorpdfstring{Características destacadas (I3)}{Características destacadas (I3)}}\label{md_README_autotoc_md4}
+
+\begin{DoxyItemize}
+\item {\bfseries{Multijugador por turnos}} — varios jugadores rotan en orden; cada turno pertenece a un jugador distinto.
+\item {\bfseries{Links bidireccionales}} — cada enlace almacena el estado abierto/\+cerrado de forma independiente por sentido de travesía ({\ttfamily orig→dest} y {\ttfamily dest→orig}), lo que permite pasajes de un solo sentido.
+\item {\bfseries{Descubrimiento de salas (F12)}} — las salas desconocidas se muestran como cajas vacías hasta que el jugador las visita; una vez descubiertas se revelan su {\ttfamily gdesc}, objetos y personajes.
+\item {\bfseries{Sistema de combate PvP}} — {\ttfamily attack} funciona tanto contra NPCs enemigos como contra otros jugadores en la misma sala; el autoataque queda vetado.
+\item {\bfseries{Motor gráfico enriquecido}} — renderiza las 4 salas vecinas, barras de salud ASCII ({\ttfamily \+[\#\#\#-\/-\/]\+ 3 !}), etiquetas {\ttfamily \+[ALLY]\+}/\+{\ttfamily \+[ENEMY]\+} en personajes y borde de color por jugador activo.
+\item {\bfseries{Log de partida (F14)}} — bandera {\ttfamily -\/l \texorpdfstring{$<$}{<}fichero\texorpdfstring{$>$}{>}} que registra cada comando con su resultado {\ttfamily OK}/\+{\ttfamily ERROR}.
+\item {\bfseries{Inventario multi-\/objeto}} — el jugador puede llevar varios objetos simultáneamente; {\ttfamily inspect} comprueba tanto el inventario como la sala actual.
+\item {\bfseries{Memoria limpia}} — 0 leaks/\+errores Valgrind, 0 advertencias con {\ttfamily -\/Wall -\/Wextra -\/Wpedantic}.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md_README_autotoc_md6}{}\doxysection{\texorpdfstring{Estructura del proyecto}{Estructura del proyecto}}\label{md_README_autotoc_md6}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{.}
+\DoxyCodeLine{├──\ src/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Código\ fuente\ (.c)}
+\DoxyCodeLine{│\ \ \ ├──\ game.c}
+\DoxyCodeLine{│\ \ \ ├──\ game\_actions.c}
+\DoxyCodeLine{│\ \ \ ├──\ game\_loop.c}
+\DoxyCodeLine{│\ \ \ ├──\ game\_reader.c}
+\DoxyCodeLine{│\ \ \ ├──\ graphic\_engine.c}
+\DoxyCodeLine{│\ \ \ ├──\ command.c}
+\DoxyCodeLine{│\ \ \ ├──\ space.c}
+\DoxyCodeLine{│\ \ \ ├──\ player.c}
+\DoxyCodeLine{│\ \ \ ├──\ object.c}
+\DoxyCodeLine{│\ \ \ ├──\ character.c}
+\DoxyCodeLine{│\ \ \ ├──\ links.c}
+\DoxyCodeLine{│\ \ \ ├──\ inventory.c}
+\DoxyCodeLine{│\ \ \ ├──\ set.c}
+\DoxyCodeLine{│\ \ \ └──\ entity.c}
+\DoxyCodeLine{├──\ headers/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Cabeceras\ (.h)}
+\DoxyCodeLine{│\ \ \ ├──\ game.h}
+\DoxyCodeLine{│\ \ \ ├──\ game\_actions.h}
+\DoxyCodeLine{│\ \ \ ├──\ game\_reader.h}
+\DoxyCodeLine{│\ \ \ ├──\ graphic\_engine.h}
+\DoxyCodeLine{│\ \ \ ├──\ command.h}
+\DoxyCodeLine{│\ \ \ ├──\ space.h}
+\DoxyCodeLine{│\ \ \ ├──\ player.h}
+\DoxyCodeLine{│\ \ \ ├──\ object.h}
+\DoxyCodeLine{│\ \ \ ├──\ character.h}
+\DoxyCodeLine{│\ \ \ ├──\ links.h}
+\DoxyCodeLine{│\ \ \ ├──\ inventory.h}
+\DoxyCodeLine{│\ \ \ ├──\ set.h}
+\DoxyCodeLine{│\ \ \ ├──\ entity.h}
+\DoxyCodeLine{│\ \ \ └──\ types.h}
+\DoxyCodeLine{├──\ obj/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Objetos\ compilados\ (generado\ por\ make)}
+\DoxyCodeLine{├──\ doc/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Documentación\ Doxygen\ (generada\ por\ make\ doc)}
+\DoxyCodeLine{├──\ tests/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Tests\ unitarios\ por\ módulo}
+\DoxyCodeLine{│\ \ \ ├──\ Makefile}
+\DoxyCodeLine{│\ \ \ ├──\ set\_test.c\ /\ set\_test.h}
+\DoxyCodeLine{│\ \ \ ├──\ entity\_test.c\ /\ entity\_test.h}
+\DoxyCodeLine{│\ \ \ ├──\ space\_test.c\ /\ space\_test.h}
+\DoxyCodeLine{│\ \ \ ├──\ player\_test.c\ /\ player\_test.h}
+\DoxyCodeLine{│\ \ \ ├──\ character\_test.c\ /\ character\_test.h}
+\DoxyCodeLine{│\ \ \ ├──\ game\_test.c\ /\ game\_test.h}
+\DoxyCodeLine{│\ \ \ ├──\ command\_test.c\ /\ command\_test.h}
+\DoxyCodeLine{│\ \ \ ├──\ links\_test.c\ /\ links\_test.h}
+\DoxyCodeLine{│\ \ \ └──\ object\_test.c\ /\ object\_test.h}
+\DoxyCodeLine{├──\ otros/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Logs\ y\ memoria\ de\ Ingit}
+\DoxyCodeLine{│\ \ \ ├──\ output.log}
+\DoxyCodeLine{│\ \ \ └──\ memoria\_ingit.txt}
+\DoxyCodeLine{├──\ castle.dat\ \ \ \ \ \ \ \ \ \ \ \ \#\ Mapa\ principal\ (el\ castillo)}
+\DoxyCodeLine{├──\ anthill.dat\ \ \ \ \ \ \ \ \ \ \ \#\ Mapa\ alternativo\ (el\ hormiguero)}
+\DoxyCodeLine{├──\ *.cmd\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Ficheros\ de\ comandos\ para\ pruebas\ de\ integración}
+\DoxyCodeLine{├──\ libscreen.a\ \ \ \ \ \ \ \ \ \ \ \#\ Librería\ de\ pantalla\ (proporcionada,\ ASCII\ only)}
+\DoxyCodeLine{├──\ Makefile}
+\DoxyCodeLine{├──\ Doxyfile}
+\DoxyCodeLine{├──\ Ingit.sh\ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Asistente\ de\ Git\ del\ equipo}
+\DoxyCodeLine{└──\ README.md}
+
+\end{DoxyCode}
+
+
+\DoxyHorRuler{0}
+\hypertarget{md_README_autotoc_md8}{}\doxysection{\texorpdfstring{Arquitectura del sistema}{Arquitectura del sistema}}\label{md_README_autotoc_md8}
+\hypertarget{md_README_autotoc_md9}{}\doxysubsection{\texorpdfstring{Entidades principales}{Entidades principales}}\label{md_README_autotoc_md9}
+
+\begin{DoxyTable}{2}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Entidad  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Descripción  \\
+{\bfseries{Space}}  &Sala del mapa:\+ hasta 4 conexiones (N/\+\+S/\+\+E/\+W vía Links), conjunto de objetos, conjunto de personajes y flag de descubrimiento  \\
+{\bfseries{Player}}  &Jugador con posición, salud, inventario de múltiples objetos y límite configurable de capacidad  \\
+{\bfseries{Object}}  &Objeto que puede estar en un espacio o en el inventario de un jugador  \\
+{\bfseries{Character}}  &Personaje NPC con salud, mensaje y atributo {\ttfamily friendly} (amistoso/\+enemigo)  \\
+{\bfseries{Links}}  &Conexión {\bfseries{bidireccional}} entre dos espacios con estado abierto/\+cerrado independiente por sentido de travesía  \\
+\end{DoxyTable}
+\hypertarget{md_README_autotoc_md10}{}\doxysubsection{\texorpdfstring{Módulos (TADs)}{Módulos (TADs)}}\label{md_README_autotoc_md10}
+
+\begin{DoxyTable}{2}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Módulo  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Responsabilidad  \\
+{\ttfamily game}  &Estado global:\+ arrays de espacios, objetos, personajes, jugadores y links; turno activo; último comando y su resultado  \\
+{\ttfamily game\+\_\+reader}  &Cinco loaders ({\ttfamily \#s}, {\ttfamily \#o}, {\ttfamily \#c}, {\ttfamily \#p}, {\ttfamily \#l}) que pueblan el estado desde ficheros {\ttfamily .dat} pipe-\/delimitados  \\
+{\ttfamily game\+\_\+actions}  &Dispatcher:\+ mapea cada {\ttfamily Command\+Code} a su handler privado (move, take, drop, attack, chat, inspect, exit)  \\
+{\ttfamily game\+\_\+loop}  &Ciclo RENDER → INPUT → UPDATE → LOG → NEXT TURN; gestión del fichero de log  \\
+{\ttfamily graphic\+\_\+engine}  &Renderizado ASCII con {\ttfamily libscreen}:\+ sala actual + 4 vecinas, inventario, barras de salud, etiquetas de personajes, borde de color por jugador  \\
+{\ttfamily command}  &Parser de entrada:\+ primer token → {\ttfamily Command\+Code}, segundo token → nombre del objeto/\+objetivo  \\
+{\ttfamily space}  &TAD sala:\+ {\ttfamily gdesc} (3 líneas × 9 chars), sets de objetos y personajes, 4 IDs de link, flag discovered  \\
+{\ttfamily player}  &TAD jugador:\+ posición, salud, {\ttfamily Inventory\texorpdfstring{$\ast$}{*}}, nombre, id  \\
+{\ttfamily object}  &TAD objeto:\+ id, nombre  \\
+{\ttfamily character}  &TAD personaje:\+ id, nombre, posición, salud, {\ttfamily friendly}, mensaje  \\
+{\ttfamily links}  &TAD enlace:\+ id, nombre, id\+\_\+orig, id\+\_\+dest, dirección, {\ttfamily open\+\_\+orig\+\_\+to\+\_\+dest}, {\ttfamily open\+\_\+dest\+\_\+to\+\_\+orig}  \\
+{\ttfamily inventory}  &Wrapper de {\ttfamily Set} que añade límite máximo de capacidad ({\ttfamily max\+\_\+objs})  \\
+{\ttfamily set}  &Colección de IDs únicos (array dinámico); operaciones CRUD sobre {\ttfamily Id}  \\
+{\ttfamily entity}  &Base común (id + nombre) para Player, Object y Character  \\
+\end{DoxyTable}
+
+
+\DoxyHorRuler{0}
+\hypertarget{md_README_autotoc_md12}{}\doxysection{\texorpdfstring{Compilación}{Compilación}}\label{md_README_autotoc_md12}
+{\bfseries{Requisitos:\+}} {\ttfamily gcc}, {\ttfamily make}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ \ \ \ \ \ \ \ \ \ \#\ compila\ todo\ →\ ejecutable\ ./castle}
+\DoxyCodeLine{make\ clean\ \ \ \ \#\ elimina\ objetos\ y\ ejecutable}
+\DoxyCodeLine{make\ clean\_all\ \ \#\ elimina\ también\ obj/\ y\ doc/}
+
+\end{DoxyCode}
+
+
+Flags usados:\+ {\ttfamily -\/g -\/Wall -\/Wextra -\/Wpedantic -\/O0 -\/DDEBUG}
+
+\DoxyHorRuler{0}
+\hypertarget{md_README_autotoc_md14}{}\doxysection{\texorpdfstring{Ejecución}{Ejecución}}\label{md_README_autotoc_md14}
+\hypertarget{md_README_autotoc_md15}{}\doxysubsection{\texorpdfstring{Modos disponibles}{Modos disponibles}}\label{md_README_autotoc_md15}
+
+\begin{DoxyTable}{2}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Comando make  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Descripción  \\
+{\ttfamily make run}  &Ejecuta {\ttfamily ./\+castle castle.\+dat}  \\
+{\ttfamily make runv}  &Lo mismo bajo Valgrind completo  \\
+{\ttfamily make run\+\_\+log}  &Ejecuta con log en {\ttfamily otros/\+output.\+log}  \\
+{\ttfamily make runv\+\_\+log}  &Valgrind + log  \\
+{\ttfamily make play}  &Menú interactivo:\+ lista los {\ttfamily .dat} disponibles, permite elegir mapa y activar log  \\
+{\ttfamily make playv}  &Igual que {\ttfamily play} pero bajo Valgrind  \\
+{\ttfamily make run\+\_\+custom BD=anthill.\+dat}  &Mapa personalizado por argumento  \\
+{\ttfamily make test\+\_\+cmd CMD=game1.\+cmd}  &Alimenta un {\ttfamily .cmd} como stdin y vuelca el log  \\
+{\ttfamily make doc}  &Genera documentación Doxygen en {\ttfamily doc/\+}  \\
+{\ttfamily make mandar}  &Empaqueta el proyecto en {\ttfamily Game\+\_\+mandar\+\_\+\+Ra\+Vi.\+zip} para entrega  \\
+\end{DoxyTable}
+\hypertarget{md_README_autotoc_md16}{}\doxysubsection{\texorpdfstring{Ejecución directa}{Ejecución directa}}\label{md_README_autotoc_md16}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./castle\ castle.dat\ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ partida\ normal}
+\DoxyCodeLine{./castle\ castle.dat\ -\/l\ otros/output.log\ \ \#\ partida\ con\ log}
+\DoxyCodeLine{./castle\ anthill.dat\ \ \ \ \ \ \ \ \ \ \ \ \ \#\ mapa\ del\ hormiguero}
+
+\end{DoxyCode}
+
+
+\DoxyHorRuler{0}
+\hypertarget{md_README_autotoc_md18}{}\doxysection{\texorpdfstring{Comandos disponibles en el juego}{Comandos disponibles en el juego}}\label{md_README_autotoc_md18}
+
+\begin{DoxyTable}{4}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Comando  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Abreviatura  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Argumento  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Descripción  \\
+{\ttfamily exit}  &{\ttfamily e}  &—  &Termina la partida  \\
+{\ttfamily move}  &{\ttfamily m}  &{\ttfamily north}/\+{\ttfamily south}/\+{\ttfamily east}/\+{\ttfamily west}  &Mueve al jugador activo en la dirección indicada si el link está abierto  \\
+{\ttfamily take}  &{\ttfamily t}  &{\ttfamily \texorpdfstring{$<$}{<}nombre\+\_\+objeto\texorpdfstring{$>$}{>}}  &Recoge un objeto de la sala y lo añade al inventario  \\
+{\ttfamily drop}  &{\ttfamily d}  &{\ttfamily \texorpdfstring{$<$}{<}nombre\+\_\+objeto\texorpdfstring{$>$}{>}}  &Deposita un objeto del inventario en la sala actual  \\
+{\ttfamily attack}  &{\ttfamily a}  &{\ttfamily \texorpdfstring{$<$}{<}nombre\+\_\+personaje\+\_\+o\+\_\+jugador\texorpdfstring{$>$}{>}}  &Ataca a un personaje enemigo o a otro jugador en la misma sala  \\
+{\ttfamily chat}  &{\ttfamily c}  &{\ttfamily \texorpdfstring{$<$}{<}nombre\+\_\+personaje\texorpdfstring{$>$}{>}}  &Habla con un personaje amistoso en la misma sala  \\
+{\ttfamily inspect}  &{\ttfamily i}  &{\ttfamily \texorpdfstring{$<$}{<}nombre\+\_\+objeto\texorpdfstring{$>$}{>}} o {\ttfamily space}  &Muestra la descripción de un objeto (inventario o sala) o de la sala actual  \\
+\end{DoxyTable}
+
+
+\DoxyHorRuler{0}
+\hypertarget{md_README_autotoc_md20}{}\doxysection{\texorpdfstring{Mecánicas de juego}{Mecánicas de juego}}\label{md_README_autotoc_md20}
+\hypertarget{md_README_autotoc_md21}{}\doxysubsection{\texorpdfstring{Movimiento}{Movimiento}}\label{md_README_autotoc_md21}
+El movimiento usa {\ttfamily Links}:\+ se busca el link que une la sala actual con la sala destino en la dirección indicada. Si el link existe y {\ttfamily open\+\_\+orig\+\_\+to\+\_\+dest == TRUE}, el movimiento se autoriza.\hypertarget{md_README_autotoc_md22}{}\doxysubsection{\texorpdfstring{Combate ({\ttfamily attack})}{Combate ({\ttfamily attack})}}\label{md_README_autotoc_md22}
+Se lanza un dado 0–9:\+
+\begin{DoxyItemize}
+\item {\bfseries{0–4}} → el enemigo gana el intercambio:\+ el jugador activo pierde 1 HP.
+\item {\bfseries{5–9}} → el jugador gana:\+ el objetivo pierde 1 HP.
+\end{DoxyItemize}
+
+Si la salud del jugador activo llega a 0, la partida termina. El PvP sigue las mismas reglas; el autoataque retorna {\ttfamily ERROR}.\hypertarget{md_README_autotoc_md23}{}\doxysubsection{\texorpdfstring{Chat}{Chat}}\label{md_README_autotoc_md23}
+El personaje objetivo debe estar en la misma sala y ser {\ttfamily friendly = TRUE}. El motor gráfico muestra su mensaje en el panel de descripción.\hypertarget{md_README_autotoc_md24}{}\doxysubsection{\texorpdfstring{Descubrimiento (F12)}{Descubrimiento (F12)}}\label{md_README_autotoc_md24}
+Las salas se marcan como descubiertas la primera vez que un jugador las visita. El motor gráfico oculta el {\ttfamily gdesc}, objetos y personajes de las salas no descubiertas.\hypertarget{md_README_autotoc_md25}{}\doxysubsection{\texorpdfstring{Sistema multijugador por turnos}{Sistema multijugador por turnos}}\label{md_README_autotoc_md25}
+{\ttfamily game\+\_\+turn\+\_\+update} avanza al siguiente jugador al final de cada acción, rotando en orden cíclico.
+
+\DoxyHorRuler{0}
+\hypertarget{md_README_autotoc_md27}{}\doxysection{\texorpdfstring{Formato de los ficheros {\ttfamily .dat}}{Formato de los ficheros {\ttfamily .dat}}}\label{md_README_autotoc_md27}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#s:<id>|<nombre>|<gdesc1>|<gdesc2>|<gdesc3>}
+\DoxyCodeLine{\#o:<id>|<nombre>|<space\_id>}
+\DoxyCodeLine{\#l:<id>|<nombre>|<origin\_id>|<destiny\_id>|<direction>|<open>}
+\DoxyCodeLine{\#c:<id>|<nombre>|<space\_id>|<health>|<friendly>|<message>}
+\DoxyCodeLine{\#p:<id>|<nombre>|<space\_id>|<health>}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily \texorpdfstring{$<$}{<}direction\texorpdfstring{$>$}{>}}:\+ {\ttfamily N}, {\ttfamily S}, {\ttfamily E}, {\ttfamily W}
+\item {\ttfamily \texorpdfstring{$<$}{<}open\texorpdfstring{$>$}{>}}:\+ {\ttfamily 1} (abierto) o {\ttfamily 0} (cerrado)
+\item Los links de 6 campos (formato unidireccional del enunciado) son compatibles; los de 7 campos añaden {\ttfamily \texorpdfstring{$<$}{<}open\+\_\+dest\+\_\+to\+\_\+orig\texorpdfstring{$>$}{>}} para la extensión bidireccional.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md_README_autotoc_md29}{}\doxysection{\texorpdfstring{Tests unitarios}{Tests unitarios}}\label{md_README_autotoc_md29}
+El directorio {\ttfamily tests/\+} contiene pruebas unitarias para todos los módulos.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd\ tests}
+\DoxyCodeLine{make\ \ \ \ \ \ \ \ \ \ \ \ \#\ compila\ todos\ los\ binarios\ de\ test}
+\DoxyCodeLine{make\ run\_set\ \ \ \ \#\ ejecuta\ set\_test}
+\DoxyCodeLine{make\ run\_spc\ \ \ \ \#\ ejecuta\ space\_test}
+\DoxyCodeLine{make\ run\_ply\ \ \ \ \#\ ejecuta\ player\_test}
+\DoxyCodeLine{\#\ ...\ etc.}
+\DoxyCodeLine{}
+\DoxyCodeLine{make\ vset\ \ \ \ \ \ \ \#\ set\_test\ bajo\ Valgrind}
+\DoxyCodeLine{make\ vspc\ \ \ \ \ \ \ \#\ space\_test\ bajo\ Valgrind}
+\DoxyCodeLine{\#\ ...\ etc.}
+
+\end{DoxyCode}
+
+
+\DoxyHorRuler{0}
+\hypertarget{md_README_autotoc_md31}{}\doxysection{\texorpdfstring{Comprobación de memoria}{Comprobación de memoria}}\label{md_README_autotoc_md31}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ runv\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Valgrind\ sobre\ castle.dat}
+\DoxyCodeLine{make\ playv\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Valgrind\ con\ selección\ interactiva\ de\ mapa}
+\DoxyCodeLine{valgrind\ -\/-\/leak-\/check=full\ -\/-\/show-\/leak-\/kinds=all\ -\/-\/track-\/origins=yes\ -\/s\ ./castle\ castle.dat}
+
+\end{DoxyCode}
+
+
+Estado actual:\+ {\bfseries{0 leaks, 0 errores}} con todas las entidades cargadas desde {\ttfamily castle.\+dat}.
+
+\DoxyHorRuler{0}
+\hypertarget{md_README_autotoc_md33}{}\doxysection{\texorpdfstring{Ingit — Asistente para colaboradores}{Ingit — Asistente para colaboradores}}\label{md_README_autotoc_md33}
+El repositorio incluye {\ttfamily Ingit.\+sh}, un asistente interactivo en Bash pensado para simplificar el flujo de trabajo con Git en los {\bfseries{ordenadores compartidos de la uni}}, donde las credenciales no persisten entre sesiones.\hypertarget{md_README_autotoc_md34}{}\doxysubsection{\texorpdfstring{Primer uso}{Primer uso}}\label{md_README_autotoc_md34}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{chmod\ +x\ Ingit.sh\ \ \ \#\ solo\ la\ primera\ vez}
+\DoxyCodeLine{./Ingit.sh}
+
+\end{DoxyCode}
+
+
+La primera vez Ingit pide tu nombre y tu username de Git\+Hub y los guarda en {\ttfamily otros/\+memoria\+\_\+ingit.\+txt}.\hypertarget{md_README_autotoc_md35}{}\doxysubsection{\texorpdfstring{Operaciones disponibles}{Operaciones disponibles}}\label{md_README_autotoc_md35}
+
+\begin{DoxyItemize}
+\item {\bfseries{Pull}} — actualiza la rama actual desde {\ttfamily origin}.
+\item {\bfseries{Push}} — sube los cambios con mensaje de commit personalizado.
+\item {\bfseries{Status}} — muestra el estado del repositorio.
+\item {\bfseries{Log}} — muestra el historial de commits.
+\item {\bfseries{Checkout}} — cambia de rama o crea una nueva.
+\item {\bfseries{Merge}} — fusiona una rama en la actual.
+\item {\bfseries{Reset}} — deshace el último commit (soft o hard).
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md_README_autotoc_md37}{}\doxysection{\texorpdfstring{Notas de diseño}{Notas de diseño}}\label{md_README_autotoc_md37}
+
+\begin{DoxyItemize}
+\item El módulo {\ttfamily entity} proporciona una base común (id + nombre) para {\ttfamily Player}, {\ttfamily Object} y {\ttfamily Character}, reduciendo la duplicación de código.
+\item {\ttfamily Set} e {\ttfamily Inventory} desacoplan la gestión de colecciones del resto de módulos; {\ttfamily Inventory} añade la capa de límite de capacidad sobre {\ttfamily Set}.
+\item Los {\bfseries{Links}} separan la topología del mapa de los propios espacios, permitiendo puertas con estado abierto/\+cerrado {\bfseries{independiente por dirección}} (extensión bidireccional consciente sobre el enunciado).
+\item El motor gráfico ({\ttfamily graphic\+\_\+engine}) está deliberadamente desacoplado del estado del juego ({\ttfamily game}) para mantener la separación de responsabilidades.
+\item {\ttfamily calloc} en lugar de {\ttfamily malloc} para arrays de punteros y contadores, garantizando que todos los campos queden a cero desde la creación.
+\item {\ttfamily libscreen} solo admite caracteres ASCII de un byte:\+ ningún carácter multibyte (Unicode) debe usarse en {\ttfamily gdesc} ni en los buffers de pantalla.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+
+
+{\bfseries{Autores:\+}} Violeta \& Rafael \& Salva \& Javier {\bfseries{Asignatura:\+}} Programación (PPROG) — Grado en Ingeniería Informática, UAM {\bfseries{Licencia:\+}} GNU Public License 

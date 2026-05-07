@@ -21,7 +21,7 @@
 typedef struct _Graphic_engine Graphic_engine;
 
 /* ----------------------------------------------------------------------
- * Out  (codigo de retorno del menu inicial — sin cambios)
+ * Out  
  * ---------------------------------------------------------------------- */
 typedef enum
 {

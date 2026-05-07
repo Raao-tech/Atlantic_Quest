@@ -2,7 +2,7 @@
  * @brief It implements the game rules
  *
  * @file game_rules.c
- * @author Salvador
+ * @author Salvador y Rafael
  * @version 1.5
  * @date 01-05-2026
  * @copyright GNU Public License
@@ -539,7 +539,7 @@ game_rule_move (Game* game)
     dir_str = command_get_target (game_get_last_command (game));
     if (!dir_str) return ERROR;
 
-    dir = ge_parse_direction (dir_str);
+    dir = types_parse_direction (dir_str);
     if (dir == U) return ERROR;
 
     dest = game_get_connection (game, origin, dir);
@@ -547,8 +547,7 @@ game_rule_move (Game* game)
 
     if (game_connection_is_open (game, origin, dir) == FALSE) return ERROR;
 
-    play.pos_x = player_get_pos_x (player);
-    play.pos_y = player_get_pos_y (player);
+    play = player_get_position (player);
     space_set_grid_by_position (orig_sp, play, 1);
 
     if (numen)
@@ -680,14 +679,20 @@ game_rules_regen (Game* game)
     Space* space;
     Numen* numen;
     Set* numen_set;
-    Id zone;
+    Id zone_id;
     int i;
-
+    if (!game) return ERROR;
+    
     if (game_get_last_cmd_status (game) == OK)
         {
-            zone  = player_get_zone (player);
+            
+            player = game_get_player_at(game, PLAYER);
+            if (!player) return ERROR;
 
-            space = game_get_space (game, zone);
+            zone_id  = player_get_zone (player);
+
+            space = game_get_space (game, zone_id);
+
 
             if (space_get_n_numens (space) != 0)
                 {
@@ -703,11 +708,12 @@ game_rules_regen (Game* game)
                         }
                 }
 
-            if (player_get_n_numens > 0)
+            if (player_get_n_numens (player) > 0)
                 {
-                    for (i = 0; i < player_get_n_numens (space); i++)
+                    for (i = 0; i < player_get_n_numens (player); i++)
                         {
-                            numen = player_get_numen_at_inventory (space, i);
+                            
+                            numen = game_get_numen_by_id(game,player_get_numen_at_inventory (player, i));
 
                             if (!numen) { return ERROR; }
                             if (numen_get_id (numen) == player_get_active_numen (player)) continue;
@@ -783,7 +789,7 @@ game_rules_death_numen (Game* game, Numen* num)
                     if (n_nums == 0) { game_rules_loose_condition (game); }
                     else
                         {
-                            player_set_active_numen (player, 0);
+                            player_set_active_numen (player, NO_ID);
                         }
                 }
         }

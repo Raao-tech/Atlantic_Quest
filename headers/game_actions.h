@@ -35,6 +35,5 @@
 Status game_actions_update (Game* game, Command* cmd);
 
 
-Direction   ge_parse_direction (const char* str);
 
 #endif

@@ -34,15 +34,15 @@
 
 
 /*file of data for default*/
-#define F_DATA_N "new_game.dat"
+#define F_DATA_N "./new_game.dat"
 #define F_DATA_S_1 "./Save_old_games/game_1.dat"
-#define F_DATA_S_2 "./Save_old_games/game_3.dat"
+#define F_DATA_S_2 "./Save_old_games/game_2.dat"
 
 /*Los Ids de los numens serán impuestos, en pokemon Bulbasaur siempre es el #1 de la pokedex incluso pasando a otro juego*/
 /*Id de los Numens inciales*/
-#define First_numen 1
-#define Second_numen 2
-#define third_numen 3
+#define First_numen 20
+#define Second_numen 21
+#define third_numen 22
 
 /*Name of game*/
 #define TITLE "Atlantic Quest"
@@ -145,5 +145,15 @@ typedef enum
 #define ERROR_LIFE -1
 #define ERROR_ATTACK -1
 #define ERROR_ENGY -1
+
+
+
+/*================== FUNTIONS UTILITIES ===================*/
+Direction   types_parse_direction (const char* str);
+Bool        types_position_is_valid( void*  generic,Position (*get_position) (void*), int min_x, int min_y,  int max_x, int max_y);
+Bool        types_is_watching_it (void*  watchful, void*  target,Position (*get_vision) (void*), Position (*get_position) (void*));
+
+
+
 
 #endif

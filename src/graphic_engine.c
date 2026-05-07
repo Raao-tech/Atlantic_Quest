@@ -146,6 +146,9 @@ graphic_engine_create (void)
 	for (i = 0; i < MAX_OBJECT_TEX; i++) ge->object_textures[i].name[0] = '\0';
 
 	ge->textures_loaded = FALSE;
+
+	InitWindow (WIDHT_MAP+OVERLAY_H, HIGHT_MAP+RIGHT_SIDE_PANEL_W, TITLE);
+	SetTargetFPS (FPS);
 	return ge;
 }
 
@@ -194,8 +197,7 @@ graphic_engine_init (Graphic_engine* ge)
 
 	if (!ge) return result;
 
-	InitWindow (WIDHT_MAP+OVERLAY_H, HIGHT_MAP+RIGHT_SIDE_PANEL_W, TITLE);
-	SetTargetFPS (FPS);
+
 
 	while (!WindowShouldClose () && exit_on == FALSE)
 	{
@@ -283,10 +285,10 @@ Status
 graphic_engine_load_textures (Graphic_engine* ge, Game* game)
 {
 	int   i, n_spaces, slot;
-	char  path[256];
-	Space* sp;
-	Player* pl;
-	Numen*  nu;
+	char  path[WORD_SIZE];
+	Space* sp = NULL;
+	Player* pl = NULL;
+	Numen*  nu = NULL;
 
 	if (!ge || !game) return ERROR;
 	if (ge->textures_loaded == TRUE) return OK;   /* idempotente */
@@ -441,10 +443,10 @@ ge_paint_background (Graphic_engine* ge, Game* game, Player* player)
 
 	{
 		int i;
-		for (i = 1; i < WIDHT;  i++)
+		for (i = 1; i < WIDHT_MAP;  i++)
 			DrawLine (i * SCALE, 0, i * SCALE, HIGHT * SCALE,
 					  (Color){ 255, 255, 255, 30 });
-		for (i = 1; i < HIGHT;  i++)
+		for (i = 1; i < HIGHT_MAP;  i++)
 			DrawLine (0, i * SCALE, WIDHT * SCALE, i * SCALE,
 					  (Color){ 255, 255, 255, 30 });
 	}
@@ -492,41 +494,50 @@ ge_paint_overlay (Game* game, Player* player)
 	Command*     last_cmd;
 	int          hp_numen, sp_numen;
 	Color        hp_color, sp_color;
-	const char*  space_name;
-	const char*  cmd_label;
-	const char*  status_label;
-	const char*  numen_name;
-	const char*  object_name;
+	char*  space_name;
+	char*  cmd_label;
+	char*  status_label;
+	char*  numen_name;
+	char*  object_name;
+
+	if (!game || !player) return;
 
 	Id_act_num=player_get_active_numen(player);
 	numen=game_get_numen_by_id(game, Id_act_num);
+	if(numen)
+	{
+		/* Franja semi-transparente arriba */
+		DrawRectangle (0, 0, WIDHT_MAP + RIGHT_SIDE_PANEL_W, OVERLAY_H, COLOR_OVERLAY);
 
-	Id_act_obj=player_get_active_object(player);
-	object=game_get_object_by_id(game, Id_act_obj);
+		/*Nombre del numen a la izquierda*/
+		numen_name=numen_get_name(numen) != NULL ? "" : numen_get_name(numen);
+		DrawText(numen_name, OVERLAY_PAD ,7, MEDIUM_TEXT_SIZE, COLOR_TEXT);
+		/* HP a la izquierda */
+		hp_numen = numen_get_health (numen);
+		hp_color  = (hp_numen > 3) ? COLOR_HP_OK : COLOR_HP_LOW;
+		DrawText (TextFormat ("HP %d", hp_numen),
+				  OVERLAY_PAD+20, 36, SMALL_TEXT_SIZE, hp_color);
+		/*SP al lado del HP*/
+		sp_numen = numen_get_energy (numen);
+		sp_color  = COLOR_TITLE;
+		DrawText (TextFormat ("SP %d", sp_numen),
+				  (OVERLAY_PAD+68), 36, SMALL_TEXT_SIZE, sp_color);
+	}
 
-	/* Franja semi-transparente arriba */
-	DrawRectangle (0, 0, WIDHT_MAP + RIGHT_SIDE_PANEL_W, OVERLAY_H, COLOR_OVERLAY);
 
-	/*Nombre del numen a la izquierda*/
-	numen_name=numen_get_name(numen);
-	DrawText(numen_name, OVERLAY_PAD ,7, MEDIUM_TEXT_SIZE, COLOR_TEXT);
-	/* HP a la izquierda */
-	hp_numen = numen_get_health (numen);
-	hp_color  = (hp_numen > 3) ? COLOR_HP_OK : COLOR_HP_LOW;
-	DrawText (TextFormat ("HP %d", hp_numen),
-			  OVERLAY_PAD+20, 36, SMALL_TEXT_SIZE, hp_color);
-	/*SP al lado del HP*/
-	sp_numen = numen_get_energy (numen);
-	sp_color  = COLOR_TITLE;
-	DrawText (TextFormat ("SP %d", sp_numen),
-			  (OVERLAY_PAD+68), 36, SMALL_TEXT_SIZE, sp_color);
+
+
+
 	/* Nombre del space en el centro */
 	sp         = game_get_space (game, player_get_zone (player));
-	space_name = sp ? space_get_name (sp) : "?";
-	DrawText (space_name,
+	if (sp)
+	{
+		space_name = sp ? space_get_name (sp) : "?";
+		DrawText (space_name,
 			  WIDHT_MAP / 2 - MeasureText (space_name, BIG_TEXT_SIZE) / 2,
 			  27, BIG_TEXT_SIZE, COLOR_TITLE);
-	
+	}
+
 	/* Resultado del ultimo comando a la derecha */
 	last_cmd = game_get_last_command (game);
 	if (last_cmd)
@@ -537,9 +548,15 @@ ge_paint_overlay (Game* game, Player* player)
 				  WIDHT_MAP - 60, 40, SMALL_TEXT_SIZE, COLOR_TEXT);
 	}
 
-	/*Nombre del object a la izquierda*/
-	object_name=obj_get_name(object);
-	DrawText(object_name, WIDHT_MAP + RIGHT_SIDE_PANEL_W - MeasureText (space_name, MEDIUM_TEXT_SIZE) / 2, 21, MEDIUM_TEXT_SIZE, COLOR_TEXT); 
+	/*Si existe el objeto*/
+	Id_act_obj=player_get_active_object(player);
+	object=game_get_object_by_id(game, Id_act_obj);
+	if(object)
+	{
+		/*Nombre del object a la izquierda*/
+		object_name=obj_get_name(object);
+		DrawText(object_name, WIDHT_MAP + RIGHT_SIDE_PANEL_W - MeasureText (space_name, MEDIUM_TEXT_SIZE) / 2, 21, MEDIUM_TEXT_SIZE, COLOR_TEXT); 
+	}	
 }
 
  
@@ -548,53 +565,33 @@ ge_paint_overlay (Game* game, Player* player)
 /* ====================================================================== */
 static void ge_paint_right_side_panel (Graphic_engine* ge, Game* game)
 {
-	Player*     	player		= 	NULL;
-	Numen*       	numen		= 	NULL;
-	Object*      	object		= 	NULL;
-	const char*  	space_name	=   NULL;
-	char*  	gdesc      	=   NULL;
-	Id           	Id_act_num = NO_ID;
-	Id				Id_act_obj = NO_ID;
-	int          	n_nums, n_objs, n, o, i;
+    Player* player = NULL;
+    Numen*  numen  = NULL;
+    Object* object = NULL;
+    int n_nums, n_objs, n, o;
 
-	/*Obtenemos al player*/
-	player=game_get_player_at(game, PLAYER);
+    player = game_get_player_at(game, PLAYER);
+    if (!player) return;
 
-	/*Obtenemos el id del numen_active y luego obtenemos un puntero a dicho numen*/
-	Id_act_num=player_get_active_numen(player);
-	numen=game_get_numen_by_id(game, Id_act_num);
+    n_nums = player_get_n_numens(player);
+    n_objs = player_get_n_objects(player);
 
-	/*Obtenemos el id del obj_activo y el puntero a dicho object*/
-	Id_act_obj=player_get_active_object(player);
-	object=game_get_object_by_id(game, Id_act_obj);
-	
-	/*Revisamos cuantos numens y objects hay*/
-	n_nums=player_get_n_numens(player);
-	n_objs=player_get_n_objects(player);
+    DrawRectangle(WIDHT_MAP, 0, WIDTH_SCREEN, HIGHT_SCREEN, COLOR_OVERLAY);
 
+    for (n = 0; n < n_nums; n++)
+    {
+        numen = game_get_numen_by_id(game, player_get_numen_at_inventory(player, n));
+        if (numen) ge_paint_numen_right_panel(ge, numen, n);
+        if (n == 3) break;
+    }
 
-	/* Franja semi-transparente arriba */
-	DrawRectangle (WIDHT_MAP, 0, WIDTH_SCREEN, HIGHT_SCREEN, COLOR_OVERLAY);
-
-	 for(n=0; n<n_nums; n++)
-		{
-			if(gdesc) free(gdesc);
-			numen= game_get_numen_by_id (game, player_get_numen_at_inventory (player, n));
-			gdesc=numen_get_gdesc(numen);
-			ge_paint_numen_right_panel(ge, numen, n);
-			if(n==3)	break;
-		}
-	for(o=0; o<n_objs; o++)
-		{
-			if(gdesc) free(gdesc);
-			object= game_get_object_by_id (game, player_get_object_at_inventory (player, o));
-			gdesc=obj_get_gdesc(object);
-			ge_paint_object_right_panel(ge, object, n+o+2);
-			if(o==3)	break;
-		}
-	if(gdesc) free(gdesc);
+    for (o = 0; o < n_objs; o++)
+    {
+        object = game_get_object_by_id(game, player_get_object_at_inventory(player, o));
+        if (object) ge_paint_object_right_panel(ge, object, n + o + 2);
+        if (o == 3) break;
+    }
 }
-
 /* ====================================================================== */
 /*                       PRIVATE: NUMEN (RIGHT PANEL)                     */
 /* ====================================================================== */
@@ -603,8 +600,11 @@ ge_paint_numen_right_panel (Graphic_engine* ge, Numen* numen, int n_painted)
 {
 	int        px, py;
 	Texture2D* tex;
+
+	if (!ge || !numen ) return;
 	
 	tex = ge_get_numen_texture (ge, numen_get_name (numen));
+	if (!tex) return;
 	
 	px  = WIDHT_MAP;
 
@@ -631,10 +631,12 @@ ge_paint_numen_right_panel (Graphic_engine* ge, Numen* numen, int n_painted)
 static void
 ge_paint_object_right_panel(Graphic_engine*ge, Object* object, int n_painted)
 {
-		int        px, py;
+	int        px, py;
 	Texture2D* tex;
+	if (!ge || !object ) return;
 	
 	tex = ge_get_object_texture (ge, obj_get_name (object));
+	if(!tex) return;
 	
 	px  = WIDHT_MAP;
 
@@ -658,33 +660,35 @@ ge_paint_object_right_panel(Graphic_engine*ge, Object* object, int n_painted)
 /*                       PRIVATE: NUMEN (RIGHT PANEL)                     */
 /* ====================================================================== */
 static void
-ge_paint_skill_panel     	(Game* game, Player* player)
+ge_paint_skill_panel(Game* game, Player* player)
 {
-	if (!game || !player) return;
-	Numen* numen;
-	Id id_numen;
-	Skills_id id_skill[3];
-	char* names[3];
-	int i;
-	int j;
-	int pos_x;
-	int pos_y;
+    Numen*    numen;
+    Id        id_numen;
+    Skills_id id_skill[N_SKILLS];
+    char*     names[N_SKILLS];
+    int       i, j;
 
-	id_numen = player_get_active_numen(player);
-	numen = game_get_numen_by_id(game, id_numen);
-	for (i = 0; i < 4; i++)
-	{
-		id_skill[i] = numen_get_skill_by_index(numen, i);
-		if (id_skill[i] == NO_SKILL) break;
-		names[i] = skill_get_name(id_skill[i]);
-	}
-	
-	for ( j = 0; j < i; j++)
-	{
-		DrawText (names[j], (MeasureText (names[i], MEDIUM_TEXT_SIZE) / 2)+(j*(WIDTH_SCREEN/4)), 40*2, MEDIUM_TEXT_SIZE, COLOR_TEXT);
-	}
-	
-	
+    if (!game || !player) return;
+
+    id_numen = player_get_active_numen(player);
+    numen    = game_get_numen_by_id(game, id_numen);
+    if (!numen) return;
+
+    for (i = 0; i < N_SKILLS; i++)
+    {
+        id_skill[i] = numen_get_skill_by_index(numen, i);
+        if (id_skill[i] == NO_SKILL) break;
+        names[i] = skill_get_name(id_skill[i]);
+        if (!names[i]) names[i] = "?"; 
+    }
+
+    for (j = 0; j < i; j++)
+    {
+        if (!names[j]) continue;
+        DrawText(names[j],
+                 MeasureText(names[j], MEDIUM_TEXT_SIZE) / 2 + j * (WIDTH_SCREEN / 4),
+                 40 * 2, MEDIUM_TEXT_SIZE, COLOR_TEXT);
+    }
 }
 /* ====================================================================== */
 /*                       PRIVATE: TEXTURE LOOKUP                           */
@@ -801,6 +805,8 @@ ge_cycle_active_object (Player* player)
     active_id   = player_get_active_object (player);
     current_idx = ge_find_idx_in_list (active_id, n,	player_get_object_at_inventory, player);
     next_idx    = (current_idx + 1) % n; /*Nos movemos al siguiente object en el inventario*/
+
+	new_active_id = player_get_object_at_inventory (player, next_idx);
 
     player_set_active_object (player, new_active_id);
 }
@@ -1030,7 +1036,7 @@ ge_paint_space_numens (Graphic_engine* ge, Game* game, Player* player)
 	float      hp_ratio;
 
 	if (!ge || !game || !player) return;
-	pos_active.pos_x = pos_active.pos_x = NO_POS;
+	pos_active.pos_x = pos_active.pos_y = NO_POS;
 
 	active_id = player_get_active_numen (player); /*Puede ser NO_ID si se  mueren todos, se cerraría el jeugo*/
 	space_id  = player_get_zone (player);
@@ -1041,9 +1047,8 @@ ge_paint_space_numens (Graphic_engine* ge, Game* game, Player* player)
 	active_num = (active_id != NO_ID)
 	             ? game_get_numen_by_id (game, active_id)
 	             : NULL;
-	if (!active_num) return;
 
-	_ge_draw_bars (active_num);
+	if (active_num) _ge_draw_bars (active_num);
 
 	pos_active = numen_get_position (active_num);
 	max_radio = _ge_max_radio_skill_of_numen (active_num);

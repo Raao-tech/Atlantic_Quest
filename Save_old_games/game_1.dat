@@ -68,13 +68,15 @@
 
 # ====================================================================
 # OBJECTS (0)
-# (Pendiente para sesion futura. No hay objetos en esta version.)
+# (Pendiente para sesion futura.)
 # ====================================================================
 #o:67|Cuadrado|1|240|320|humulukumulunulu|Cuadrado|1|10|0|0|0|-1|1|2|
 #o:69|Circulo|100|300|320|humulukumulunulu|Circulo|1|10|0|0|0|-1|1|1|
 # ====================================================================
 # CHARACTERS (0)
 # (Eliminados. En esta version solo hay numens.)
+# Puede que en un futuro tengamos más tipos de NPCs por lo que esto es La
+# base para una próxima expansión del proyecto, a una versión Demo
 # ====================================================================
 
 
@@ -133,11 +135,10 @@
 #n:3|Pyjuggler|1|220|180|F|10|10|1|2|1|6|7|0|-1|0|
 
 # --- CAPTURABLES (errantes amigos) ---
-#n:4|FirePlushie|2|100|240|f|8|8|3|2|1|6|0|0|-1|0|
+#n:4|FirePlushie|2|240|240|f|8|8|3|2|1|6|0|0|-1|0|
 #n:5|LavaBall|4|240|240|l|8|8|3|2|1|6|0|0|-1|0|
-#n:6|Waterlizard|6|500|240|z|8|8|3|3|1|3|0|0|-1|0|
+#n:6|Waterlizard|6|240|240|z|8|8|3|3|1|3|0|0|-1|0|
 #n:7|Arisand|7|240|240|g|8|8|3|2|1|6|0|0|-1|0|
-#n:8|Arisand|5|240|240|g|8|8|3|2|1|6|0|0|-1|0|
 
 # --- CORRUPTOS (enemigos finales) ---
 #n:8|Arisand|1|440|340|N|200|100|1|2|1|6|7|0|-1|1|

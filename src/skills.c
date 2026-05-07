@@ -29,7 +29,7 @@ static const Skills skill_table[NUM_SKILLS] = {
     [STAND_PLATINUM] = { STAND_PLATINUM, "Stand Platinum", 4, 4, 5 },
     [THUNDER_SHOCK]  = { THUNDER_SHOCK,  "Thunder Shock",  6, 2, 4 },
     [FIRE_BALL]      = { FIRE_BALL,      "Fire Ball",      4, 3, 4 },
-    [FIRE_BALL_A]    = { FIRE_BALL_A,    "Fire Ball Area", 2, 1, 0 }
+    [FIRE_BALL_A]    = { FIRE_BALL_A,    "Fire Ball Area", 2, 1, 0 },
 };
 
 /* ====================================================================== */

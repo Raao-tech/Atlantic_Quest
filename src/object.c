@@ -321,27 +321,41 @@ obj_set_consumable (Object* obj, Bool consumable)
 Status
 obj_print (Object* obj)
 {
+    Entity* e_obj;
+    Bool movable;
+    Id open;
+    Id dependency;
+    char gdesc[WORD_SIZE + 1];
+    Bool consumable;
+    Effect  effect;
+
+    Status status;
+
     if (!obj) return ERROR;
-    char* name = entity_get_name (obj->e_obj);
-    char* desc = entity_get_message (obj->e_obj);
-    Id id      = entity_get_id (obj->e_obj);
-    /*stats*/
-    int health = entity_get_health (obj->e_obj);
-    int speed  = entity_get_speed (obj->e_obj);
-    int energy = entity_get_energy (obj->e_obj);
-    int attack = entity_get_attack (obj->e_obj);
 
-    fprintf (stdout,
-             "--> Object (Id: %ld; Name: %s; Desc: %s; Movable: %s; Open: %ld; "
-             "Dependency: %ld)\n",
-             id, name, desc, ((obj->movable) == TRUE) ? "Yes" : "No", obj->open, obj->dependency);
-    fprintf (stdout,
-             "This Object has effects in:  Health += %d, Speed += %d, Attack += "
-             "%d, Energy += %d\n",
-             health, speed, attack, energy);
+    e_obj = obj->e_obj;
+    movable = obj->movable;
+    open = obj->open;
+    dependency = obj->dependency;
+    strcpy (gdesc, obj->gdesc);
+    consumable = obj->consumable;
+    effect = obj->effect;
 
-    free (name);
-    free (desc);
+    printf (stdout, "\n--- Object ---\n");
 
+    status = entity_print(e_obj);
+    if (status == ERROR) return ERROR;
+    
+    if (movable == TRUE) printf (stdout, " ->Movable: TRUE;\n");
+    else printf (stdout, " ->Movable: FALSE;\n");
+    printf (stdout, " ->Open id: %ld;\n", open);
+    printf (stdout, " ->Dependency id: %ld;\n", dependency);
+    printf (stdout, " ->Gdesc: %s;\n", gdesc);
+    if (consumable == TRUE) printf (stdout, " ->Consumable: TRUE;\n");
+    else printf (stdout, " ->Consumable: FALSE;\n");
+
+
+
+    if (e_obj) free (e_obj);
     return OK;
 }

@@ -355,3 +355,40 @@ entity_set_pos_y (Entity* entity, int y)
     entity->position.pos_y = y;
     return OK;
 }
+
+/*
+================================================================
+  PRINT
+================================================================
+*/
+
+Status entity_print (Entity* entity)
+{
+    Id id;             
+    char* gdesc;       
+    char* message;
+    char* name;   
+    int health;
+    int attack;
+    int energy;
+    int speed;
+    int x;
+    int y;
+
+    if (!entity) return ERROR;
+
+    id = entity->id;
+    strcpy (gdesc, entity->gdesc);
+    strcpy (message, entity->message);
+    strcpy (name, entity->name);
+    health = entity->stats.health;
+    attack = entity->stats.attack;
+    energy = entity->stats.energy;
+    speed = entity->stats.speed;
+    x = entity->position.pos_x;
+    y = entity->position.pos_y;
+
+    fprintf (stdout, " --> Entity (Id: %ld; Gdesc: %s; Message: %s; Name: %s; Health: %i;"
+        "Attack: %i; Energy: %i; Speed: %i; Position x: %i; Position y: %i)\n", id, gdesc, message, name, health, attack, energy, speed, x, y);
+
+}

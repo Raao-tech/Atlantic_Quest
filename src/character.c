@@ -275,109 +275,26 @@ character_get_pos_y (Character* cha)
 
 /* ================ PRINT ============================ */
 
-Status
-character_print (Character* character)
+Status character_print (Character* character)
 {
-    char* name    = NULL;
-    char* gdesc   = NULL;
-    char* message = NULL;
-    Id following  = NO_ID;
-    int health    = 0;
-    int attack    = 0;
-    int energy    = 0;
-
+    Entity* e_character;
+    Bool friendly; 
+    Id following;    
+    
+    Status status;
+    
     if (!character) return ERROR;
 
-    name      = character_get_name (character);
-    gdesc     = character_get_gdesc (character);
-    message   = character_get_message (character);
-    following = character_get_following (character);
-    health    = character_get_health (character);
-    attack    = character_get_attack (character);
-    energy    = character_get_energy (character);
+    e_character = character->e_character;
+    friendly = character->friendly;
+    following = character->following;
 
-    fprintf (stdout, "\n--- Character ---\n");
-    fprintf (stdout, "|| ID:       %ld\n", character_get_id (character));
-    fprintf (stdout, "|| NAME:     %s\n", name ? name : "N/A");
-    fprintf (stdout, "|| GDESC:    %s\n", gdesc ? gdesc : "N/A");
-    fprintf (stdout, "|| HEALTH:   %d\n", health);
-    fprintf (stdout, "|| ATTACK:   %d\n", attack);
-    fprintf (stdout, "|| HEALTH:   %d\n", energy);
-    fprintf (stdout, "|| FRIENDLY: %s\n", character_get_friendly (character) == TRUE ? "YES" : "NO");
-    fprintf (stdout, "|| MESSAGE:  %s\n", message ? message : "N/A");
-    fprintf (stdout, "|| FOLLOWING:  %ld\n", following != NO_ID ? following : NO_ID);
-    fprintf (stdout, "-----------------\n");
-
-    if (name) free (name);
-    if (gdesc) free (gdesc);
-    if (message) free (message);
+    printf (stdout, "\n--- Character ---\n");
+    status = entity_print (e_character);
+    if (status == ERROR) return ERROR;
+    if (friendly == FALSE) printf (stdout, "-> Friendly: FALSE");
+     else printf (stdout, "-> Friendly: TRUE;\n");
+    printf (stdout, "-> Id: %ld;\n", following);
 
     return OK;
 }
-/*
-Status create_set_obj(Character *create, Id id_obj)
-{
-  if (create == NULL)
-  {
-    return ERROR;
-  }
-
-  create->id_object_take = id_obj;
-  return OK;
-}
-
-Status create_set_space(Character *create, Id id_space)
-{
-  if (create == NULL || id_space == NO_ID)
-  {
-    return ERROR;
-  }
-
-  create->id_space_location = id_space;
-  return OK;
-}
-
-
-
-char *create_get_name(Character *create)
-{
-  if (!create)
-  {
-    return NULL;
-  }
-  return create->name;
-}
-
-Id create_get_space(Character *create)
-{
-  if (create == NULL)
-  {
-    return NO_ID;
-  }
-  return create->id_space_location;
-}
-
-Id create_get_obj(Character *create)
-{
-  if (create == NULL)
-  {
-    return NO_ID;
-  }
-  return create->id_object_take;
-}
-
-Status create_print(Character *create)
-{
-
-  if (!create || create->id == NO_ID)
-  {
-    return ERROR;
-  }
-
-
-  fprintf(stdout, "--> Character %ld: %s)\n", create->id, create->name);
-
-  return OK;
-}
-
-*/

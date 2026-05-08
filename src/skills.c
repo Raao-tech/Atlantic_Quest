@@ -126,3 +126,16 @@ skill_get_coste (Skills_id id)
     if (!skill_id_is_valid (id)) return -1;
     return skill_table[id].coste;
 }
+
+Status
+skill_print (Skills_id id)
+{
+    char* name;
+    strcpy (name, skill_get_name(id));
+    int radio = skill_get_radio(id);
+    int damage = skill_get_damage(id);
+    int coste = skill_get_coste(id);
+
+    fprintf (stdout, " --> Skill (Id: %i; Name: %s; Radio: %i; Damage: %i; Coste: %i;)\n", id, name, radio, damage, coste);
+    return OK;
+}

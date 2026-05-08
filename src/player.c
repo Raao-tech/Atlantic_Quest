@@ -466,31 +466,63 @@ player_get_vision_y (Player* player)
 Status
 player_print (Player* player)
 {
-	Id player_id;
-	Id player_zone;
-	int player_n_objects;
-	char* player_name    = NULL;
-	char* player_gdesc   = NULL;
-	char* player_message = NULL;
+	Entity* e_player;
+	Inventory* backpack_items;
+	Inventory* backpack_numen;
+	Id zone;
+	int x;
+	int y;
+	Id active_numen;
+	Id active_object;
+	Bool loading;
+
+	Status status;
+
+
+
 
 	if (!player) return ERROR;
+	e_player = player->e_player;
+	backpack_items = player->backpack_items;
+	backpack_numen = player->active_numen;
+	zone = player->zone;
+	x = player->vision.pos_x;
+	y = player->vision.pos_y;
+	active_numen = player->active_numen;
+	active_object = player->active_object;
+	loading = player->loading;
 
-	player_id        = player_get_id (player);
-	player_zone      = player_get_zone (player);
-	player_n_objects = player_get_n_objects (player);
-	player_name      = player_get_name (player);
-	player_gdesc     = player_get_gdesc (player);
-	player_message   = player_get_message (player);
 
-	fprintf (stdout,
-			 "--> Player (Id: %ld; Name: %s; Gdesc: %s; Zone: %ld; "
-			 "Objects: %d; Message: %s)\n",
-			 player_id, player_name ? player_name : "NULL", player_gdesc ? player_gdesc : "NULL", player_zone, player_n_objects,
-			 player_message ? player_message : "NULL");
+	
+	printf (stdout, "\n--- Character ---\n");
+	status = entity_print(e_player);
+	if (status == ERROR) return ERROR;
+	status = inventory_print (backpack_items);
+	if (status == ERROR) return ERROR;
+	status = inventory_print(backpack_numen);
+	if (status == ERROR) return ERROR;
 
-	if (player_name) free (player_name);
-	if (player_gdesc) free (player_gdesc);
-	if (player_message) free (player_message);
+	printf (stdout, " ->Zone: %ld;\n", zone);
+	printf (stdout, " ->Position x: %ld;\n", x);
+	printf (stdout, " ->Position y: %ld;\n", y);
+	printf (stdout, " ->Active numen id: %ld;\n", active_numen);
+	printf (stdout, " ->Active object id: %ld;\n", active_object);
+	if (loading == FALSE) printf (stdout, " ->Loading: FALSE;\n");
+	printf (stdout, " ->Loading: TRUE;\n");
+
+
+	if (e_player)
+	{
+		entity_destroy (e_player);
+	}
+	if (backpack_items)
+	{
+		inventory_destroy (backpack_items);
+	}
+	if (backpack_numen) 
+	{
+		inventory_destroy (backpack_numen);
+	}
 
 	return OK;
 }

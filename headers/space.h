@@ -194,6 +194,19 @@ Status space_set_grid_by_line (Space* space, int line, int* content);
  */
 int* space_get_grid_by_line (Space* space, int line);
 
+
+/**
+ * @brief It gets a line of the grid for the space
+ * @author Rafael
+ *
+ * @param space a pointer to the space
+ * @param position A value int pixels
+ * @return Ok if there not problem
+ */
+
+Status
+space_set_grid_by_position (Space* space, Position position, int value);
+
 /* ========== OST ====================== */
 
 /**

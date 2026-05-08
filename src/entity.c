@@ -365,9 +365,9 @@ entity_set_pos_y (Entity* entity, int y)
 Status entity_print (Entity* entity)
 {
     Id id;             
-    char* gdesc;       
-    char* message;
-    char* name;   
+    char* gdesc     = NULL;       
+    char* message   = NULL;
+    char* name      = NULL;   
     int health;
     int attack;
     int energy;
@@ -391,4 +391,5 @@ Status entity_print (Entity* entity)
     fprintf (stdout, " --> Entity (Id: %ld; Gdesc: %s; Message: %s; Name: %s; Health: %i;"
         "Attack: %i; Energy: %i; Speed: %i; Position x: %i; Position y: %i)\n", id, gdesc, message, name, health, attack, energy, speed, x, y);
 
+    return OK;
 }

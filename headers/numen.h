@@ -239,7 +239,7 @@ Status  numen_add_skill (Numen* numen, Id skill_id);
  * @param skill_id the id of the new skill to shearch
  * @return TRUE if the skill exists, FALSE if not
  */
-Bool  numen_get_skill_by_id (Numen* numen, Id skill_id);
+Skills_id  numen_get_skill_by_id (Numen* numen, Id skill_id);
 /**
  * @brief It gets the id of a skill with the index
  * @author Rafael, Javier, Salvador and Violeta
@@ -306,6 +306,8 @@ Status numen_set_corrupt (Numen* numen, Bool corrupt);
  * @return TRUE if the numen is corrupt, FALSE otherwise
  */
 Bool numen_get_corrupt (Numen* numen);
+
+
 
 /*====== (set/get) corrupt ===================*/
 /**

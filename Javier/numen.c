@@ -242,11 +242,11 @@ numen_add_skill (Numen* numen, Id skill_id)
     return ERROR;   /* Sin slots libres */
 }
 
-Id
+Skills_id
 numen_get_skill_by_id (Numen* numen, Id skill_id)
 {
     int i;
-    if (!numen || skill_id < 0) return NO_ID;
+    if (!numen || skill_id < NO_SKILL) return NO_ID;
 
     for (i = 0; i < NUM_SKILLS; i++)
     {

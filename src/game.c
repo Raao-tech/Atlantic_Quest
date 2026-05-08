@@ -625,7 +625,7 @@ game_turn_update (Game* game)
 
 Status game_print (Game* game)
 {
-	if (!game) return;
+	if (!game) return ERROR;
 	Status status;
 	
 	printf ("\n============ GAME STATE ============\n");
@@ -652,26 +652,26 @@ Status game_print (Game* game)
 	}
 	for (int i = 0; i < game->n_spaces; i++)
 	{
-		obj_print (game->spaces[i]);
+		space_print (game->spaces[i]);
 		if (status = ERROR) return ERROR;
 	}
 	for (int i = 0; i < game->n_links; i++)
 	{
-		obj_print (game->links[i]);
+		link_print (game->links[i], stdout);
 		if (status = ERROR) return ERROR;
 	}
 
-	printf (stdout, " ->Turn: %i;\n", game->turn);
-	printf (stdout, " ->N_players: %i;", game->n_players);
-	printf (stdout, " ->N_spaces: %i;", game->n_spaces);
-	printf (stdout, " ->N_objects: %i;\n", game->n_objects);
-	printf (stdout, " ->N_numens: %i;\n", game->n_numens);
-	printf (stdout, " ->N_links: %i;\n", game->n_links);
+	fprintf (stdout, " ->Turn: %i;\n", game->turn);
+	fprintf (stdout, " ->N_players: %i;", game->n_players);
+	fprintf (stdout, " ->N_spaces: %i;", game->n_spaces);
+	fprintf (stdout, " ->N_objects: %i;\n", game->n_objects);
+	fprintf (stdout, " ->N_numens: %i;\n", game->n_numens);
+	fprintf (stdout, " ->N_links: %i;\n", game->n_links);
 
-	if (game->finished == TRUE) printf (stdout, " ->Game finished: True;\n");
-	else printf (stdout, " ->Game finished: False;\n");
-	if (game->last_cmd_status == OK) printf (stdout, " ->Last cmd status: OK;\n");
-	else printf (stdout, " ->Last cmd status: ERROR;\n");
+	if (game->finished == TRUE) fprintf (stdout, " ->Game finished: True;\n");
+	else fprintf (stdout, " ->Game finished: False;\n");
+	if (game->last_cmd_status == OK) fprintf (stdout, " ->Last cmd status: OK;\n");
+	else fprintf (stdout, " ->Last cmd status: ERROR;\n");
 
 
 

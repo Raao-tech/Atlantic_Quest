@@ -4,7 +4,7 @@
  * This module manages the logic of the game the player doesn't interact with directly.
  *
  * @file game_rules.h
- * @author Salvador
+ * @author Salvador y Rafael
  * @version 1.0
  * @date 26-04-2026
  * @copyright GNU Public License
@@ -55,5 +55,11 @@ Status game_rule_walk_active (Game* game);
  * @return OK, if everything goes well, or ERROR if there was some mistake
  */
 Status game_rule_move (Game* game);
+
+Status  game_rules_regen (Game* game);
+
+Bool    game_rules_win_condition(Game* game);
+Bool    game_rules_loose_condition(Game* game);
+void    game_rules_death_numen (Game* game, Numen* num);
 
 #endif

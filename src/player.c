@@ -484,7 +484,7 @@ player_print (Player* player)
 	if (!player) return ERROR;
 	e_player = player->e_player;
 	backpack_items = player->backpack_items;
-	backpack_numen = player->active_numen;
+	backpack_numen = player->backpack_numens;
 	zone = player->zone;
 	x = player->vision.pos_x;
 	y = player->vision.pos_y;
@@ -494,7 +494,7 @@ player_print (Player* player)
 
 
 	
-	printf (stdout, "\n--- Character ---\n");
+	fprintf (stdout, "\n--- Character ---\n");
 	status = entity_print(e_player);
 	if (status == ERROR) return ERROR;
 	status = inventory_print (backpack_items);
@@ -502,13 +502,13 @@ player_print (Player* player)
 	status = inventory_print(backpack_numen);
 	if (status == ERROR) return ERROR;
 
-	printf (stdout, " ->Zone: %ld;\n", zone);
-	printf (stdout, " ->Position x: %ld;\n", x);
-	printf (stdout, " ->Position y: %ld;\n", y);
-	printf (stdout, " ->Active numen id: %ld;\n", active_numen);
-	printf (stdout, " ->Active object id: %ld;\n", active_object);
-	if (loading == FALSE) printf (stdout, " ->Loading: FALSE;\n");
-	printf (stdout, " ->Loading: TRUE;\n");
+	fprintf (stdout, " ->Zone: %ld;\n", zone);
+	fprintf (stdout, " ->Position x: %d;\n", x);
+	fprintf (stdout, " ->Position y: %d;\n", y);
+	fprintf (stdout, " ->Active numen id: %ld;\n", active_numen);
+	fprintf (stdout, " ->Active object id: %ld;\n", active_object);
+	if (loading == FALSE) fprintf (stdout, " ->Loading: FALSE;\n");
+	fprintf (stdout, " ->Loading: TRUE;\n");
 
 
 	if (e_player)

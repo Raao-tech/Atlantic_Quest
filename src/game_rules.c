@@ -19,6 +19,63 @@ Bool _game_rules_numen_in_area (Numen* numen_center, Numen* numen_goal, int scal
 Direction _game_rules_enemy_dir (Numen* numen_center, Numen* numen_goal);
 
 Status
+game_rules_regen (Game* game)
+{
+    Player* player;
+    Space* space;
+    Numen* numen;
+    Set* numen_set;
+    Id zone_id;
+    int i;
+    if (!game) return ERROR;
+    
+    if (game_get_last_cmd_status (game) == OK)
+        {
+            
+            player = game_get_player_at(game, PLAYER);
+            if (!player) return ERROR;
+
+            zone_id  = player_get_zone (player);
+
+            space = game_get_space (game, zone_id);
+
+
+            if (space_get_n_numens (space) != 0)
+                {
+                    numen_set = space_get_numens (space);
+                    for (i = 0; i < space_get_n_numens (space); i++)
+                        {
+                            if (!numen_set) { return ERROR; }
+                            numen = game_get_numen_by_id (game, set_get_id_at (numen_set, i));
+                            if (!numen) { return ERROR; }
+
+                            numen_set_energy (numen, numen_get_energy (numen) + 1);
+                            numen_set_health (numen, numen_get_health (numen) + 1);
+                        }
+                }
+
+            if (player_get_n_numens (player) > 0)
+                {
+                    for (i = 0; i < player_get_n_numens (player); i++)
+                        {
+                            
+                            numen = game_get_numen_by_id(game,player_get_numen_at_inventory (player, i));
+
+                            if (!numen) { return ERROR; }
+                            if (numen_get_id (numen) == player_get_active_numen (player)) continue;
+                            numen_set_energy (numen, numen_get_energy (numen) + 1);
+                            numen_set_health (numen, numen_get_health (numen) + 1);
+                        }
+                    return OK;
+                }
+            if (game_rules_loose_condition (game) == TRUE) return OK;
+
+            return ERROR;
+        }
+    return OK;
+}
+
+Status
 game_rule_attack_enemy (Game* game, Id id_enemy)
 {
     Player* player = NULL;
@@ -140,11 +197,11 @@ _game_rule_enemy_dir (Numen* numen_center, Numen* numen_goal)
 Status
 game_rule_walk_enemy (Game* game)
 {
-    Player* player;
+    Player* player      = NULL;
     Numen* active_numen = NULL;
-    Numen* walker;
-    Space* space;
-    Set* set_ids;
+    Numen* walker       = NULL;
+    Space* space        = NULL;
+    Set* set_ids        = NULL;
     Id active_id, walker_id;
     Direction dir;
     Position pos_now, pos_orig;
@@ -672,62 +729,6 @@ _game_rules_enemy_dir (Numen* numen_center, Numen* numen_goal)
     return U;
 }
 
-Status
-game_rules_regen (Game* game)
-{
-    Player* player;
-    Space* space;
-    Numen* numen;
-    Set* numen_set;
-    Id zone_id;
-    int i;
-    if (!game) return ERROR;
-    
-    if (game_get_last_cmd_status (game) == OK)
-        {
-            
-            player = game_get_player_at(game, PLAYER);
-            if (!player) return ERROR;
-
-            zone_id  = player_get_zone (player);
-
-            space = game_get_space (game, zone_id);
-
-
-            if (space_get_n_numens (space) != 0)
-                {
-                    numen_set = space_get_numens (space);
-                    for (i = 0; i < space_get_n_numens (space); i++)
-                        {
-                            if (!numen_set) { return ERROR; }
-                            numen = game_get_numen_by_id (game, set_get_id_at (numen_set, i));
-                            if (!numen) { return ERROR; }
-
-                            numen_set_energy (numen, numen_get_energy (numen) + 1);
-                            numen_set_health (numen, numen_get_health (numen) + 1);
-                        }
-                }
-
-            if (player_get_n_numens (player) > 0)
-                {
-                    for (i = 0; i < player_get_n_numens (player); i++)
-                        {
-                            
-                            numen = game_get_numen_by_id(game,player_get_numen_at_inventory (player, i));
-
-                            if (!numen) { return ERROR; }
-                            if (numen_get_id (numen) == player_get_active_numen (player)) continue;
-                            numen_set_energy (numen, numen_get_energy (numen) + 1);
-                            numen_set_health (numen, numen_get_health (numen) + 1);
-                        }
-                    return OK;
-                }
-            if (game_rules_loose_condition (game) == TRUE) return OK;
-
-            return ERROR;
-        }
-    return OK;
-}
 
 Bool
 game_rules_loose_condition (Game* game) /*in this game, you loose when you run out of numens*/
@@ -766,9 +767,9 @@ game_rules_win_condition (Game* game) /*in this game, you win when you defeat th
 void
 game_rules_death_numen (Game* game, Numen* num)
 {
-    Player* player;
+    Player* player = NULL;
+    Space* space = NULL;
     Id space_id;
-    Space* space;
     int i, n_nums;
     Position pos;
 
@@ -787,10 +788,8 @@ game_rules_death_numen (Game* game, Numen* num)
                     space_set_grid_by_position(space, pos, 1);
                     n_nums = player_get_n_numens (player);
                     if (n_nums == 0) { game_rules_loose_condition (game); }
-                    else
-                        {
-                            player_set_active_numen (player, NO_ID);
-                        }
+                    else    player_set_active_numen (player, NO_ID);
+                        
                 }
         }
 

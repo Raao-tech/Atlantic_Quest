@@ -321,7 +321,7 @@ obj_set_consumable (Object* obj, Bool consumable)
 Status
 obj_print (Object* obj)
 {
-    Entity* e_obj;
+    Entity* e_obj = NULL;
     Bool movable;
     Id open;
     Id dependency;
@@ -341,18 +341,18 @@ obj_print (Object* obj)
     consumable = obj->consumable;
     effect = obj->effect;
 
-    printf (stdout, "\n--- Object ---\n");
+    fprintf (stdout, "\n--- Object ---\n");
 
     status = entity_print(e_obj);
     if (status == ERROR) return ERROR;
     
-    if (movable == TRUE) printf (stdout, " ->Movable: TRUE;\n");
-    else printf (stdout, " ->Movable: FALSE;\n");
-    printf (stdout, " ->Open id: %ld;\n", open);
-    printf (stdout, " ->Dependency id: %ld;\n", dependency);
-    printf (stdout, " ->Gdesc: %s;\n", gdesc);
-    if (consumable == TRUE) printf (stdout, " ->Consumable: TRUE;\n");
-    else printf (stdout, " ->Consumable: FALSE;\n");
+    if (movable == TRUE) fprintf (stdout, " ->Movable: TRUE;\n");
+    else fprintf (stdout, " ->Movable: FALSE;\n");
+    fprintf (stdout, " ->Open id: %ld;\n", open);
+    fprintf (stdout, " ->Dependency id: %ld;\n", dependency);
+    fprintf (stdout, " ->Gdesc: %s;\n", gdesc);
+    if (consumable == TRUE) fprintf (stdout, " ->Consumable: TRUE;\n");
+    else fprintf (stdout, " ->Consumable: FALSE;\n");
 
 
 

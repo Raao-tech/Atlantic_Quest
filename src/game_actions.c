@@ -139,46 +139,26 @@ game_actions_walk (Game* game)
 	Position pos_original;
 	Position cur_orig;
 	Player* p = NULL;
-	Id nu_id;
+	Id nu_id = NO_ID;
 	int cell_x, cell_y;
 
-	if (!game)
-		{
-			game_set_last_cmd_status (game, ERROR_walk);
-			return;
-		}
+	if (!game) {game_set_last_cmd_status (game, ERROR_walk);return;}
 
 	/*ultimo comando*/
 	lst_cmd = game_get_last_command (game);
-	if (!lst_cmd)
-		{
-			game_set_last_cmd_status (game, ERROR_walk);
-			return;
-		}
+	if (!lst_cmd) {game_set_last_cmd_status (game, ERROR_walk);return;}
 
 	/*Dirección en string*/
 	dir_str = command_get_target (lst_cmd);
-	if (!dir_str)
-		{
-			game_set_last_cmd_status (game, ERROR_walk);
-			return;
-		}
+	if (!dir_str) {game_set_last_cmd_status (game, ERROR_walk);return;}
 
 	/*Dirección parseada*/
 	direction = types_parse_direction (dir_str);
-	if (direction == U)
-		{
-			game_set_last_cmd_status (game, ERROR_walk);
-			return;
-		}
+	if (direction == U)	{game_set_last_cmd_status (game, ERROR_walk);return;}
 
 	/*Obtenemos player*/
 	player = game_get_player_at (game, PLAYER);
-	if (!player)
-		{
-			game_set_last_cmd_status (game, ERROR_walk);
-			return;
-		}
+	if (!player) {game_set_last_cmd_status (game, ERROR_walk);return;}
 
 	pos_current  = player_get_position (player);
 	pos_original = player_get_position (player);
@@ -199,52 +179,32 @@ game_actions_walk (Game* game)
 	/*si nos salimos del grid -> intento de transicion de space */
 	if (cell_x < 0 || cell_x >= WIDHT || cell_y < 0 || cell_y >= HIGHT)
 		{
-			if (game_rule_move (game) == OK)
-				{
-					game_set_last_cmd_status (game, OK);
-					return;
-				}
+			if (game_rule_move (game) == OK)	{game_set_last_cmd_status (game, OK);return;}
 			game_set_last_cmd_status (game, ERROR_walk);
 			return;
 		}
 
 	/* Dentro del grid: comprobamos transitabilidad */
 	space = game_get_space (game, player_get_zone (player));
-	if (!space)
-		{
-			game_set_last_cmd_status (game, ERROR_walk);
-			return;
-		}
+	if (!space)	{game_set_last_cmd_status (game, ERROR_walk);return;}
 
 	grid_line = space_get_grid_by_line (space, cell_y);
-	if (!grid_line)
-		{
-			game_set_last_cmd_status (game, ERROR_walk);
-			return;
-		}
+	if (!grid_line) {game_set_last_cmd_status (game, ERROR_walk);return;}
 
 	/* solo 0 = no transitable.*/
-	if (grid_line[cell_x] == 0)
-		{
-			game_set_last_cmd_status (game, ERROR_walk);
-			return;
-		}
+	if (grid_line[cell_x] == 0)	{game_set_last_cmd_status (game, ERROR_walk);return;}
 
-	if (player_set_position (player, pos_current.pos_x, pos_current.pos_y) == ERROR)
-		{
-			game_set_last_cmd_status (game, ERROR_walk);
-			return;
-		}
+	if (player_set_position (player, pos_current.pos_x, pos_current.pos_y) == ERROR)	{game_set_last_cmd_status (game, ERROR_walk);return;}
 	space_set_grid_by_position (space, pos_original, 1);
 	space_set_grid_by_position (space, pos_current, 0);
-	/*Pequeño entorno disitno del resto del código doonde nos aseguramos de actualizar la posicón del numen_active */
+	/*Pequeño entorno para actualizar el estado del jeugo*/
 	{
 
 		game_rule_walk_active (game);
+		/*==== MOVIMIENTO del los Numens Enemigos ====*/
+		game_rule_walk_enemy (game);
 	}
 
-	/*==== MOVIMIENTO del los Numens Enemigos ====*/
-	game_rule_walk_enemy (game);
 
 	game_set_last_cmd_status (game, OK);
 }
@@ -255,9 +215,9 @@ game_actions_walk (Game* game)
 static void
 game_actions_take (Game* game)
 {
-	Player* player;
-	Space* space;
-	Object* obj;
+	Player* player = NULL;
+	Space* space   = NULL;
+	Object* obj    = NULL;
 	Position obj_pos, ply_vision;
 	Id space_id, obj_id, dependency_id;
 	Bool movable;
@@ -268,20 +228,12 @@ game_actions_take (Game* game)
 	obj_pos.pos_y = NO_POS;
 
 	player        = game_get_player_by_turn (game);
-	if (!player)
-		{
-			game_set_last_cmd_status (game, ERROR_take);
-			return;
-		}
+	if (!player)	{game_set_last_cmd_status (game, ERROR_take);return;}
 
 	ply_vision = player_get_vision (player);
 
 	space_id   = player_get_zone (player);
-	if (space_id == NO_ID)
-		{
-			game_set_last_cmd_status (game, ERROR_take);
-			return;
-		}
+	if (space_id == NO_ID)	{game_set_last_cmd_status (game, ERROR_take);return;}
 	space = game_get_space (game, space_id);
 	if (!space)
 		{

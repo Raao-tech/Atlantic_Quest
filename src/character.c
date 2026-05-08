@@ -289,12 +289,12 @@ Status character_print (Character* character)
     friendly = character->friendly;
     following = character->following;
 
-    printf (stdout, "\n--- Character ---\n");
+    fprintf (stdout, "\n--- Character ---\n");
     status = entity_print (e_character);
     if (status == ERROR) return ERROR;
-    if (friendly == FALSE) printf (stdout, "-> Friendly: FALSE");
-     else printf (stdout, "-> Friendly: TRUE;\n");
-    printf (stdout, "-> Id: %ld;\n", following);
+    if (friendly == FALSE) fprintf (stdout, "-> Friendly: FALSE");
+     else fprintf (stdout, "-> Friendly: TRUE;\n");
+    fprintf (stdout, "-> Id: %ld;\n", following);
 
     return OK;
 }

@@ -7,7 +7,10 @@
  * @date 08-04-2026
  * @copyright GNU Public License
  */
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 #include "command.h"
 #include "game.h"
 #include "game_actions.h"
@@ -15,10 +18,7 @@
 #include "game_rules.h"
 #include "graphic_engine.h"
 #include "raylib.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+
 
 #define FLAG_DET "-d"
 #define FLAG_LOG "-l"
@@ -107,7 +107,6 @@ main (int argc, char* argv[])
 	Bool log_enabled                   = FALSE;
 	Bool test_enabled                  = FALSE;
 	Bool is_determinist                = FALSE;
-	Bool **GameStatus  				   = NULL;
 	Status_init result                 = INIT_ERR_UNKNOW;
 	char name_file_data[WORD_SIZE + 1] = "";
 	int i_flag                         = 0;
@@ -226,7 +225,7 @@ main (int argc, char* argv[])
 	    {	
 			game_rules_win_condition(game_loop->game);
 			game_rules_loose_condition(game_loop->game);
-			game_rules_regen(game_loop->game); 
+			game_rules_regen (game_loop->game); 
 	        BeginDrawing ();
 	        graphic_engine_paint_game     (game_loop->gp_raylib, game_loop->game);
 	        EndDrawing ();

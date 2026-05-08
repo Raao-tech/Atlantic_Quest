@@ -280,25 +280,95 @@ Effect  obj_get_effect (Object* obj);
  */
 Status obj_set_stats (Object* obj, int speed, int health, int energy, int attack);
 
+
+/* ========== STATS ========== */
+
+/*
+        Nota: las estadisticas de los objetos son los valores numericos que modifican las estadisticas de numens o cualquier hijo de character.
+        Player tiene estadisticas, pero ahora no se usan (futuras iteraciones)
+*/
+
+/**
+ * @brief It sets the health
+ * @author Rafael, Javier, Salvador and Violeta
+ *
+ * @param obj a pointer to the object
+ * @param health the health points to set
+ * @return OK, if everything goes well, or ERROR if out of bounds
+ */
 Status obj_set_health (Object* obj, int health);
+/**
+ * @brief It gets the health
+ * @author Rafael, Javier, Salvador and Violeta
+ *
+ * @param object a pointer to the object
+ * @return the health value, or ERROR_LIFE if object is NULL
+ */
 int obj_get_health (Object* obj);
 
+/**
+ * @brief It gets the speed
+ * @author Rafael, Javier, Salvador and Violeta
+ *
+ * @param obj a pointer to the object
+ * @return the speed of the object being followed, or 0 if object is NULL
+ */
 Status obj_set_speed (Object* obj, int speed);
+/**
+ * @brief It gets the speed
+ * @author Rafael, Javier, Salvador and Violeta
+ *
+ * @param obj a pointer to the object
+ * @return the speed of the object being followed, or 0 if object is NULL
+ */
 int obj_get_speed (Object* obj);
 
+/**
+ * @brief It sets the attack value
+ * @author Rafael, Javier, Salvador and Violeta
+ *
+ * @param obj a pointer to the object
+ * @param attack the attack value to set
+ * @return OK, if everything goes well, or ERROR if there was some mistake
+ */
 Status obj_set_attack (Object* obj, int attack);
+/**
+ * @brief It gets the attack value
+ * @author Rafael, Javier, Salvador and Violeta
+ *
+ * @param obj a pointer to the object
+ * @return the attack value, or ERROR_ATTACK if object is NULL
+ */
 int obj_get_attack (Object* obj);
 
+/**
+ * @brief It sets the energy value
+ * @author Rafael, Javier, Salvador and Violeta
+ *
+ * @param obj a pointer to the object
+ * @param energy the energy value to set
+ * @return OK, if everything goes well, or ERROR if there was some mistake
+ */
 Status obj_set_energy (Object* obj, int energy);
+/**
+ * @brief It gets the attack value
+ * @author Rafael, Javier, Salvador and Violeta
+ *
+ * @param obj a pointer to the object
+ * @return the energy value, or ERROR_ENGY if object is NULL
+ */
 int obj_get_energy (Object* obj);
 
 /* ========== Consumable ========== */
 Bool obj_get_consumable (Object* obj);
 Status obj_set_consumable (Object* obj, Bool consumable);
 
+
+/* ========== PRINT ========== */
+
 /**
  * @brief It prints the object information
- * @author Violeta y Rafa
+ * @author Javier Jarque
  *
  * @param obj a pointer to the object
  * @return OK, if everything goes well, or ERROR if there was some mistake

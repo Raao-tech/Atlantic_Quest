@@ -105,7 +105,7 @@ Id inventory_get_id_at (Inventory* inventory, int position);
 
 /**
  * @brief Prints the inventory contents to stdout
- * @author Salvador
+ * @author Javier Jarque
  *
  * @param inventory pointer to the inventory
  * @return OK if successful, ERROR if inventory is NULL

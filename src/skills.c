@@ -58,7 +58,7 @@ apply_basic_damage (Numen* receiver,Numen* sender, Skills_id id, int distance)
 
     if (!receiver || !skill_id_is_valid (id) || !sender) return ERROR;
 
-    radio  = skill_table[id].radio;
+    radio  = skill_table[id].radio * SCALE;   /* radio en píxeles, igual que distance */
     damage = skill_table[id].damage;
 
     /* Si el target esta MAS LEJOS que el radio, no le llegamos. */

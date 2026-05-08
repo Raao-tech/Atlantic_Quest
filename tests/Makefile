@@ -36,6 +36,7 @@ $(CHR_BIN): character_test.o ../character.o ../entity.o ../set.o
 	$(CC) $(FLAGS) $^ -o $@
 
 $(GAM_BIN): game_test.o ../game.o ../player.o ../character.o ../object.o ../space.o ../entity.o ../inventory.o ../set.o ../command.o ../links.o
+	$(CC) $(FLAGS) $^ -o $@
 
 $(CMD_BIN): command_test.o ../command.o
 	$(CC) $(FLAGS) $^ -o $@

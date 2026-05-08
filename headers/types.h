@@ -16,11 +16,11 @@
 #include <string.h>
 
 /*Dimensiones de la pantalla del graphic Engine*/
-#define WIDHT_MAP 512
-#define HIGHT_MAP 512
 #define SCALE 40
 #define WIDHT 12
 #define HIGHT 12
+#define WIDHT_MAP (WIDHT * SCALE)
+#define HIGHT_MAP (HIGHT * SCALE)
 
 
 /* Consts to numbers */

@@ -752,10 +752,16 @@ game_rules_loose_condition (Game* game) /*in this game, you loose when you run o
 Bool
 game_rules_win_condition (Game* game) /*in this game, you win when you defeat the final boss*/
 {
-
+    Numen* boss;
     if (!game) { return FALSE; }
-
-    return numen_get_health (game_get_numen_by_id (game, 10)) <= 0 ? TRUE : FALSE;
+    boss = game_get_numen_by_id (game, 29); /* LavaBall — boss final */
+    if (!boss) return FALSE;
+    if (numen_get_health (boss) <= 0)
+    {
+        game_set_finished (game, TRUE);
+        return TRUE;
+    }
+    return FALSE;
 }
 
 void

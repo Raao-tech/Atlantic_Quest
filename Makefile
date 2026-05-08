@@ -162,8 +162,9 @@ TARGET = atlantic_quest
 LOG_FILE ?= $(LOG_DIR)/output.log
 
 # =============== DATA FILES ===============
-BD  ?= atlantic_quest.dat
-CMD ?= game1.cmd
+BD      ?= new_game.dat
+CMD     ?= game1.cmd
+TEST_N  ?= 0
 
 
 # =============== LOCAL STATIC LIBRARIES ===============
@@ -227,22 +228,34 @@ prueba_sys: window_prueba.c
 #######################################
 
 run: $(TARGET)
-	./$(TARGET) $(BD)
+	./$(TARGET)
 
 runv: $(TARGET)
-	$(PREFLAG) ./$(TARGET) $(BD)
+	$(PREFLAG) ./$(TARGET)
 
 run_log: $(TARGET) $(LOG_DIR)
-	./$(TARGET) $(BD) -l $(LOG_FILE)
+	./$(TARGET) -l $(LOG_FILE)
 
 runv_log: $(TARGET) $(LOG_DIR)
-	$(PREFLAG) ./$(TARGET) $(BD) -l $(LOG_FILE)
+	$(PREFLAG) ./$(TARGET) -l $(LOG_FILE)
 
 run_custom: $(TARGET)
-	./$(TARGET) $(BD)
+	./$(TARGET)
 
 run_custom_log: $(TARGET) $(LOG_DIR)
-	./$(TARGET) $(BD) -l $(LOG_FILE)
+	./$(TARGET) -l $(LOG_FILE)
+
+run_text: $(TARGET) $(LOG_DIR)
+	./$(TARGET) -t $(BD) < $(CMD)
+
+run_text_log: $(TARGET) $(LOG_DIR)
+	./$(TARGET) -t $(BD) -l $(LOG_FILE) < $(CMD)
+	@echo ""
+	@echo "LOG written to $(LOG_FILE):"
+	@cat $(LOG_FILE)
+
+run_text_v: $(TARGET) $(LOG_DIR)
+	$(PREFLAG) ./$(TARGET) -t $(BD) < $(CMD)
 
 play: $(TARGET) $(LOG_DIR)
 	@echo ""
@@ -321,10 +334,41 @@ test_cmd: $(TARGET) $(LOG_DIR)
 	@if [ ! -f "$(CMD)" ]; then \
 		echo "Error: file '$(CMD)' not found."; exit 1; \
 	fi
-	./$(TARGET) $(BD) -l $(LOG_FILE) < $(CMD)
+	./$(TARGET) -t $(BD) -l $(LOG_FILE) < $(CMD)
 	@echo ""
 	@echo "LOG written to $(LOG_FILE):"
 	@cat $(LOG_FILE)
+
+
+#######################################
+#          UNIT TESTS (tests/)
+#######################################
+# Delega en tests/Makefile. Requiere que los .c del projecto ya esten compilados.
+# TEST_N: numero de test individual, 0 = todos (por defecto todos).
+
+test_all: $(OBJ_DIR)
+	$(MAKE) -C tests run_all
+
+test_game: $(OBJ_DIR)
+	$(MAKE) -C tests run_game T=$(TEST_N)
+
+test_game_v: $(OBJ_DIR)
+	$(MAKE) -C tests vgame
+
+test_set: $(OBJ_DIR)
+	$(MAKE) -C tests run_set T=$(TEST_N)
+
+test_space: $(OBJ_DIR)
+	$(MAKE) -C tests run_space T=$(TEST_N)
+
+test_player: $(OBJ_DIR)
+	$(MAKE) -C tests run_player T=$(TEST_N)
+
+test_numen: $(OBJ_DIR)
+	$(MAKE) -C tests run_numen T=$(TEST_N)
+
+test_object: $(OBJ_DIR)
+	$(MAKE) -C tests run_object T=$(TEST_N)
 
 
 #######################################
@@ -336,8 +380,15 @@ doc:
 	@if [ -f Doxyfile ]; then \
 		doxygen Doxyfile; \
 		echo "Documentation generated in $(DOC_DIR)/"; \
+	elif command -v doxygen > /dev/null 2>&1; then \
+		doxygen -g Doxyfile; \
+		sed -i 's|^OUTPUT_DIRECTORY.*|OUTPUT_DIRECTORY = $(DOC_DIR)|' Doxyfile; \
+		sed -i 's|^INPUT .*|INPUT = $(SRC_DIR) $(HDR_DIR)|' Doxyfile; \
+		sed -i 's|^RECURSIVE.*|RECURSIVE = YES|' Doxyfile; \
+		doxygen Doxyfile; \
+		echo "Documentation generated in $(DOC_DIR)/"; \
 	else \
-		echo "No Doxyfile found. Create one with: doxygen -g"; \
+		echo "doxygen not installed. Run: sudo dnf install doxygen"; \
 	fi
 
 
@@ -369,7 +420,9 @@ clean_all: clean
 
 
 .PHONY: all run runv run_log runv_log run_custom run_custom_log \
-        play playv test_cmd doc Ingit Tests mandar mandar_rm rm_log \
+        run_text run_text_log run_text_v \
+        play playv test_cmd doc Tests mandar mandar_rm rm_log \
+        test_all test_game test_game_v test_set test_space test_player test_numen test_object \
         clean clean_all prueba_local prueba_sys
 
 -include $(OBJS:.o=.d)

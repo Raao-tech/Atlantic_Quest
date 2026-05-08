@@ -15,7 +15,9 @@
 
 /* lugar de #include "numen.h":
  * skills.h NO necesita ver la struct interna de Numen, solo
- * recibirlo como puntero opaco.*/
+ * recibirlo como puntero opaco. Esto rompe el ciclo
+ * skills.h ↔ numen.h y permite que numen.h incluya skills.h
+ * sin problemas. */
 typedef struct _Numen Numen;
 
 typedef enum
@@ -57,9 +59,37 @@ typedef struct _Skills
 Status skill_active (Numen* sender, Numen* receiver, Skills_id id_skill, int distance);
 
 /* Lpropiedades en la tabla — devuelven -1 / NULL en error */
+/**
+ * @brief It gets the name of an skill
+ * @author Rafael
+ *
+ * @param id the id of the skill
+ * @return a string with the name of the object
+ */
 char* skill_get_name   (Skills_id id);
+/**
+ * @brief It gets the radio of the skill
+ * @author Rafael
+ *
+ * @param id a pointer to the skill
+ * @return the radio of the skill, -1 otherwise
+ */
 int   skill_get_radio  (Skills_id id);
+/**
+ * @brief It gets the damage of the skill
+ * @author Rafael
+ *
+ * @param id a pointer to the skill
+ * @return the damage of the skill, -1 otherwise
+ */
 int   skill_get_damage (Skills_id id);
-int   skill_get_coste  (Skills_id id);
+/**
+ * @brief It prints all the skill information for debugging
+ * @author Javier Jarque
+ *
+ * @param id the id of the skill with the information
+ * @return OK, if everything goes well, or ERROR if player is NULL
+ */
+Status skill_print (Skills_id id);
 
 #endif

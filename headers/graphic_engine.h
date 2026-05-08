@@ -2,7 +2,7 @@
  * @brief It defines the graphic engine interface (Raylib + raygui)
  *
  * @file graphic_engine.h
- * @author Rafael
+ * @author Rafael, Salva, Javier and Violeta
  * @version 1
  * @date 02-05-2026
  * @copyright GNU Public License
@@ -38,8 +38,31 @@ typedef struct _MenuResult
     Id   init_numen;
 } MenuResult;
 
+/**
+ * @brief It creates new graphic entities
+ * @author Rafael, Javier, Salvador and Violeta
+ * 
+ * @note The graphic entities are date type which contains attributes
+ *
+ * @return Graphic engine, initialized, or NULL if memory fails
+ */
 Graphic_engine* graphic_engine_create  (void);
+
+/**
+ * @brief It destroy the graphic entities
+ * @author Rafael, Javier, Salvador and Violeta
+ *
+ * @param ge a pointer to the graphic engine
+ */
 void            graphic_engine_destroy (Graphic_engine* ge);
+
+/**
+ * @brief It initialices the graphic entities
+ * @author Rafael, Javier, Salvador and Violeta
+ *
+ * @param ge a pointer to the the graphic engine
+ * @return The menu reuslt
+ */
 MenuResult      graphic_engine_init    (Graphic_engine* ge);
 
 /**
@@ -60,7 +83,21 @@ MenuResult      graphic_engine_init    (Graphic_engine* ge);
  */
 Status graphic_engine_load_textures (Graphic_engine* ge, Game* game);
 
+/**
+ * @brief It prints the game
+ * @author Rafael, Javier, Salvador and Violeta
+ *
+ * @param ge a pointer to the the graphic engine
+ * @param game the game to print
+ */
 void graphic_engine_paint_game     (Graphic_engine* ge, Game* game);
+/**
+ * @brief It prints the handle
+ * @author Rafael, Javier, Salvador and Violeta
+ *
+ * @param ge a pointer to the the graphic engine
+ * @param game the game to print
+ */
 void graphic_engine_handle_ui_input (Graphic_engine* ge, Game* game);
 
 #endif

@@ -541,14 +541,17 @@ int game_get_n_players (Game* game);
  * @brief It returns the number of links in the game
  * @author Rafael
  *
- * Useful for graphic_engine to iterate over links when
- * displaying the map topology (F13).
- *
  * @param game a pointer to the game
  * @return number of links, or -1 if game is NULL
  */
 int game_get_n_links (Game* game);
-
+/**
+ * @brief It returns the number of links in the game
+ * @author Rafael
+ *
+ * @param game a pointer to the game
+ * @return number of numens, or -1 if game is NULL
+ */
 int game_get_n_numens (Game* game);
 
 /* ========================================================================= */
@@ -631,13 +634,13 @@ Status game_turn_update (Game* game);
 
 /**
  * @brief It prints the full game state to stdout for debugging
- * @author Violeta, Rafa and Salvador
+ * @author Javier Jarque
  *
  * Shows all players (with turn), spaces, objects, characters, links,
  * and whether the game is finished.
  *
  * @param game a pointer to the game
  */
-void game_print (Game* game);
+Status game_print (Game* game);
 
 #endif

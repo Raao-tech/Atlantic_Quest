@@ -135,5 +135,8 @@ inventory_print (Inventory* inventory)
 {
     if (!inventory) return ERROR;
 
-    return set_print (stdout, inventory->objs);
+    printf (stdout, "\n--- Inventory ---\n");
+    Status status = set_print (stdout, inventory->objs);
+    printf (stdout, " ->max_objs: %i;\n", inventory->max_objs);
+    return status;
 }

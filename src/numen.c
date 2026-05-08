@@ -310,9 +310,16 @@ numen_get_corrupt (Numen* numen)
 /*                               PRINT                                    */
 /* ====================================================================== */
 
+
 Status
 numen_print (Numen* numen)
 {
     if (!numen) return ERROR;
-    return character_print (numen->c_numen);
+    Status status;
+
+    printf (stdout, "\n--- Numen ---\n");
+    status = skill_print (numen->skills);
+    if (status == ERROR) return ERROR;
+    else status = character_print (numen->c_numen);
+    return status;
 }

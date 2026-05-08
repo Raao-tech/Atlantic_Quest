@@ -623,54 +623,59 @@ game_turn_update (Game* game)
 /*                         PRINT (debugging)                                 */
 /* ========================================================================= */
 
-void
-game_print (Game* game)
+Status game_print (Game* game)
 {
-	int i;
-	Id loc;
-
 	if (!game) return;
-
+	Status status;
+	
 	printf ("\n============ GAME STATE ============\n");
 
-	/* Players */
-	printf ("\n=> Players (%d), active turn = %d:\n", game->n_players, game->turn);
-	for (i = 0; i < game->n_players; i++)
-		{
-			loc = player_get_zone (game->players[i]);
-			player_print (game->players[i]);
-			printf ("   Located in space: %ld%s\n", loc, (i == game->turn) ? "  <-- ACTIVE" : "");
-		}
+	for (int i = 0; i < game->n_players; i++)
+	{
+		status = player_print (game->players[i]);
+		if (status == ERROR) return ERROR;
+	}
+	for (int i = 0; i < game->n_numens; i++)
+	{
+		status = numen_print (game->numens[i]);
+		if (status = ERROR) return ERROR;
+	}
+	for (int i = 0; i < game->n_objects; i++)
+	{
+		status = obj_print (game->objects[i]);
+		if (status = ERROR) return ERROR;
+	}
+	for (int i = 0; i < game->n_objects; i++)
+	{
+		obj_print (game->objects[i]);
+		if (status = ERROR) return ERROR;
+	}
+	for (int i = 0; i < game->n_spaces; i++)
+	{
+		obj_print (game->spaces[i]);
+		if (status = ERROR) return ERROR;
+	}
+	for (int i = 0; i < game->n_links; i++)
+	{
+		obj_print (game->links[i]);
+		if (status = ERROR) return ERROR;
+	}
 
-	/* Spaces */
-	printf ("\n=> Spaces (%d):\n", game->n_spaces);
-	for (i = 0; i < game->n_spaces; i++) { space_print (game->spaces[i]); }
+	printf (stdout, " ->Turn: %i;\n", game->turn);
+	printf (stdout, " ->N_players: %i;", game->n_players);
+	printf (stdout, " ->N_spaces: %i;", game->n_spaces);
+	printf (stdout, " ->N_objects: %i;\n", game->n_objects);
+	printf (stdout, " ->N_numens: %i;\n", game->n_numens);
+	printf (stdout, " ->N_links: %i;\n", game->n_links);
 
-	/* Objects */
-	printf ("\n=> Objects (%d):\n", game->n_objects);
-	for (i = 0; i < game->n_objects; i++)
-		{
-			loc = game_get_object_location (game, obj_get_id (game->objects[i]));
-			obj_print (game->objects[i]);
-			if (loc != NO_ID) printf ("   Located in space: %ld\n", loc);
-			else printf ("   In player inventory\n");
-		}
+	if (game->finished == TRUE) printf (stdout, " ->Game finished: True;\n");
+	else printf (stdout, " ->Game finished: False;\n");
+	if (game->last_cmd_status == OK) printf (stdout, " ->Last cmd status: OK;\n");
+	else printf (stdout, " ->Last cmd status: ERROR;\n");
 
-	/* Characters */
-	printf ("\n=> Characters (%d):\n", game->n_numens);
-	for (i = 0; i < game->n_numens; i++)
-		{
-			loc = game_get_numen_location (game, numen_get_id (game->numens[i]));
-			numen_print (game->numens[i]);
-			if (loc != NO_ID) printf ("   Located in space: %ld\n", loc);
-		}
 
-	/* Links */
-	printf ("\n=> Links (%d):\n", game->n_links);
-	for (i = 0; i < game->n_links; i++) { link_print (game->links[i], stdout); }
 
-	printf ("\n=> Finished: %s\n", game->finished == TRUE ? "YES" : "NO");
-	printf ("====================================\n");
+	return OK;
 }
 
 Id

@@ -426,7 +426,7 @@ Bool player_get_loading (Player* player);
 
 /**
  * @brief It prints all the player information for debugging
- * @author Violeta y Rafa
+ * @author Javier Jarque
  *
  * @param player a pointer to the player
  * @return OK, if everything goes well, or ERROR if player is NULL

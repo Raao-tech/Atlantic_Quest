@@ -50,6 +50,7 @@ static Status _apply_attack_plus (Game* game, Object* obj);
 static Status _apply_attack_less (Game* game, Object* obj);
 static Status _apply_energy_plus (Game* game, Object* obj);
 static Status _apply_energy_less (Game* game, Object* obj);
+static Status _apply_multi_effect (Game* game, Object* obj);
 
 
 
@@ -1099,6 +1100,7 @@ game_actions_apply_effect (Game* game, Object* obj, Effect obj_effect)
 			case ENERGY_PLUS: result = _apply_energy_plus (game, obj); break;
 			case ENERGY_LESS: result = _apply_energy_less (game, obj); break;
 			case OPEN: result = _apply_open_door (game, obj); break;
+			case MULTI_EFFECT: result = _apply_multi_effect (game, obj); break;
 			default: result = ERROR_use; break;
 		}
 
@@ -1341,4 +1343,33 @@ static Status _apply_open_door (Game* game, Object* obj)
 	return OK;
 }
 
+static Status _apply_multi_effect (Game* game, Object* obj)
+{
+		Numen* numen_active;
+	Player* player;
+	Id active_id;
+	int energy_update, health_update, attack_update, speed_update;
 
+	if (!game || !obj) return ERROR_use;
+
+	player = game_get_player (game);
+	if (!player) return ERROR_use;
+
+	active_id = player_get_active_numen (player);
+	if (active_id == NO_ID) return ERROR_use;
+
+	numen_active = game_get_numen_by_id (game, active_id);
+	if (!numen_active) return ERROR_use;
+
+	energy_update = numen_get_energy (numen_active) + obj_get_energy (obj);
+	health_update = numen_get_health (numen_active) + obj_get_health (obj);
+	attack_update = numen_get_attack (numen_active) + obj_get_attack (obj);
+	speed_update = numen_get_speed (numen_active) + obj_get_speed (obj);
+
+	if (numen_set_energy (numen_active, energy_update) == ERROR) return ERROR_use;
+	if (numen_set_health (numen_active, health_update) == ERROR) return ERROR_use;
+	if (numen_set_attack (numen_active, attack_update) == ERROR) return ERROR_use;
+	if (numen_set_speed (numen_active, speed_update) == ERROR) return ERROR_use;
+
+	return OK;
+}

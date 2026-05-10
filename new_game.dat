@@ -68,10 +68,10 @@
 #o:71|Exotic flower|9|80|240|A pale flower that looks out of place and even untouchable. Wouldn't match a pink one?|White_flower|0|0|0|0|0|72|0|0|
 #o:72|Blushed flower|5|240|360|A delicate flower which is in love with a blue one, where is her lover? Her petals are vigorizing.|Pink_flower|0|0|0|14|0|73|0|7|
 #o:73|Flower bro|3|360|360|A loyal flower that takes care of his broco-bro. Seems to be in a relationship and has healing petals.|Blue_flower|0|2|0|0|0|-1|1|1|
-#o:74|Golden Apple|7|400|80|Eating it will be tiring... But shure it's healthy!|Yellow_apple|1|10|0|-20|0|-1|1|1|
-#o:75|Three-flavor Gielatto|10|80|80|Three flavors means three effects! Heal, energy and attack to your numen!|Gielatto|1|5|1|20|0|76|0|1|
+#o:74|Golden Apple|7|400|80|Eating it will be tiring... But shure it's healthy!|Yellow_apple|1|10|0|-20|0|-1|1|10|
+#o:75|Three-flavor Gielatto|10|80|80|Three flavors means three effects! Heal, energy and attack to your numen!|Gielatto|1|5|1|20|0|76|0|10|
 #o:76|Scroll of knowledge|1|240|80|It holds ancestral and incredible knowledge... And a three-flavor Gielatto receipt.|Scroll|0|0|0|0|0|-1|1|0|
-#o:77|Acid apple|2|440|280|It may still be a little green... But shure it'll heal his best!|Green_apple|1|3|-5|0|0|-1|1|1|
+#o:77|Acid apple|2|440|280|It may still be a little green... But shure it'll heal his best!|Green_apple|1|3|-5|0|0|-1|1|10|
 #o:78|Newton's apple|2|440|240|If it hadn't fallen, he wouldn't have invented gravity?|Newton_apple|0|0|0|0|0|-1|0|0|
 
 # --- Objetos nuevos (8) para completar los 20 ---

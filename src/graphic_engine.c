@@ -1492,7 +1492,7 @@ graphic_engine_game_over (Graphic_engine* ge, Game* game)
 	/* Música del game-over
 	 * El archivo "Judas" debe estar en ./msc_src/OST/Judas.mp3
 	 * Si no existe, raylib carga silencio y el juego sigue sin crashear. */
-	ge->gameover_music        = LoadMusicStream ("./msc_src/OST/the_final_countdown_musica_epica_boss.mp3");
+	ge->gameover_music        = LoadMusicStream ("./msc_src/OST/Judas.mp3");
 	ge->gameover_music_loaded = TRUE;
 	SetMusicVolume (ge->gameover_music, 0.6f);
 	PlayMusicStream (ge->gameover_music);

@@ -727,22 +727,39 @@ _game_rules_enemy_dir (Numen* numen_center, Numen* numen_goal)
 Bool
 game_rules_loose_condition (Game* game) /*in this game, you loose when you run out of numens*/
 {
-    Player* player;
-    int n_players, i;
+    Player* player = NULL;
+    int n_players, i, j, n_numens;
+    Numen* numen = NULL;
+    Id     numen_id = NULL;
     Bool defeat = TRUE;
 
     n_players   = game_get_n_players (game);
 
     for (i = 0; i < n_players; i++)
         {
+            /*Obtenemos el jugador de turno*/
             player = game_get_player_at (game, i);
-            if (!player) return (Bool)ERROR;
-
-            if (player_get_n_numens (player) > 0)
+            if (!player) return FALSE;
+            /*Conocemos la cnatidad de numesn que tiene en el inventory*/
+            n_numens = player_get_n_numens (player);
+            if ( n_numens > 0)
                 {
-                    defeat = FALSE;
-                    break;
+                    for ( j = 0; j < n_numens; j++)
+                    {
+                        /*Pot cada numen, verificamos que tenga vida, si hay uno que tiene vida, entonces decimos que todavía no hay codnicòn de perdida*/
+                       numen_id = player_get_numen_at_inventory (player, j);
+                       if (numen_id == NO_ID) continue;
+                       numen  = game_get_numen_by_id (game, numen_id);
+                       if ( numen_get_health (numen) > MIN_LIFE) 
+                        {                       
+                            defeat = FALSE;
+                            break;
+                        }
+
+
+                    }
                 }
+            else continue;
         }
     if (defeat == TRUE) { game_set_finished (game, TRUE); }
 
@@ -769,8 +786,9 @@ game_rules_death_numen (Game* game, Numen* num)
 {
     Player* player = NULL;
     Space* space = NULL;
-    Id space_id;
-    int n_nums;
+    Numen*  other_num = NULL;
+    Id space_id, num_id;
+    int n_nums,i;
     Position pos;
 
     if (!game || !num) return;
@@ -788,7 +806,18 @@ game_rules_death_numen (Game* game, Numen* num)
                     space_set_grid_by_position(space, pos, 1);
                     n_nums = player_get_n_numens (player);
                     if (n_nums == 0) { game_rules_loose_condition (game); }
-                    else    player_set_active_numen (player, NO_ID);
+                    else
+                    {
+                        for (i = 0; i < n_nums; i++)
+                        {
+                            num_id = player_get_numen_at_inventory (player, i);
+
+                            if (num_id == NO_ID) continue; 
+                            other_num = game_get_numen_by_id (game, num_id);
+                            if (numen_get_health (other_num) > MIN_LIFE) player_set_active_numen (player, num_id); 
+                        }
+                        
+                    }
                         
                 }
         }

@@ -772,7 +772,7 @@ game_actions_chat (Game* game)
 {
     Player* player;
     Space* space;
-    Numen* ch;
+    Numen* ch = NULL;
     Id char_id, space_id;
     Set* space_numens;
     Position ply_vision, char_pos;
@@ -818,6 +818,7 @@ game_actions_chat (Game* game)
                     }
                 }
         }
+    if (found == FALSE) ch = NULL;
     if (found==FALSE && player_get_active_numen (player) != NO_ID)
         {
             char_id = player_get_active_numen (player);
@@ -841,7 +842,7 @@ game_actions_inspect (Game* game)
 {
     Player* player;
     Space* space;
-    Object* ch;
+    Object* ch = NULL;
     Id char_id, space_id;
     Position ply_vision, char_pos;
 	Bool found = FALSE;
@@ -886,6 +887,7 @@ game_actions_inspect (Game* game)
                     }
                 }
         }
+    if (found == FALSE) ch = NULL;
     if (found==FALSE && player_get_active_object (player) != NO_ID)
         {
             char_id = player_get_active_object (player);
@@ -960,7 +962,7 @@ game_actions_use (Game* game)
 }
 
 /* ========================================================================= */
-/*                       SAVE / LOAD RECRUIT / KICK                          */
+/*                       SAVE / LOAD RECRUIT                         */
 /*                                                                           */
 /* ========================================================================= */
 static void

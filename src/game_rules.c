@@ -565,7 +565,7 @@ game_rule_walk_active (Game* game)
 Status
 game_rule_move (Game* game)
 {
-    Numen* numen;
+    Numen* numen = NULL;
     Player* player;
     Space* orig_sp;
     Space* dest_sp;

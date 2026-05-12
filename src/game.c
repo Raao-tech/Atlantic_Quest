@@ -238,6 +238,17 @@ game_add_numen (Game* game, Numen* numen)
 	game->n_numens++;
 	return OK;
 }
+Id
+game_get_numen_location (Game* game, Id numen_id)
+{
+	int i;
+	if (!game) return NO_ID;
+	for (i = 0; i < game->n_spaces; i++)
+		{
+			if (game->spaces[i] && space_contains_numen (game->spaces[i], numen_id)) return space_get_id (game->spaces[i]);
+		}
+	return NO_ID;
+}
 
 Status
 game_add_player (Game* game, Player* player)
@@ -682,18 +693,24 @@ Status game_print (Game* game)
 	return OK;
 }
 
-Id
-game_get_numen_location (Game* game, Id numen_id)
-{
-	int i;
-	if (!game) return NO_ID;
-	for (i = 0; i < game->n_spaces; i++)
-		{
-			if (game->spaces[i] && space_contains_numen (game->spaces[i], numen_id)) return space_get_id (game->spaces[i]);
-		}
-	return NO_ID;
-}
 
+
+/**
+ * 	==================================================
+ * 													||
+ * 													||
+ * 	ES UNA PRÓXIMA EXPANSIÖN						||
+ * 													||
+ *                Character                         ||
+ * 													||
+ *   Hay que preguntarle al profesor:				||
+ * 		¿Podemos usar nuestr código para un proyecto//
+ * 		Personal ?									//
+ * 		Quitamo Judas y creamos nuestras canciones	||
+ * 													||
+ * 	==================================================
+ * 
+ */
 Status
 game_add_character (Game* game, Character* character)
 {

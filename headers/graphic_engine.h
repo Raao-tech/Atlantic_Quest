@@ -101,6 +101,14 @@ void graphic_engine_paint_game     (Graphic_engine* ge, Game* game);
 void graphic_engine_handle_ui_input (Graphic_engine* ge, Game* game);
 
 /**
+ * @brief Updates audio streams (must be called BEFORE BeginDrawing each frame).
+ *
+ * @param ge   a pointer to the graphic engine
+ * @param game the current game
+ */
+void graphic_engine_update_audio (Graphic_engine* ge, Game* game);
+
+/**
  * @brief Shows the game-over / victory screen with music.
  *        Blocks until the player presses ENTER, ESC or closes the window.
  *

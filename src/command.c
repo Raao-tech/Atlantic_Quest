@@ -15,7 +15,7 @@
 #include <string.h>
 #include <strings.h>
 
-#define CMD_LENGHT 30
+#define CMD_LENGHT 256
 
 /* ----------------------------------------------------------------------
  * Tabla de comandos
@@ -29,7 +29,7 @@
  *      Kick o k    == liberar  Numen
  * ---------------------------------------------------------------------- */
 char* cmd_to_str[N_CMD][N_CMDT] = { { "", "No command" }, { "", "Unknown" }, { "e", "Exit" },    { "m", "Move" },    { "w", "Walk" }, { "t", "Take" },
-                                    { "d", "Drop" },      { "a", "Attack" }, { "c", "Chat" },    { "i", "Inspect" }, { "u", "Use" },  { "o", "Open" },
+                                    { "d", "Drop" },      { "a", "Attack" }, { "c", "Chat" },    { "i", "Inspect" }, { "u", "Use" },
                                     { "s", "Save" },      { "l", "Load" },   { "r", "Recruit" }, { "k", "Kick" } };
 
 struct _Command
@@ -112,21 +112,30 @@ command_get_user_input (Command* command)
     if (command->target)
 		{free (command->target);    command->target = NULL;}
 
-    if (fgets (input, CMD_LENGHT, stdin))
+    while (fgets (input, CMD_LENGHT, stdin))
         {
+            char* p = input;
+
+            /* Saltar espacios/tabs iniciales */
+            while (*p == ' ' || *p == '\t') p++;
+
+            /* Ignorar líneas de comentario y líneas vacías */
+            if (*p == '#' || *p == '\n' || *p == '\r' || *p == '\0') continue;
+
             /* Primer token: el comando */
-            token = strtok (input, " \n");
-            if (!token) return command_set_code (command, UNKNOWN);
+            token = strtok (p, " \t\n\r");
+            if (!token) continue;
 
             cmd = UNKNOWN;
+            i   = UNKNOWN - NO_CMD + 1;
             while (cmd == UNKNOWN && i < N_CMD)
                 {
                     if (!strcasecmp (token, cmd_to_str[i][CMDS]) || !strcasecmp (token, cmd_to_str[i][CMDL])) { cmd = i + NO_CMD; }
-                    else	{i++;}
+                    else {i++;}
                 }
 
             /* Segundo token: el target (opcional segun el comando) */
-            token = strtok (NULL, " \n");
+            token = strtok (NULL, " \t\n\r");
             if (token) command->target = strdup (token);
 
             return command_set_code (command, cmd);

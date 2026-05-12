@@ -221,7 +221,11 @@ Status
 entity_set_health (Entity* entity, int health)
 {
     if (!entity) return ERROR;
-    entity->stats.health = (health < MIN_LIFE) ? MIN_LIFE : health;
+    if (health < MIN_LIFE ) 
+    {  entity->stats.health = MIN_LIFE; return ERROR; }
+    if (health > MAX_LIFE_CORRUPT ) 
+    {  entity->stats.health = MAX_LIFE_CORRUPT; return ERROR; }
+    entity->stats.health = health;
     return OK;
 }
 int

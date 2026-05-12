@@ -224,7 +224,8 @@ main (int argc, char* argv[])
 	    {	
 			game_rules_win_condition(game_loop->game);
 			game_rules_loose_condition(game_loop->game);
-			game_rules_regen (game_loop->game); 
+			game_rules_regen (game_loop->game);
+	        graphic_engine_update_audio    (game_loop->gp_raylib, game_loop->game);
 	        BeginDrawing ();
 	        graphic_engine_paint_game     (game_loop->gp_raylib, game_loop->game);
 	        EndDrawing ();
@@ -407,8 +408,11 @@ game_loop_print_log (Game* game, Command* last_cmd, FILE* log_file)
 					case ATTACK: print (log_file, "Attack", target_name, skill_id, result_str); break;
 					case CHAT: print (log_file, "Chat", target_name, skill_id, result_str); break;
 					case INSPECT: print (log_file, "Inspect", target_name, skill_id, result_str); break;
-					case USE: print (log_file, "Use", target_name, skill_id, result_str); break;
-					case SAVE: print (log_file, "Save", target_name, skill_id, result_str); break;
+					case USE:     print (log_file, "Use",     target_name, skill_id, result_str); break;
+					case SAVE:    print (log_file, "Save",    target_name, skill_id, result_str); break;
+					case LOAD:    print (log_file, "Load",    target_name, skill_id, result_str); break;
+					case RECRUIT: print (log_file, "Recruit", target_name, skill_id, result_str); break;
+					case KICK:    print (log_file, "Kick",    target_name, skill_id, result_str); break;
 					default: print (log_file, "UNKNOW", "???", NO_ID, "ERROR"); break;
 				}
 		}

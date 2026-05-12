@@ -416,7 +416,7 @@ clean:
 	rm -f prueba prueba_sys
 
 clean_all: clean
-	rm -rf $(OBJ_DIR) $(DOC_DIR) tests/*.o tests/*_test
+	rm -rf $(OBJ_DIR) $(DOC_DIR) tests/*.o tests/*_test *.o
 
 
 .PHONY: all run runv run_log runv_log run_custom run_custom_log \

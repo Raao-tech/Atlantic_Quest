@@ -450,6 +450,20 @@ ge_update_space_music (Graphic_engine* ge, Game* game, Player* player)
 }
 
 /* ====================================================================== */
+/*          PUBLIC: UPDATE AUDIO (llamar ANTES de BeginDrawing)            */
+/* ====================================================================== */
+
+void
+graphic_engine_update_audio (Graphic_engine* ge, Game* game)
+{
+	Player* player;
+	if (!ge || !game) return;
+	player = game_get_player_by_turn (game);
+	if (!player) return;
+	ge_update_space_music (ge, game, player);
+}
+
+/* ====================================================================== */
 /*                  PUBLIC: PAINT GAME (cada frame)                        */
 /* ====================================================================== */
 
@@ -462,9 +476,6 @@ graphic_engine_paint_game (Graphic_engine* ge, Game* game)
 	if (!ge || !game) return;
 	player = game_get_player_by_turn (game);
 	if (!player) return;
-
-	/* Actualizar / cambiar música del space actual */
-	ge_update_space_music (ge, game, player);
 
 	ClearBackground (BLACK);
 
@@ -1477,11 +1488,18 @@ graphic_engine_game_over (Graphic_engine* ge, Game* game)
 
 	if (!ge || !IsWindowReady ()) return;
 
-	won = game_get_last_cmd_status (game) != ERROR;
-	/* Usamos la condición guardada en el juego: si el jugador tiene numens vivos = victoria */
+	/* Victoria = al menos un numen del jugador sigue con vida */
+	won = FALSE;
 	{
-		Player* p = game ? game_get_player (game) : NULL;
-		won = (p && player_get_n_numens (p) > 0);
+		Player* p   = game ? game_get_player (game) : NULL;
+		int     n   = p ? player_get_n_numens (p) : 0;
+		int     idx;
+		for (idx = 0; idx < n; idx++)
+		{
+			Id     nid  = player_get_numen_at_inventory (p, idx);
+			Numen* nm   = (nid != NO_ID) ? game_get_numen_by_id (game, nid) : NULL;
+			if (nm && numen_get_health (nm) > MIN_LIFE) { won = TRUE; break; }
+		}
 	}
 
 	headline       = won ? "VICTORIA"   : "GAME OVER";

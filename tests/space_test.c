@@ -345,7 +345,11 @@ void test3_space_set_gdesc_line() {
 void test1_space_get_gdesc() {
   Space *s = space_create();
   space_set_gdesc(s, "  _ !#");
-  PRINT_TEST_RESULT(space_get_gdesc(s) != NULL && strcmp(space_get_gdesc(s), "  _ !#") == 0);
+  char *g1 = space_get_gdesc(s);
+  char *g2 = space_get_gdesc(s);
+  PRINT_TEST_RESULT(g1 != NULL && strcmp(g2, "  _ !#") == 0);
+  free(g1);
+  free(g2);
   space_destroy(s);
 }
 

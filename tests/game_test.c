@@ -53,6 +53,9 @@ int main(int argc, char **argv) {
   if (all || test == 18) test1_game_get_object_location();
   if (all || test == 19) test2_game_get_object_location();
   if (all || test == 20) test3_game_get_object_location();
+
+/*Javi, recuerda, sólo asegurate de que esté presente, pero Character es una próxima expansión*/
+/* 
   if (all || test == 21) test1_game_add_character();
   if (all || test == 22) test2_game_add_character();
   if (all || test == 23) test1_game_get_character_by_id();
@@ -61,16 +64,18 @@ int main(int argc, char **argv) {
   if (all || test == 26) test2_game_get_character_by_name();
   if (all || test == 27) test1_game_get_character_location();
   if (all || test == 28) test2_game_get_character_location();
+ */
+
   if (all || test == 29) test1_game_get_object_at();
   if (all || test == 30) test2_game_get_object_at();
-  if (all || test == 31) test1_game_get_character_at();
-  if (all || test == 32) test2_game_get_character_at();
+/*   if (all || test == 31) test1_game_get_character_at();
+  if (all || test == 32) test2_game_get_character_at(); */
   if (all || test == 33) test1_game_get_space_id_at();
   if (all || test == 34) test2_game_get_space_id_at();
   if (all || test == 35) test1_game_get_n_spaces();
   if (all || test == 36) test2_game_get_n_spaces();
   if (all || test == 37) test1_game_get_n_objects();
-  if (all || test == 38) test1_game_get_n_characters();
+/*   if (all || test == 38) test1_game_get_n_characters(); */
   if (all || test == 39) test1_game_set_finished();
   if (all || test == 40) test2_game_get_finished();
   if (all || test == 41) test1_game_set_last_command();
@@ -237,8 +242,11 @@ void test3_game_get_object_location() {
   PRINT_TEST_RESULT(game_get_object_location(NULL, 21) == NO_ID);
 }
 
-
+/* ========== ================================================== ========== */
 /* ========== game_add_character / get_character_by_id / by_name ========== */
+/* ==========    Proxima expansión, hay que conservar el control ========== */
+/* ==========     De errores                                     ========== */
+/* ========== ================================================== ========== */
 
 void test1_game_add_character() {
   Game *g = game_create();
@@ -286,8 +294,6 @@ void test2_game_get_character_by_name() {
 }
 
 
-/* ========== game_get_character_location ========== */
-
 void test1_game_get_character_location() {
   Game *g = game_create();
   Space *s = space_create();
@@ -323,6 +329,10 @@ void test2_game_get_object_at() {
   game_destroy(g);
 }
 
+
+
+
+
 void test1_game_get_character_at() {
   Game *g = game_create();
   Character *c = character_create();
@@ -337,6 +347,10 @@ void test2_game_get_character_at() {
   PRINT_TEST_RESULT(game_get_character_at(g, 99) == NULL);
   game_destroy(g);
 }
+
+
+
+
 
 void test1_game_get_space_id_at() {
   Game *g = game_create();

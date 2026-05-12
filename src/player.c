@@ -271,8 +271,8 @@ player_get_active_object (Player* player)
 Status
 player_set_active_object (Player* player, Id obj_id)
 {
-	if (!player || (player_contains_object (player, obj_id) == FALSE && player->loading == FALSE)) return ERROR;
-	/* Permitimos NO_ID para "deseleccionar" */
+	if (!player) return ERROR;
+	if (obj_id != NO_ID && player_contains_object (player, obj_id) == FALSE && player->loading == FALSE) return ERROR;
 	player->active_object = obj_id;
 	return OK;
 }

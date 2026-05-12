@@ -156,8 +156,12 @@ void test3_obj_set_name() {
 /* Test 1: get_name returns the name that was set */
 void test1_obj_get_name() {
   Object *o = obj_create();
+  char*   name = NULL;
   obj_set_name(o, "Sword");
-  PRINT_TEST_RESULT(strcmp(obj_get_name(o), "Sword") == 0);
+  name =obj_get_name(o);
+
+  PRINT_TEST_RESULT(strcmp( name, "Sword") == 0);
+  free (name);
   obj_destroy(o);
 }
 
@@ -213,7 +217,9 @@ void test3_obj_set_description() {
 void test1_obj_get_description() {
   Object *o = obj_create();
   obj_set_description(o, "A sharp blade");
-  PRINT_TEST_RESULT(strcmp(obj_get_description(o), "A sharp blade") == 0);
+  char *desc = obj_get_description(o);
+  PRINT_TEST_RESULT(strcmp(desc, "A sharp blade") == 0);
+  free(desc);
   obj_destroy(o);
 }
 

@@ -208,7 +208,7 @@ void test1_character_set_health() {
 
 void test2_character_set_health() {
   Character *c = character_create();
-  PRINT_TEST_RESULT(character_set_health(c, MAX_LIFE + 1) == ERROR);
+  PRINT_TEST_RESULT(character_set_health(c, MAX_LIFE_CORRUPT + 1) == ERROR);
   character_destroy(c);
 }
 

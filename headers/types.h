@@ -36,8 +36,8 @@
 
 /*file of data for default*/
 #define F_DATA_N "./new_game.dat"
-#define F_DATA_S_1 "./Save_old_games/game_1.dat"
-#define F_DATA_S_2 "./Save_old_games/game_2.dat"
+#define F_DATA_S_1 "./Save_old_games/savefile.dat"
+#define F_DATA_S_2 "./Save_old_games/savefile.dat"
 
 /*Los Ids de los numens serán impuestos, en pokemon Bulbasaur siempre es el #1 de la pokedex incluso pasando a otro juego*/
 /*Id de los Numens inciales*/

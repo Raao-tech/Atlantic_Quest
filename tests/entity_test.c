@@ -105,13 +105,13 @@ void test2_entity_set_id() {
 
 void test1_entity_get_id() {
   Entity *e = entity_create();
-  entity_set_id(e, 42);
-  PRINT_TEST_RESULT(entity_get_id(e) == 42);
+  entity_set_id(e, (Id)42);
+  PRINT_TEST_RESULT(entity_get_id(e) == (Id)42);
   entity_destroy(e);
 }
 
 void test2_entity_get_id() {
-  PRINT_TEST_RESULT(entity_get_id(NULL) == ERROR);
+  PRINT_TEST_RESULT(entity_get_id(NULL) == NO_ID);
 }
 
 /* ========== entity_set_name / get_name ========== */
@@ -205,7 +205,7 @@ void test1_entity_set_health() {
 /* Out of bounds: MAX_LIFE + 1 */
 void test2_entity_set_health() {
   Entity *e = entity_create();
-  PRINT_TEST_RESULT(entity_set_health(e, MAX_LIFE + 1) == ERROR);
+  PRINT_TEST_RESULT(entity_set_health(e, MAX_LIFE_CORRUPT + 1) == ERROR);
   entity_destroy(e);
 }
 

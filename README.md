@@ -11,6 +11,13 @@
 
 El juego tiene dos modos de ejecución: **User** (con Raylib, teclado + ratón en la UI) y **test** (stdin puro, sin ventana, ideal para automatizar pruebas de integración recomendado usar -l para el log).
 
+
+## Comentario de los desarrolladores
+Nuestra visión de un "**buen videojuego**" no es aquel que sólo sea estupendo técnicamente, sino que además debe ser un **potenciador para todas las ideas**, sin limitaciones de ningún tipo.  **Atlantic Quest** es la historia que quisimos contar para darle vida a este proyecto, pero la "gasolina" del programa es la ilusión de **poder crear** cual artesano en su taller, por eso, si tienes algo que contar o tienes el "bichito" que te incita a crear algo, no dudes en usar nuestra arquitectura para expandirla, retorcerla o transformala hasta tal punto que puedas contar y dar la bienvenida a una nueva idea al mundo.
+
+
+>Pos Data: Cuidado con el solapamiento entre numens, les puedes quitar su estatus de entidades.  Lueego entenderas que digo mi amigo. 
+
 ---
 
 ## Índice
@@ -405,8 +412,8 @@ grep -v '^#' mi_mapa_expected.txt | diff - mi_mapa.log
 
 ---
 
-> *"El universo de Atlantic Quest está abierto a quien se atreva a cartografiarlo.*
-> *Si creas un mapa épico o un mod increíble, compártelo — siempre hay nuevas tierras que explorar."*
+> *"El universo de Atlantic Quest está abierto a todos los curiosos, locos, ezquisofrenicos y demás tipos de informáticos que quieran experimentar, destruir y crear*
+> *Si creas un mapa épico o un mod increíble, compártelo — siempre hay una historia que contar, y nos encantaría jugar la tuya"*
 >
 > — El equipo de desarrollo
 
@@ -502,19 +509,10 @@ valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -s ./atlant
 ```
 
 Estado actual: **0 leaks, 0 errores** con todas las entidades cargadas.
+.... O por lo menos es lo que hemos tenido hasta el momento, si alguien quiere contribuir, se agradecería que intentara encontrar 
+fugas de memoria en sitios que todavía no hemos visto.
 
 ---
-
-## Ingit — Asistente Git del equipo
-
-El repositorio incluye `Ingit.sh`, un asistente interactivo en Bash para simplificar el flujo de trabajo en ordenadores compartidos de la uni (donde las credenciales no persisten).
-
-```bash
-chmod +x Ingit.sh   # solo la primera vez
-./Ingit.sh
-```
-
-Operaciones disponibles: Pull, Push, Status, Log, Checkout, Merge, Reset.
 
 ---
 
